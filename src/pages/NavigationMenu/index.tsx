@@ -46,7 +46,7 @@ const NavigationMenuDemo = () => {
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className="NavigationMenuContent">
             <ul className="List two">
-              <ListItem href="https://stitches.dev/" title="Video meeting">
+              <ListItem href="/meets" title="Video meeting">
                 Conduct virtual meetings with video. Ideal for workshops, training and webinars.
               </ListItem>
               <ListItem href="/colors" title="Audio Spaces">
@@ -61,8 +61,8 @@ const NavigationMenuDemo = () => {
         </NavigationMenu.Item>
 
         <NavigationMenu.Item>
-          <NavigationMenu.Link className="NavigationMenuLink" href="https://github.com/radix-ui">
-            Github
+          <NavigationMenu.Link className="NavigationMenuLink" href="/meets">
+            Meets
           </NavigationMenu.Link>
         </NavigationMenu.Item>
 
