@@ -1,35 +1,29 @@
-import Link from "next/link";
+import Link from 'next/link'
 
-import Copyright from "./Copyright";
-import FooterContent from "./FooterContent";
+import Copyright from './Copyright'
+import FooterContent from './FooterContent'
 
 // Components
 
-export function FooterLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
+export function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   const classes =
-    "text-sm text-gray-500 no-underline betterhover:hover:text-gray-700 betterhover:hover:dark:text-white transition";
-  if (href.startsWith("http")) {
+    'text-sm text-gray-500 no-underline betterhover:hover:text-gray-700 betterhover:hover:dark:text-white transition'
+  if (href.startsWith('http')) {
     return (
-      <a href={href} className={classes}>
+      <Link href={href} className={classes}>
         {children}
-      </a>
-    );
+      </Link>
+    )
   }
   return (
     <Link href={href}>
       <div className={classes}>{children}</div>
     </Link>
-  );
+  )
 }
 
 export function FooterHeader({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm text-gray-900 dark:text-white">{children}</h3>;
+  return <h3 className="text-sm text-gray-900 dark:text-white">{children}</h3>
 }
 
 export function Footer() {
@@ -44,5 +38,5 @@ export function Footer() {
       <FooterContent />
       <Copyright />
     </footer>
-  );
+  )
 }

@@ -3,6 +3,7 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 import classNames from 'classnames'
 import { CaretDownIcon } from '@radix-ui/react-icons'
 
+import Link from 'next/link'
 import { createRoom } from '@components/createRoom'
 import { useRouter } from 'next/router'
 
@@ -20,10 +21,10 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(function Lis
   return (
     <li>
       <NavigationMenu.Link asChild>
-        <a className={classNames('ListItemLink', className)} {...props} ref={forwardedRef}>
+        <Link href={props.href} className={classNames('ListItemLink', className)} {...props} ref={forwardedRef}>
           <div className="ListItemHeading">{title}</div>
           <p className="ListItemText">{children}</p>
-        </a>
+        </Link>
       </NavigationMenu.Link>
     </li>
   )

@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import cn from 'classnames';
-import VercelLogo from '@components/icons/icon-platform';
-import styles from './footer.module.css';
-import { COPYRIGHT_HOLDER, SITE_NAME, CODE_OF_CONDUCT, LEGAL_URL, REPO } from '@lib/constants';
+import cn from 'classnames'
+import VercelLogo from '@components/icons/icon-platform'
+import styles from './footer.module.css'
+import { COPYRIGHT_HOLDER, SITE_NAME, CODE_OF_CONDUCT, LEGAL_URL, REPO } from '@lib/constants'
+import Link from 'next/link'
 
 export function HostedByVercel() {
   return (
-    <a
+    <Link
       href="https://vercel.com"
       className={cn(styles['footer-link'], styles['footer-logo'])}
       target="_blank"
@@ -29,8 +30,8 @@ export function HostedByVercel() {
     >
       <div className={styles['secondary-text']}>Created by </div>
       <VercelLogo color="white" />
-    </a>
-  );
+    </Link>
+  )
 }
 
 export default function Footer() {
@@ -42,48 +43,32 @@ export default function Footer() {
           <div className={styles['footer-separator']} />
         </div>
         <div className={styles['footer-copyright']}>
-          Copyright © {`${new Date().getFullYear()} `} {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All
-          rights reserved.
+          Copyright © {`${new Date().getFullYear()} `} {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All rights reserved.
         </div>
         <div className={styles['footer-center-group']}>
           <p className={styles['footer-paragraph']}>
-            <a
-              href={REPO}
-              className={styles['footer-link']}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href={REPO} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">
               Source Code
-            </a>
+            </Link>
           </p>
           <div className={styles['footer-separator']} />
           <p className={styles['footer-paragraph']}>
-            <a
-              href={CODE_OF_CONDUCT}
-              className={styles['footer-link']}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href={CODE_OF_CONDUCT} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">
               Code of Conduct
-            </a>
+            </Link>
           </p>
           {LEGAL_URL && (
             <>
               <div className={styles['footer-separator']} />
               <p className={styles['footer-paragraph']}>
-                <a
-                  href={LEGAL_URL}
-                  className={styles['footer-link']}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={LEGAL_URL} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">
                   Legal
-                </a>
+                </Link>
               </p>
             </>
           )}
         </div>
       </div>
     </footer>
-  );
+  )
 }
