@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Web",
+    "typeArr": [
+      { "title": "Vanilla JS SDK", "url": "/sdk/vanilla", "icon": "js" },
+      { "title": "React JS SDK", "url": "/sdk/reactjs", "icon": "react" }
+    ],
+    "desc": "Build stunning and immersive web applications with the Huddle01 Web SDK . Our easy-to-use toolkit lets you effortlessly integrate Huddle01's powerful communication features into your web applications, so you can offer your users the ultimate online experience."
+  },
+  {
+    "title": "Mobile",
+    "typeArr": [
+      {
+        "title": "React Native SDK",
+        "url": "/sdk/react-native",
+        "icon": "react"
+      }
+    ],
+    "desc": "Create high-performance, cross-platform mobile applications with Huddle01 SDK's Mobile SDK. We provide a complete set of tools that enable you to easily integrate Huddle01's advanced communication features into your mobile apps, delivering unparalleled real-time communication capabilities to your users."
+  }
+]

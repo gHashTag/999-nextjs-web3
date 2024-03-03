@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Vanilla JS iFrame",
+    "url": "/iFrame/vanilla",
+    "icon": "js"
+  },
+  {
+    "title": "React iFrame",
+    "url": "/iFrame/react",
+    "icon": "react"
+  }
+]

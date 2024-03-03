@@ -1,5 +1,5 @@
-import ChatBox from '@/component/ChatBox/ChatBox'
-import RemotePeer from '@/component/RemotePeer/RemotePeer'
+import ChatBox from '@/components/ChatBox/ChatBox'
+import RemotePeer from '@/components/RemotePeer/RemotePeer'
 import { TPeerMetadata } from '@/utils/types'
 import {
   useLocalAudio,
@@ -82,7 +82,7 @@ export default function Home({ token }: Props) {
       method: 'eth_private_key' // use "private_key" for other non-evm chains
     })) as any
     const app_pub_key = getPublicCompressed(Buffer.from(app_scoped_key.padStart(64, '0'), 'hex')).toString('hex')
-    console.log(app_pub_key)
+
     if (state === 'idle')
       await joinRoom({
         roomId: roomId as string,

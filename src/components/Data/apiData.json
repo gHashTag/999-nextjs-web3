@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Create Room",
+    "url": "/apis/create-room"
+  },
+  {
+    "title": "Create Token Gated Room",
+    "url": "/apis/join-room"
+  },
+  {
+    "title": "Create Token Gated Room",
+    "url": "/apis/join-room"
+  }
+]
