@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import '@/styles/styles.css'
 import type { AppProps } from 'next/app'
 
 import { HuddleClient, HuddleProvider } from '@huddle01/react'

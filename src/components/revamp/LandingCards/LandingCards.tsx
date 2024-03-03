@@ -33,7 +33,9 @@ const LandingCards: React.FC<CardsProps> = ({ children, title, type, className, 
             className="object-contain"
           />
         )}
-        <div className="text-xl font-medium text-rgb-2">{title}</div>
+        <div className="text-xl font-medium text-rgb-2" style={{ color: 'lime' }}>
+          {title}
+        </div>
       </div>
 
       <div>{children}</div>

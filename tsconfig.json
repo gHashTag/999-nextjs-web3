@@ -17,7 +17,8 @@
       "@/*": ["./src/*"],
       "@components/*": ["./src/components/*"],
       "@lib/*": ["./lib/*"],
-      "helpers/*": ["./src/helpers/*"]
+      "helpers/*": ["./src/helpers/*"],
+      "@pages/*": ["./src/pages/*"]
     },
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true

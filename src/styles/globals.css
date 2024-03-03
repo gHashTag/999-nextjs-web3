@@ -1,22 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: #121212;
-  --background-start-rgb: #121212;
-  --background-end-rgb: #121212;
+.customPrimaryButton {
+  color: '#fcfcfd';
+  border: 1.5px solid #12367f;
+  background: linear-gradient(0deg, #246bfd, #246bfd), linear-gradient(0deg, #12367f, #12367f);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.customSecondaryButton {
+  transition: all ease-in-out 300ms;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: radial-gradient(65.73% 137.5% at 50% 50%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+#tab[data-state='active'] {
+  color: #0086e6;
+  border-bottom: 1px solid #0086e6;
+}
+.nx-border-t {
+  border: none;
+}
+
+.nx-bg-white {
+  background-color: transparent !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.card {
+  border-radius: 12px;
+  border: 1px solid #202328;
+  background: linear-gradient(180deg, rgba(32, 35, 40, 0.4) 0%, #101114 100%);
+}
+
+.calendarText {
+  background: linear-gradient(180deg, #c7cad1 0%, #9ea3ae 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.calendarBtn {
+  background-color: rgb(32, 35, 40) !important;
+  transition: all ease-in-out 300ms;
+}
+.calendarBtn:hover {
+  background-color: rgba(32, 35, 40, 0.7) !important;
 }
