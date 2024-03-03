@@ -19,18 +19,14 @@ import VercelLogo from '@components/icons/icon-platform'
 import styles from './footer.module.css'
 import { COPYRIGHT_HOLDER, SITE_NAME, CODE_OF_CONDUCT, LEGAL_URL, REPO } from '@lib/constants'
 import Link from 'next/link'
+import IconLogo from '@/components/icons/icon-logo'
 
 export function HostedByVercel() {
   return (
-    <Link
-      href="https://vercel.com"
-      className={cn(styles['footer-link'], styles['footer-logo'])}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <div className={styles['secondary-text']}>Created by </div>
-      <VercelLogo color="white" />
-    </Link>
+    <div className="flex items-center justify-center mt-4 ">
+      Powered by <IconLogo width="50" height="50" backgroundColor="var(--accents-1)" foregroundColor="black" />
+      dao999nft
+    </div>
   )
 }
 

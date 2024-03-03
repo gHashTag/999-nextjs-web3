@@ -146,6 +146,14 @@
   justify-content: center;
 }
 
+.register-text {
+  color: black; /* Черный цвет текста в обычном состоянии */
+  transition: color 0.3s; /* Плавное изменение цвета */
+}
+
+.register-text:hover {
+  color: #9392; /* Желтый цвет текста при наведении */
+}
 @media (min-width: 768px) {
   .submit.register {
     width: 120px;

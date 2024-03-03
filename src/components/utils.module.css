@@ -31,6 +31,10 @@
   animation-delay: 1.2s;
 }
 
+.show-on-desktop {
+  color: black;
+}
+
 .appear-fourth {
   animation-delay: 1.6s;
 }
@@ -89,4 +93,8 @@
   .hide-on-tablet {
     display: none;
   }
+}
+
+.brand {
+  color: var(--brand);
 }

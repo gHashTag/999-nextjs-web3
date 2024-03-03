@@ -223,7 +223,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   })
 
   const token = await accessToken.toJwt()
-
+  console.log('token', token)
   return {
     props: { token }
   }

@@ -14,122 +14,115 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from 'react';
-import cn from 'classnames';
-import useConfData from '@lib/hooks/use-conf-data';
-import { useRouter } from 'next/router';
-import FormError from '@lib/form-error';
-import LoadingDots from './loading-dots';
-import styleUtils from './utils.module.css';
-import styles from './form.module.css';
-import useEmailQueryParam from '@lib/hooks/use-email-query-param';
-import { register } from '@lib/user-api';
-import Captcha, { useCaptcha } from './captcha';
+import { useState, useCallback } from 'react'
+import cn from 'classnames'
+import useConfData from '@lib/hooks/use-conf-data'
+import { useRouter } from 'next/router'
+import FormError from '@lib/form-error'
+import LoadingDots from './loading-dots'
+import styleUtils from './utils.module.css'
+import styles from './form.module.css'
+import useEmailQueryParam from '@lib/hooks/use-email-query-param'
+import { register } from '@lib/user-api'
+import Captcha, { useCaptcha } from './captcha'
+import { Typography, Button } from '@supabase/ui'
 
-type FormState = 'default' | 'loading' | 'error';
+const { Title } = Typography
+
+type FormState = 'default' | 'loading' | 'error'
 
 type Props = {
-  sharePage?: boolean;
-};
+  sharePage?: boolean
+}
 
 export default function Form({ sharePage }: Props) {
-  const [email, setEmail] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [errorTryAgain, setErrorTryAgain] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [formState, setFormState] = useState<FormState>('default');
-  const { setPageState, setUserData } = useConfData();
-  const router = useRouter();
-  const {
-    ref: captchaRef,
-    execute: executeCaptcha,
-    reset: resetCaptcha,
-    isEnabled: isCaptchaEnabled
-  } = useCaptcha();
-
+  const [email, setEmail] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
+  const [errorTryAgain, setErrorTryAgain] = useState(false)
+  const [focused, setFocused] = useState(false)
+  const [formState, setFormState] = useState<FormState>('default')
+  const { setPageState, setUserData } = useConfData()
+  const router = useRouter()
+  const { ref: captchaRef, execute: executeCaptcha, reset: resetCaptcha, isEnabled: isCaptchaEnabled } = useCaptcha()
+  console.log('formState', formState)
   const handleRegister = useCallback(
     (token?: string) => {
       register(email, token)
-        .then(async res => {
+        .then(async (res) => {
           if (!res.ok) {
-            throw new FormError(res);
+            throw new FormError(res)
           }
 
-          const data = await res.json();
+          const data = await res.json()
           const params = {
             id: data.id,
             ticketNumber: data.ticketNumber,
             name: data.name,
             username: data.username
-          };
+          }
 
           if (sharePage) {
             const queryString = Object.keys(params)
               .map(
-                key =>
-                  `${encodeURIComponent(key)}=${encodeURIComponent(
-                    params[key as keyof typeof params] || ''
-                  )}`
+                (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key as keyof typeof params] || '')}`
               )
-              .join('&');
-            await router.replace(`/?${queryString}`, '/');
+              .join('&')
+            await router.replace(`/?${queryString}`, '/')
           } else {
-            setUserData(params);
-            setPageState('ticket');
+            setUserData(params)
+            setPageState('ticket')
           }
         })
-        .catch(async err => {
-          let message = 'Error! Please try again.';
+        .catch(async (err) => {
+          let message = 'Error! Please try again.'
 
           if (err instanceof FormError) {
-            const { res } = err;
-            const data = res.headers.get('Content-Type')?.includes('application/json')
-              ? await res.json()
-              : null;
+            const { res } = err
+            const data = res.headers.get('Content-Type')?.includes('application/json') ? await res.json() : null
 
             if (data?.error?.code === 'bad_email') {
-              message = 'Please enter a valid email';
+              message = 'Please enter a valid email'
             }
           }
 
-          setErrorMsg(message);
-          setFormState('error');
-        });
+          setErrorMsg(message)
+          setFormState('error')
+        })
     },
     [email, router, setPageState, setUserData, sharePage]
-  );
+  )
 
   const onSubmit = useCallback(
     (e: React.FormEvent) => {
-      e.preventDefault();
+      e.preventDefault()
 
       if (formState === 'default') {
-        setFormState('loading');
+        setFormState('loading')
 
         if (isCaptchaEnabled) {
-          return executeCaptcha();
+          return executeCaptcha()
         }
 
-        return handleRegister();
+        return handleRegister()
       } else {
-        setFormState('default');
+        setFormState('default')
       }
     },
     [executeCaptcha, formState, isCaptchaEnabled, handleRegister]
-  );
+  )
 
   const onTryAgainClick = useCallback(
     (e: React.MouseEvent) => {
-      e.preventDefault();
+      e.preventDefault()
 
-      setFormState('default');
-      setErrorTryAgain(true);
-      resetCaptcha();
+      setFormState('default')
+      setErrorTryAgain(true)
+      resetCaptcha()
     },
     [resetCaptcha]
-  );
+  )
 
-  useEmailQueryParam('email', setEmail);
+  useEmailQueryParam('email', setEmail)
 
   return formState === 'error' ? (
     <div
@@ -140,11 +133,7 @@ export default function Form({ sharePage }: Props) {
       <div className={styles['form-row']}>
         <div className={cn(styles['input-label'], styles.error)}>
           <div className={cn(styles.input, styles['input-text'])}>{errorMsg}</div>
-          <button
-            type="button"
-            className={cn(styles.submit, styles.register, styles.error)}
-            onClick={onTryAgainClick}
-          >
+          <button type="button" className={cn(styles.submit, styles.register, styles.error)} onClick={onTryAgainClick}>
             Try Again
           </button>
         </div>
@@ -173,7 +162,7 @@ export default function Form({ sharePage }: Props) {
             type="email"
             id="email-input-field"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder="Enter email to register free"
@@ -186,10 +175,10 @@ export default function Form({ sharePage }: Props) {
           className={cn(styles.submit, styles.register, styles[formState])}
           disabled={formState === 'loading'}
         >
-          {formState === 'loading' ? <LoadingDots size={4} /> : <>Register</>}
+          {formState === 'loading' ? <LoadingDots size={4} /> : <p className={styles['register-text']}>Register</p>}
         </button>
       </div>
       <Captcha ref={captchaRef} onVerify={handleRegister} />
     </form>
-  );
+  )
 }
