@@ -12,17 +12,21 @@ const Meets = () => {
     router.push(`/meets/${roomId}`)
   }
 
+  const getSpace = async () => {
+    router.push(`/audio-spaces`)
+  }
+
+  const getTokenGated = async () => {
+    router.push(`/token-gated`)
+  }
+
   return (
     <Layout>
       <LandingCards title="Get started quickly" type="Guide" className="flex-col mt-10">
         <div className="grid lg:grid-cols-3 gap-4 grid-cols-1 mt-6">
-          {[
-            { title: 'Video Meeting', url: '/meets', img: 'Video Meeting.png' },
-            { title: 'Audio Spaces', url: '/audio-spaces', img: 'Audio Spaces.png' },
-            { title: 'Token-gated Room', url: '/guides/token-gated', img: 'Token-gated Room.png' }
-          ].map(({ title, url, img }) => (
-            <SubCard key={title} title={title} img={img} onClick={getRoom} />
-          ))}
+          <SubCard title="Video Meeting" img="Video Meeting.png" onClick={getRoom} />
+          <SubCard title="Audio Spaces" img="Audio Spaces.png" onClick={getSpace} />
+          <SubCard title="Token-gated Room" img="Token-gated Room.png" onClick={getTokenGated} />
         </div>
       </LandingCards>
     </Layout>

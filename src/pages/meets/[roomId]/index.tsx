@@ -18,6 +18,7 @@ import { ADAPTER_EVENTS } from '@web3auth/base'
 import { getPublicCompressed } from '@toruslabs/eccrypto'
 import { GetServerSidePropsContext } from 'next'
 import { log } from 'console'
+import VideoList from '@/components/hms/VideoList'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -196,6 +197,7 @@ export default function Home({ token }: Props) {
             {peerIds.map((peerId) => (peerId ? <RemotePeer key={peerId} peerId={peerId} /> : null))}
           </div>
         </div>
+        <VideoList />
         {state === 'connected' && <ChatBox />}
       </div>
     </main>

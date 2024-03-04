@@ -4,8 +4,6 @@ import classNames from 'classnames'
 import { CaretDownIcon } from '@radix-ui/react-icons'
 
 import Link from 'next/link'
-import { createRoom } from '@components/createRoom'
-import { useRouter } from 'next/router'
 
 interface ListItemProps {
   className?: string
@@ -31,13 +29,6 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(function Lis
 })
 
 const NavigationMenuDemo = () => {
-  const [roomId, setRoomId] = useState(null)
-  const router = useRouter()
-  const getRoom = async () => {
-    const roomId = await createRoom()
-    setRoomId(roomId)
-  }
-
   return (
     <NavigationMenu.Root className="NavigationMenuRoot">
       <NavigationMenu.List className="NavigationMenuList">
