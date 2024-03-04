@@ -16,6 +16,8 @@ import { useEffect, useRef, useState } from 'react'
 import { web3auth } from '@/utils/web3Auth'
 import { ADAPTER_EVENTS } from '@web3auth/base'
 import { getPublicCompressed } from '@toruslabs/eccrypto'
+import { GetServerSidePropsContext } from 'next'
+import { log } from 'console'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +26,6 @@ type Props = {
 }
 
 export default function Home({ token }: Props) {
-  console.log('token', token)
   const router = useRouter()
   const { roomId } = router.query
   const [displayName, setDisplayName] = useState<string>('')
@@ -78,6 +79,7 @@ export default function Home({ token }: Props) {
 
   const authenticateUser = async () => {
     const info = await web3auth.getUserInfo()
+    console.log('info', info)
     const app_scoped_key = (await web3auth.provider?.request({
       method: 'eth_private_key' // use "private_key" for other non-evm chains
     })) as any
@@ -200,8 +202,6 @@ export default function Home({ token }: Props) {
   )
 }
 
-import { GetServerSidePropsContext } from 'next'
-
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const accessToken = new AccessToken({
     apiKey: process.env.API_KEY || '',
@@ -223,7 +223,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   })
 
   const token = await accessToken.toJwt()
-  console.log('token', token)
+
   return {
     props: { token }
   }

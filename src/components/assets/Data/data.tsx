@@ -1,11 +1,11 @@
-import { BookIcon } from '../BookIcon';
-import { CalendarIcon } from '../Calendar';
-import { DocumentIcon } from '../DocumentIcon';
+import { BookIcon } from '../BookIcon'
+import { CalendarIcon } from '../Calendar'
+import { DocumentIcon } from '../DocumentIcon'
 // import { DocumentIcon } from '../DocumentIcon';
-import { PaperClipIcon } from '../PaperClip';
-import { PaperAirplaneIcon } from '../PaperPlane';
-import { SquaresPlusIcon } from '../SquarePlusIcon';
-import { Stopwatch } from '../stopwatch';
+import { PaperClipIcon } from '../PaperClip'
+import { PaperAirplaneIcon } from '../PaperPlane'
+import { SquaresPlusIcon } from '../SquarePlusIcon'
+import { Stopwatch } from '../stopwatch'
 
 export const FlutterSDKData = [
   {
@@ -16,8 +16,8 @@ export const FlutterSDKData = [
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/Flutter/walkthrough',
@@ -29,9 +29,9 @@ export const FlutterSDKData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/Flutter/example',
@@ -43,9 +43,9 @@ export const FlutterSDKData = [
       y: -6,
       squares: [
         [-1, 2],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/Flutter/methods',
@@ -57,22 +57,21 @@ export const FlutterSDKData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
+        [1, 4]
+      ]
+    }
   },
   {
     href: '/Flutter/events',
     name: 'Events',
-    description:
-      'This section lists the available events that can be subscribed to in the Flutter SDK.',
+    description: 'This section lists the available events that can be subscribed to in the Flutter SDK.',
     icon: CalendarIcon,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
-  },
-];
+      squares: [[0, 1]]
+    }
+  }
+]
 
 // React Js Data
 export const MigrationData = [
@@ -84,8 +83,8 @@ export const MigrationData = [
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/migration/walkthrough',
@@ -97,23 +96,22 @@ export const MigrationData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/migration/example',
     name: 'Start from an Example',
-    description:
-      'This section provides instructions on how to clone and run a sample Huddle01 app in a React project.',
+    description: 'This section provides instructions on how to clone and run a sample Huddle01 app in a React project.',
     icon: PaperAirplaneIcon,
     pattern: {
       y: -6,
       squares: [
         [-1, 2],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/migration/hooks',
@@ -125,11 +123,11 @@ export const MigrationData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 export const FlutterData = [
   {
@@ -140,8 +138,8 @@ export const FlutterData = [
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/Flutter/walkthrough',
@@ -153,9 +151,9 @@ export const FlutterData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/Flutter/example',
@@ -167,9 +165,9 @@ export const FlutterData = [
       y: -6,
       squares: [
         [-1, 2],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/Flutter/methods/init',
@@ -181,11 +179,11 @@ export const FlutterData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 // React Js Data
 
@@ -198,11 +196,11 @@ export const ReactJsData = [
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
-    href: '/React/react-walkthrough',
+    href: '/React',
     name: 'Walkthrough',
     description:
       'This section provides a step-by-step guide to building a simple Huddle01-based video conferencing app in a React project.',
@@ -211,23 +209,22 @@ export const ReactJsData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/React/example',
     name: 'Start from an Example',
-    description:
-      'This section provides instructions on how to clone and run a sample Huddle01 app in a React project.',
+    description: 'This section provides instructions on how to clone and run a sample Huddle01 app in a React project.',
     icon: PaperAirplaneIcon,
     pattern: {
       y: -6,
       squares: [
         [-1, 2],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/React/hooks',
@@ -239,11 +236,11 @@ export const ReactJsData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 // React-Native Data
 export const ReactNativeData = [
@@ -255,8 +252,8 @@ export const ReactNativeData = [
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/React-Native/react-native-walkthrough',
@@ -268,9 +265,9 @@ export const ReactNativeData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/React-Native/example',
@@ -282,9 +279,9 @@ export const ReactNativeData = [
       y: -6,
       squares: [
         [-1, 2],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/React-Native/hooks',
@@ -296,11 +293,11 @@ export const ReactNativeData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 // JavaScript Data
 export const VanillaData = [
@@ -312,8 +309,8 @@ export const VanillaData = [
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/Javascript/walkthrough',
@@ -325,9 +322,9 @@ export const VanillaData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/Javascript/example',
@@ -339,9 +336,9 @@ export const VanillaData = [
       y: -6,
       squares: [
         [-1, 2],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/Javascript/methods',
@@ -353,11 +350,11 @@ export const VanillaData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 // UseCase Data
 export const GuidesData = [
@@ -370,62 +367,58 @@ export const GuidesData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/guides/recording-livestreaming',
     name: 'Recording and Livestreaming',
-    description:
-      'Step by step guide to record or livestream to 3rd party streaming platforms.',
+    description: 'Step by step guide to record or livestream to 3rd party streaming platforms.',
     icon: BookIcon,
     pattern: {
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/guides/collaborative-whiteboard',
     name: 'Collaborative Whiteboard',
-    description:
-      'Step by step guide to create a collaborative whiteboard with audio/video communication.',
+    description: 'Step by step guide to create a collaborative whiteboard with audio/video communication.',
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/guides/selective-consuming',
     name: 'Selective Consuming',
-    description:
-      'Step by step guide to implement selective consuming in your application.',
+    description: 'Step by step guide to implement selective consuming in your application.',
     icon: PaperClipIcon,
     pattern: {
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/guides/custom-auth',
     name: 'Custom Authentication',
-    description:
-      'Step by step guide to implement custom authentication with Web3 Auth.',
+    description: 'Step by step guide to implement custom authentication with Web3 Auth.',
     icon: SquaresPlusIcon,
     pattern: {
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/guides/token-gated-rooms',
@@ -436,11 +429,11 @@ export const GuidesData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
-  },
-];
+        [1, 3]
+      ]
+    }
+  }
+]
 
 // Apis Data
 export const ApisData = [
@@ -451,8 +444,8 @@ export const ApisData = [
     icon: SquaresPlusIcon,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/apis/create-room/create-iframe-room',
@@ -463,9 +456,9 @@ export const ApisData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
 
   {
@@ -477,11 +470,11 @@ export const ApisData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 // ShowcaseData
 export const showcaseData = [
@@ -489,80 +482,75 @@ export const showcaseData = [
     href: 'https://meetwithwallet.xyz/',
     name: 'Meet With Wallet',
     description:
-      'Meeting Scheduler for Web3. Schedule meetings with your friends and colleagues using your wallet address.',
+      'Meeting Scheduler for Web3. Schedule meetings with your friends and colleagues using your wallet address.'
   },
   {
     href: 'https://buttrfly.app/',
     name: 'Buttrfly',
     description:
-      'A Web3 Social Explorer build on lens protocol. You can experience audio spaces built with Huddle01 SDK.',
+      'A Web3 Social Explorer build on lens protocol. You can experience audio spaces built with Huddle01 SDK.'
   },
   {
     href: 'https://ethermail.io/',
     name: 'Ethermail',
     description:
-      'EtherMail is the first email solution setting the standard for anonymous and encrypted wallet-to-wallet communication',
+      'EtherMail is the first email solution setting the standard for anonymous and encrypted wallet-to-wallet communication'
   },
   {
     href: 'https://app.soclly.com/',
     name: 'Soclly',
-    description:
-      'A creator-centric community-focused decentralized social network.',
+    description: 'A creator-centric community-focused decentralized social network.'
   },
   {
     href: 'https://syncx.vercel.app/',
     name: 'SyncX',
-    description:
-      'SyncX is a tool that enables you to connect with your audience through 1:1 sessions',
+    description: 'SyncX is a tool that enables you to connect with your audience through 1:1 sessions'
   },
   {
     href: 'https://pixelmen.vercel.app/room/',
     name: 'Pixelmen',
-    description:
-      'A pixelated retro world where you can communicate with each other with spatial audio.',
+    description: 'A pixelated retro world where you can communicate with each other with spatial audio.'
   },
   {
     href: 'https://peer-code.vercel.app/',
     name: 'Peer Code',
-    description: 'A Remote developer collaboration platform.',
+    description: 'A Remote developer collaboration platform.'
   },
   {
     href: 'https://studio-01.vercel.app/',
     name: 'Studio 01',
-    description: 'Record studio quality podcasts and stream it live.',
+    description: 'Record studio quality podcasts and stream it live.'
   },
   {
     href: 'https://blinkr-five.vercel.app/',
     name: 'Blinkr',
-    description: 'Randomly connect with people with same NFTs.',
-  },
-];
+    description: 'Randomly connect with people with same NFTs.'
+  }
+]
 
 export const meetingDetailsApi = [
   {
     href: '/apis/meeting-details/room-details',
     name: 'Room Details API',
-    description:
-      'This API retrieves room information using the room title or room ID as parameters.',
+    description: 'This API retrieves room information using the room title or room ID as parameters.',
     icon: SquaresPlusIcon,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/apis/meeting-details/meeting-list',
     name: 'Meeting List API',
-    description:
-      'This API retrieves the list of meetings conducted in each rooms',
+    description: 'This API retrieves the list of meetings conducted in each rooms',
     icon: BookIcon,
     pattern: {
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
 
   {
@@ -574,24 +562,23 @@ export const meetingDetailsApi = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 // MigrationIndexData Data
 export const MigrationIndexData = [
   {
     href: '/migration/concepts',
     name: 'Concepts',
-    description:
-      'This section provides a brief overview of concepts which have changed between old and new SDK.',
+    description: 'This section provides a brief overview of concepts which have changed between old and new SDK.',
     icon: Stopwatch,
     pattern: {
       y: 22,
-      squares: [[0, 1]],
-    },
+      squares: [[0, 1]]
+    }
   },
   {
     href: '/migration/walkthrough/javascript',
@@ -603,9 +590,9 @@ export const MigrationIndexData = [
       y: 16,
       squares: [
         [0, 1],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/migration/recording',
@@ -617,9 +604,9 @@ export const MigrationIndexData = [
       y: -6,
       squares: [
         [-1, 2],
-        [1, 3],
-      ],
-    },
+        [1, 3]
+      ]
+    }
   },
   {
     href: '/migration/hooks',
@@ -631,9 +618,9 @@ export const MigrationIndexData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
+        [1, 4]
+      ]
+    }
   },
 
   {
@@ -646,11 +633,11 @@ export const MigrationIndexData = [
       y: 32,
       squares: [
         [0, 2],
-        [1, 4],
-      ],
-    },
-  },
-];
+        [1, 4]
+      ]
+    }
+  }
+]
 
 export const ServerSDKIndexData = [
   {
@@ -661,120 +648,110 @@ export const ServerSDKIndexData = [
     icon: PaperAirplaneIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/access-token',
     name: 'Access Token',
-    description:
-      'This section provides an overview of how to generate Access Token using the Server SDK.',
+    description: 'This section provides an overview of how to generate Access Token using the Server SDK.',
     icon: PaperAirplaneIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/api-functions',
     name: 'API Functions',
-    description:
-      'This section provides an overview of various API functions available in the Server SDK.',
+    description: 'This section provides an overview of various API functions available in the Server SDK.',
     icon: DocumentIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/recorder',
     name: 'Recording & Livestreaming',
-    description:
-      'This section provides an overview of how to record and livestream using the Server SDK.',
+    description: 'This section provides an overview of how to record and livestream using the Server SDK.',
     icon: CalendarIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
-  },
-];
+      squares: [[0, 2]]
+    }
+  }
+]
 
 export const APIFunctionsData = [
   {
     href: '/Server-SDK/api-functions/create-room',
     name: 'Create Room',
-    description:
-      'This section provides an overview of how to create a room using Server SDK.',
+    description: 'This section provides an overview of how to create a room using Server SDK.',
     icon: PaperAirplaneIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/api-functions/get-rooms',
     name: 'Get Rooms',
-    description:
-      'This section provides an overview of how to get all rooms using Server SDK.',
+    description: 'This section provides an overview of how to get all rooms using Server SDK.',
     icon: PaperAirplaneIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/api-functions/get-live-meetings',
     name: 'Get Live Meetings',
-    description:
-      'This section provides an overview of how to get live meetings using Server SDK.',
+    description: 'This section provides an overview of how to get live meetings using Server SDK.',
     icon: PaperClipIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/api-functions/get-metrics',
     name: 'Get Metrics',
-    description:
-      'This section provides an overview of how to get metrics using Server SDK.',
+    description: 'This section provides an overview of how to get metrics using Server SDK.',
     icon: PaperClipIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/api-functions/get-participants',
     name: 'Get Participants',
-    description:
-      'This section provides an overview of how to get participants using Server SDK.',
+    description: 'This section provides an overview of how to get participants using Server SDK.',
     icon: PaperClipIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/api-functions/get-room-details',
     name: 'Get Room Details',
-    description:
-      'This section provides an overview of how to get room details using Server SDK.',
+    description: 'This section provides an overview of how to get room details using Server SDK.',
     icon: PaperClipIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
+      squares: [[0, 2]]
+    }
   },
   {
     href: '/Server-SDK/api-functions/get-room-meetings',
     name: 'Get Room Meetings',
-    description:
-      'This section provides an overview of how to get room meetings using Server SDK.',
+    description: 'This section provides an overview of how to get room meetings using Server SDK.',
     icon: PaperClipIcon,
     pattern: {
       y: 22,
-      squares: [[0, 2]],
-    },
-  },
-];
+      squares: [[0, 2]]
+    }
+  }
+]
