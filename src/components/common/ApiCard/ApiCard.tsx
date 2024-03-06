@@ -1,12 +1,12 @@
-import * as Tabs from '@radix-ui/react-tabs';
+import * as Tabs from "@radix-ui/react-tabs";
 
-import { cn } from '../../../helpers/utils';
-import Pill from '../Pill/Pill';
+import { cn } from "../../@helpers/utils";
+import Pill from "../Pill/Pill";
 
 //* Wrapper
 interface Props {
   children: JSX.Element;
-  requestType?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  requestType?: "GET" | "POST" | "PUT" | "DELETE";
   route?: string;
 }
 
@@ -17,7 +17,7 @@ export const APIRequestCard: React.FC<Props> = ({
   requestType,
   route,
 }) => {
-  const tabs = ['axios', 'fetch', 'cUrl'];
+  const tabs = ["axios", "fetch", "cUrl"];
 
   return (
     <Tabs.Root defaultValue="axios" className="w-full">
@@ -31,7 +31,7 @@ export const APIRequestCard: React.FC<Props> = ({
                 value={tab}
                 key={`tabs-toggle-${i + 1}`}
                 className={cn(
-                  'transition-all duration-300 ease-out pb-2 font-semibold text-white'
+                  "transition-all duration-300 ease-out pb-2 font-semibold text-white"
                 )}
               >
                 {tab}
@@ -53,7 +53,7 @@ export const APIRequestCard: React.FC<Props> = ({
 
 interface APIRequestProps {
   children: JSX.Element;
-  value: 'cUrl' | 'fetch' | 'axios';
+  value: "cUrl" | "fetch" | "axios";
 }
 
 export const APIRequestContent: React.FC<APIRequestProps> = ({
@@ -72,7 +72,7 @@ export const APIRequestContent: React.FC<APIRequestProps> = ({
 //* Response Section
 
 export const APIResponseCard: React.FC<Props> = ({ children }) => {
-  const tabs = ['Success', 'Error'];
+  const tabs = ["Success", "Error"];
 
   return (
     <Tabs.Root defaultValue="Success" className=" w-full">
@@ -86,7 +86,7 @@ export const APIResponseCard: React.FC<Props> = ({ children }) => {
                 value={tab}
                 key={`tabs-toggle-${i + 1}`}
                 className={cn(
-                  'transition-all duration-300 ease-out pb-2 font-semibold text-white text-base'
+                  "transition-all duration-300 ease-out pb-2 font-semibold text-white text-base"
                 )}
               >
                 {tab}
@@ -102,7 +102,7 @@ export const APIResponseCard: React.FC<Props> = ({ children }) => {
 
 interface APIResponseProps {
   children: JSX.Element;
-  value: 'Success' | 'Error';
+  value: "Success" | "Error";
 }
 
 export const APIResponseContent: React.FC<APIResponseProps> = ({

@@ -1,32 +1,36 @@
-import React, { useState } from 'react'
-import * as NavigationMenu from '@radix-ui/react-navigation-menu'
-import classNames from 'classnames'
-import { CaretDownIcon } from '@radix-ui/react-icons'
+import React, { useState } from "react";
+import * as NavigationMenu from "@radix-ui/react-navigation-menu";
+import classNames from "classnames";
+import { CaretDownIcon } from "@radix-ui/react-icons";
 
-import Link from 'next/link'
+import Link from "next/link";
 
 interface ListItemProps {
-  className?: string
-  children?: React.ReactNode
-  title?: string
-  [x: string]: any
+  className?: string;
+  children?: React.ReactNode;
+  title?: string;
+  [x: string]: any;
 }
 
-const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(function ListItem(
-  { className, children, title, ...props },
-  forwardedRef
-) {
-  return (
-    <li>
-      <NavigationMenu.Link asChild>
-        <Link href={props.href} className={classNames('ListItemLink', className)} {...props} ref={forwardedRef}>
-          <div className="ListItemHeading">{title}</div>
-          <p className="ListItemText">{children}</p>
-        </Link>
-      </NavigationMenu.Link>
-    </li>
-  )
-})
+const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
+  function ListItem({ className, children, title, ...props }, forwardedRef) {
+    return (
+      <li>
+        <NavigationMenu.Link asChild>
+          <Link
+            href={props.href}
+            className={classNames("ListItemLink", className)}
+            {...props}
+            ref={forwardedRef}
+          >
+            <div className="ListItemHeading">{title}</div>
+            <p className="ListItemText">{children}</p>
+          </Link>
+        </NavigationMenu.Link>
+      </li>
+    );
+  }
+);
 
 const NavigationMenuDemo = () => {
   return (
@@ -38,15 +42,20 @@ const NavigationMenuDemo = () => {
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className="NavigationMenuContent">
             <ul className="List two">
-              <ListItem href="/meets" title="Video meeting">
-                Conduct virtual meetings with video. Ideal for workshops, training and webinars.
+              <ListItem href="/create-meet/meets" title="Video meeting">
+                Conduct virtual meetings with video. Ideal for workshops,
+                training and webinars.
               </ListItem>
-              <ListItem href="/colors" title="Audio Spaces">
-                Create an audio space for podcasts, discussions or music sessions. Communicate and share ideas through
-                audio.
+              <ListItem href="/create-meet/audio-spaces" title="Audio Spaces">
+                Create an audio space for podcasts, discussions or music
+                sessions. Communicate and share ideas through audio.
               </ListItem>
-              <ListItem href="https://icons.radix-ui.com/" title="Token gated Room">
-                A closed room that can only be accessed with a token. Use for private events or exclusive content.
+              <ListItem
+                href="https://icons.radix-ui.com/"
+                title="Token gated Room"
+              >
+                A closed room that can only be accessed with a token. Use for
+                private events or exclusive content.
               </ListItem>
             </ul>
           </NavigationMenu.Content>
@@ -67,7 +76,7 @@ const NavigationMenuDemo = () => {
         <NavigationMenu.Viewport className="NavigationMenuViewport" />
       </div>
     </NavigationMenu.Root>
-  )
-}
+  );
+};
 
-export default NavigationMenuDemo
+export default NavigationMenuDemo;

@@ -1,4 +1,4 @@
-import ExternalLinks from "../helpers/externalLinks";
+import ExternalLinks from "@helpers/externalLinks";
 import FooterIcons from "./assets/FooterIcons";
 
 export type TSocialDataType = {
@@ -23,8 +23,8 @@ export const NavigationData: TNavigationType = {
   support: [
     {
       id: 5,
-      name: 'GitHub',
-      href: 'https://github.com/Huddle01',
+      name: "GitHub",
+      href: "https://github.com/Huddle01",
     },
     {
       id: 6,
