@@ -5,7 +5,8 @@ import { createRoom } from '@components/createRoom'
 import { useRouter } from 'next/navigation'
 import { HMSPrebuilt } from '@100mslive/roomkit-react'
 
-const Meets = () => {
+const Meets = ({ token }: { token: string }) => {
+  console.log('token', token)
   //Prebuilt links are role specific room links with a format https://<template-subdomain>.app.100ms.live/<room-code> where,
   //javascript-videoconf-1844.app.100ms.live/meeting/uve-kjxm-pca
   return (
