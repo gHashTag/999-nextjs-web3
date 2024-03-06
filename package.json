@@ -59,7 +59,8 @@
     "swr": "^2.2.5",
     "tailwind-merge": "^2.2.1",
     "vanilla-tilt": "^1.8.1",
-    "wagmi": "^2.5.7"
+    "wagmi": "^2.5.7",
+    "web3": "^4.5.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

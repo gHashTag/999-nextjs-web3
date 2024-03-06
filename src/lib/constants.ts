@@ -47,30 +47,38 @@ export const NAVIGATION = [
     route: "/create-meet",
   },
   {
+    name: "Tasks",
+    route: "/tasks",
+  },
+  {
     name: "Schedule",
     route: "/schedule",
   },
   {
-    name: "Speakers",
-    route: "/speakers",
+    name: "Wallet",
+    route: "/wallet",
   },
-  {
-    name: "Vercel Stage",
-    route: "/stage/c",
-  },
-  {
-    name: "100ms Stage",
-    route: "/stage/m",
-  },
+  // {
+  //   name: "Speakers",
+  //   route: "/speakers",
+  // },
+  // {
+  //   name: "Vercel Stage",
+  //   route: "/stage/c",
+  // },
+  // {
+  //   name: "100ms Stage",
+  //   route: "/stage/m",
+  // },
 
-  {
-    name: "Expo",
-    route: "/expo",
-  },
-  {
-    name: "Jobs",
-    route: "/jobs",
-  },
+  // {
+  //   name: "Expo",
+  //   route: "/expo",
+  // },
+  // {
+  //   name: "Jobs",
+  //   route: "/jobs",
+  // },
 ];
 
 export type TicketGenerationState = "default" | "loading";

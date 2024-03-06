@@ -1,28 +1,49 @@
-import '@/styles/globals.css'
-import '@/styles/styles.css'
-import type { AppProps } from 'next/app'
-import { HMSRoomProvider } from '@100mslive/react-sdk'
-import { HuddleClient, HuddleProvider } from '@huddle01/react'
-import NProgress from '@components/nprogress';
-import ResizeHandler from '@components/resize-handler';
+import "@/styles/globals.css";
+// import "@/styles/styles.css";
+import { useEffect } from "react";
+import type { AppProps } from "next/app";
+import { NextUIProvider } from "@nextui-org/react";
+import { HMSRoomProvider } from "@100mslive/react-sdk";
+import { HuddleClient, HuddleProvider } from "@huddle01/react";
+import NProgress from "@components/nprogress";
+import ResizeHandler from "@components/resize-handler";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import {
+  authenticateUser,
+  initWeb3Auth,
+  subscribeToEvents,
+} from "@/utils/auth";
 
 const huddleClient = new HuddleClient({
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID || '',
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
   options: {
     activeSpeakers: {
-      size: 8
-    }
-  }
-})
+      size: 8,
+    },
+  },
+});
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { setLoggedIn } = useWeb3Auth();
+
+  useEffect(() => {
+    initWeb3Auth();
+    const unsubscribe = subscribeToEvents(async () => {
+      await authenticateUser();
+      setLoggedIn(true);
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <HuddleProvider client={huddleClient}>
       <HMSRoomProvider>
-        <Component {...pageProps} />
-        <ResizeHandler />
-        <NProgress />
+        <NextUIProvider>
+          <Component {...pageProps} />
+          <ResizeHandler />
+          <NProgress />
+        </NextUIProvider>
       </HMSRoomProvider>
     </HuddleProvider>
-  )
+  );
 }
