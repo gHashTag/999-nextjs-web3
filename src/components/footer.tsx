@@ -14,50 +14,73 @@
  * limitations under the License.
  */
 
-import cn from 'classnames'
-import VercelLogo from '@components/icons/icon-platform'
-import styles from './footer.module.css'
-import { COPYRIGHT_HOLDER, SITE_NAME, CODE_OF_CONDUCT, LEGAL_URL, REPO } from '@lib/constants'
-import Link from 'next/link'
-import IconLogo from '@/components/icons/icon-logo'
+import cn from "classnames";
+import VercelLogo from "@components/icons/icon-platform";
+import styles from "./footer.module.css";
+import {
+  COPYRIGHT_HOLDER,
+  SITE_NAME,
+  CODE_OF_CONDUCT,
+  LEGAL_URL,
+  REPO,
+} from "@lib/constants";
+import Link from "next/link";
+import IconLogo from "@/components/icons/icon-logo";
 
 export function HostedByVercel() {
   return (
     <div className="flex items-center justify-center mt-4 ">
-      Powered by <IconLogo width="50" height="50" backgroundColor="var(--accents-1)" foregroundColor="black" />
+      Powered by{" "}
+      <IconLogo
+        width="50"
+        height="50"
+        backgroundColor="var(--accents-1)"
+        foregroundColor="black"
+      />
       dao999nft
     </div>
-  )
+  );
 }
 
 export default function Footer() {
   return (
     <footer className={cn(styles.footer)}>
-      <div className={styles['footer-legal']}>
-        <div className={styles['footer-hostedby']}>
+      <div className={styles["footer-legal"]}>
+        <div className={styles["footer-hostedby"]}>
           <HostedByVercel />
-          <div className={styles['footer-separator']} />
+          <div className={styles["footer-separator"]} />
         </div>
-        <div className={styles['footer-copyright']}>
-          Copyright © {`${new Date().getFullYear()} `} {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All rights reserved.
+        <div className={styles["footer-copyright"]}>
+          Copyright © {`${new Date().getFullYear()} `}{" "}
+          {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All rights reserved.
         </div>
-        <div className={styles['footer-center-group']}>
-          <p className={styles['footer-paragraph']}>
-            <Link href={REPO} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">
+        <div className={styles["footer-center-group"]}>
+          <p className={styles["footer-paragraph"]}>
+            <Link
+              href={REPO}
+              className={styles["footer-link"]}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Source Code
             </Link>
           </p>
-          <div className={styles['footer-separator']} />
-          <p className={styles['footer-paragraph']}>
+          <div className={styles["footer-separator"]} />
+          {/* <p className={styles['footer-paragraph']}>
             <Link href={CODE_OF_CONDUCT} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">
               Code of Conduct
             </Link>
-          </p>
+          </p> */}
           {LEGAL_URL && (
             <>
-              <div className={styles['footer-separator']} />
-              <p className={styles['footer-paragraph']}>
-                <Link href={LEGAL_URL} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">
+              <div className={styles["footer-separator"]} />
+              <p className={styles["footer-paragraph"]}>
+                <Link
+                  href={LEGAL_URL}
+                  className={styles["footer-link"]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Legal
                 </Link>
               </p>
@@ -66,5 +89,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

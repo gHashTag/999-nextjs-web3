@@ -5,7 +5,7 @@ You need a database to save user data and enable the following features:
 - Generating a unique ticket number for each email when signing up on the registration form. If no DB is set up, it’ll always be `1234`.
 - Generating a unique ticket image or ticket URL after signing in with GitHub. If no DB is set up, each ticket image or URL will show generic data.
 
-Environment variables determine which database to use. See [lib/db-api.ts](https://github.com/vercel/virtual-event-starter-kit/blob/main/lib/db-api.ts) for details and `.env.local.example` for all environment variables. There's support for:
+Environment variables determine which database to use. See [lib/db-api.ts](https://github.com/gHashTag/blob/main/lib/db-api.ts) for details and `.env.local.example` for all environment variables. There's support for:
 
 ## Redis
 
@@ -38,5 +38,5 @@ If you do not want to maintain a Redis server, you can use [Upstash](https://up
 
 - If you haven't already, [create a Supabase account](https://app.supabase.com/) and project.
 - Within your project, navigate to the [SQL editor](https://app.supabase.com/project/_/sql) and create a "New query".
-- Copy the SQL from [supabase/schema.sql](https://github.com/vercel/virtual-event-starter-kit/blob/main/lib/db-providers/supabase/schema.sql) and paste it into the Supabase SQL editor and click run.
+- Copy the SQL from [supabase/schema.sql](https://github.com/gHashTag/blob/main/lib/db-providers/supabase/schema.sql) and paste it into the Supabase SQL editor and click run.
 - Navigate to the [API settings](https://app.supabase.com/project/_/settings/api) and copy the project URL and service role key (make sure to keep it secret) to your env variables.
