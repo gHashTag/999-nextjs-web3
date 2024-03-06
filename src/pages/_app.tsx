@@ -39,9 +39,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <HuddleProvider client={huddleClient}>
       <HMSRoomProvider>
         <NextUIProvider>
-          <Component {...pageProps} />
-          <ResizeHandler />
-          <NProgress />
+          <main className="dark text-foreground bg-background">
+            <Component {...pageProps} />
+            <ResizeHandler />
+            <NProgress />
+          </main>
         </NextUIProvider>
       </HMSRoomProvider>
     </HuddleProvider>

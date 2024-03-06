@@ -145,6 +145,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
 }
+
 html,
 body {
   color: var(--foreground);
