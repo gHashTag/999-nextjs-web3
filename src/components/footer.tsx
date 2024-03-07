@@ -55,7 +55,7 @@ export default function Footer() {
           {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All rights reserved.
         </div>
         <div className={styles["footer-center-group"]}>
-          <p className={styles["footer-paragraph"]}>
+          {/* <p className={styles["footer-paragraph"]}>
             <Link
               href={REPO}
               className={styles["footer-link"]}
@@ -64,7 +64,7 @@ export default function Footer() {
             >
               Source Code
             </Link>
-          </p>
+          </p> */}
           <div className={styles["footer-separator"]} />
           {/* <p className={styles['footer-paragraph']}>
             <Link href={CODE_OF_CONDUCT} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">

@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useWeb3Auth } from "@hooks/useWeb3Auth";
 import { Button, User, Card, CardBody } from "@nextui-org/react";
 import Layout from "@/components/layout";
@@ -16,6 +17,20 @@ export default function Wallet() {
     getBalance,
     signMessage,
   } = useWeb3Auth();
+
+  useEffect(() => {
+    console.log("loggedIn", loggedIn);
+    if (loggedIn) {
+      // Выполнить действия после успешного входа
+      console.log("Успешный вход");
+      // Например, получить информацию о пользователе
+      getUserInfo();
+      // Или получить баланс
+      getBalance();
+      // Или получить список аккаунтов
+      getAccounts();
+    }
+  }, [loggedIn]); // Зависимость от состояния loggedIn
 
   const loggedInView = (
     <>
@@ -49,12 +64,6 @@ export default function Wallet() {
     </>
   );
 
-  const unloggedInView = (
-    <Button onClick={login} color="primary" variant="faded">
-      Login
-    </Button>
-  );
-
   const name = userInfo?.name;
   const description = userInfo?.email;
   const profileImage = userInfo?.profileImage;
@@ -63,7 +72,7 @@ export default function Wallet() {
   return (
     <Layout>
       <main className="flex flex-col items-center justify-between p-24">
-        {userInfo && (
+        {loggedIn && (
           <User
             name={name}
             description={description}
@@ -88,7 +97,7 @@ export default function Wallet() {
           </Card>
         )}
         <div style={{ padding: "20px" }} />
-        <div className="grid">{loggedIn ? loggedInView : unloggedInView}</div>
+        <div className="grid">{loggedIn && loggedInView}</div>
       </main>
     </Layout>
   );

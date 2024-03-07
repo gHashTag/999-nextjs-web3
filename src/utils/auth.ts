@@ -18,23 +18,6 @@ export const authenticateUser = async () => {
   return { info, app_scoped_key };
 };
 
-export const login = async () => {
-  try {
-    console.log("login");
-    const web3authProvider = await web3auth.connect();
-    console.log("web3authProvider", web3authProvider);
-    return web3authProvider;
-  } catch (error) {
-    if (error instanceof Error && error.message === "popup_closed_by_user") {
-      // Обработка ситуации, когда всплывающее окно было закрыто пользователем
-      console.log("Вход отменен пользователем");
-    } else {
-      // Обработка других видов ошибок
-      console.error("Ошибка входа:", error);
-    }
-  }
-};
-
 export const subscribeToEvents = (
   onConnected: (provider: IProvider) => void
 ) => {

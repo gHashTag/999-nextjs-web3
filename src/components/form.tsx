@@ -49,7 +49,7 @@ export default function Form({ sharePage }: Props) {
     reset: resetCaptcha,
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
-  console.log("formState", formState);
+
   const handleRegister = useCallback(
     (token?: string) => {
       register(email, token)
