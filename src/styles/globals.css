@@ -96,7 +96,7 @@
 
   --gray: #252729;
   --secondary-color: #d0d0d0;
-  --sidebar: #040404;
+  --sidebar: "transparent";
   --brand: #f6ff00;
   --brand-lighter: #f6ff00;
   --brand-light: #f6ff00;
@@ -359,7 +359,7 @@ input {
   border: 1px solid #e9a944;
 }
 
-.moderator-badge {
+.dao-badge {
   border: 1px solid #4e8ff7;
 }
 
@@ -367,7 +367,7 @@ input {
   border: 1px solid #8465cb;
 }
 
-.attendee-badge {
+.member-badge {
   border: 1px solid #8465cb;
 }
 

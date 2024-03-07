@@ -24,7 +24,7 @@
   letter-spacing: -0.05em;
   font-weight: 700;
   text-align: center;
-  margin: 0 0 5px;
+  margin: 0 50 5px;
 }
 
 .info {
@@ -64,7 +64,7 @@
     font-size: 100px;
     line-height: 1;
     font-weight: 800;
-    margin: 0 0px 40px;
+    margin: 0 0px 0px;
   }
 
   .info {

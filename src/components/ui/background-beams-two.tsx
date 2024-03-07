@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { cn } from "@utils/cn";
 
 const BackgroundBeams = React.memo(({ className }: { className?: string }) => {
-  const paths = [
+  let paths = [
     "M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875",
     "M-373 -197C-373 -197 -305 208 159 335C623 462 691 867 691 867",
     "M-366 -205C-366 -205 -298 200 166 327C630 454 698 859 698 859",
@@ -56,6 +56,7 @@ const BackgroundBeams = React.memo(({ className }: { className?: string }) => {
     "M-44 -573C-44 -573 24 -168 488 -41C952 86 1020 491 1020 491",
     "M-37 -581C-37 -581 31 -176 495 -49C959 78 1027 483 1027 483",
   ];
+
   return (
     <div
       className={cn(
@@ -67,7 +68,7 @@ const BackgroundBeams = React.memo(({ className }: { className?: string }) => {
         className=" z-0 h-full w-full pointer-events-none absolute "
         width="100%"
         height="100%"
-        viewBox="0 0 696 316"
+        viewBox="0 0 996 616"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -111,7 +112,7 @@ const BackgroundBeams = React.memo(({ className }: { className?: string }) => {
             >
               <stop stopColor="#FFD700" stopOpacity="0"></stop>
               <stop stopColor="#18CCFC"></stop>
-              <stop offset="32.5%" stopColor="#FFD700"></stop>
+              <stop offset="92.5%" stopColor="#FFD700"></stop>
               <stop offset="100%" stopColor="#FFD700" stopOpacity="0"></stop>
             </motion.linearGradient>
           ))}

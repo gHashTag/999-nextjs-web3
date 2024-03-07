@@ -2,7 +2,6 @@ import React from "react";
 
 import { cn } from "@helpers/utils";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 type CardsProps = {
@@ -21,7 +20,7 @@ const LandingCards: React.FC<CardsProps> = ({
   url,
 }) => {
   const { push } = useRouter();
-  console.log("type", type);
+
   return (
     <div
       className={cn(

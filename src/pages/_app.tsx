@@ -8,6 +8,9 @@ import { HuddleClient, HuddleProvider } from "@huddle01/react";
 import NProgress from "@components/nprogress";
 import ResizeHandler from "@components/resize-handler";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import BackgroundBeams from "@components/ui/background-beams";
+import BackgroundBeamsTwo from "@components/ui/background-beams-two";
+
 import {
   authenticateUser,
   initWeb3Auth,
@@ -40,9 +43,11 @@ export default function App({ Component, pageProps }: AppProps) {
       <HMSRoomProvider>
         <NextUIProvider>
           <main className="dark text-foreground bg-background">
+            <BackgroundBeams />
             <Component {...pageProps} />
             <ResizeHandler />
             <NProgress />
+            {/* <BackgroundBeamsTwo /> */}
           </main>
         </NextUIProvider>
       </HMSRoomProvider>

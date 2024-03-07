@@ -1,15 +1,12 @@
 import LandingCards from "@components/revamp/LandingCards/LandingCards";
 import SubCard from "@/components/revamp/LandingCards/SubCard";
 import Layout from "@/components/layout";
-import { createRoom } from "@components/createRoom";
 import { useRouter } from "next/navigation";
 
 const CreateMeet = () => {
   const router = useRouter();
   const getRoom = async () => {
-    const roomId = await createRoom();
-    console.log("roomId", roomId);
-    router.push(`/create-meet/meets/${roomId}`);
+    router.push(`/create-meet/meets`);
   };
 
   const getSpace = async () => {

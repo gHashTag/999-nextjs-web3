@@ -1,52 +1,56 @@
-import { ArrowRightIcon } from '@100mslive/react-icons'
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
-import Button from '../Button'
-import LinkButton from '../LinkButton'
+import { ArrowRightIcon } from "@100mslive/react-icons";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import Button from "../Button";
+import LinkButton from "../LinkButton";
 
-import IconLogo from '@/components/icons/icon-logo'
+import IconLogo from "@/components/icons/icon-logo";
 
 const data = [
   {
-    name: 'Moderator',
-    roleName: 'moderator',
-    role: 'backstage',
-    desc: ` This role is meant for the event organisers. The moderator is like a stage admin - can add speakers, remove them, invite attendees on stage, kick them out of the event, etc`
+    name: "DAO",
+    roleName: "dao",
+    role: "backstage",
+    desc: ` This role is for DAO (Decentralized Autonomous Organizations) organizers. The role has full control and can add or remove members, invite them to the team, remove them from the team, and perform other administrative functions.`,
   },
+  // {
+  //   name: "Speaker",
+  //   roleName: "speaker",
+  //   role: "stage",
+  //   desc: " This one is self explanatory. Use this role for folks who are going to be the main guests of the session. Speakers can also invite attendees on the stage, and respond to public chat messages.",
+  // },
   {
-    name: 'Speaker',
-    roleName: 'speaker',
-    role: 'stage',
-    desc: ' This one is self explanatory. Use this role for folks who are going to be the main guests of the session. Speakers can also invite attendees on the stage, and respond to public chat messages.'
+    name: "Member",
+    roleName: "member",
+    role: "viewer",
+    desc: `This is the most basic role: he can see and hear everything that happens in his DAO, cannot share his audio and video, and can also leave messages in the public chat section.`,
   },
-  {
-    name: 'Attendee',
-    roleName: 'attendee',
-    role: 'viewer',
-    desc: ` This one is the most basic role - can see and hear whatever is happening on the stage, cannot share their audio and video, and can put up messages on the public chat section.`
-  }
-]
+];
 
 const DemoModal = () => {
-  const [stage, setStage] = React.useState(``)
-  const router = useRouter()
+  const [stage, setStage] = React.useState(``);
+  const router = useRouter();
   React.useEffect(() => {
     if (router.query.slug) {
-      setStage(router.query.slug as string)
+      setStage(router.query.slug as string);
     }
-  }, [router])
+  }, [router]);
   return (
     <div className="font-sans">
-      <p className="text-[32px] font-semibold my-0">Take your Webinar for a test drive</p>
+      <p className="text-[32px] font-semibold my-0">
+        Welcome to the DAO 999 NFT
+      </p>
       <div>
         <p className="text-gray-300 text-[15px] my-0">
-          We have setup a few profiles to make it easy for you or your team to experience each perspective. Join in one
-          click or share access with anyone else.
+          A new era in the financial world opens today with the launch of the
+          DAO 999 NFT digital avatar bank. This is a unique financial
+          institution where immortality is now not only a concept, but a
+          reality.
         </p>
         {data.map((m) => (
           <div
             className="flex md:flex-row flex-col justify-between py-4"
-            style={{ borderBottom: '1px solid #323232' }}
+            style={{ borderBottom: "1px solid #323232" }}
             key={`${m.roleName}-${m.name}`}
           >
             <div className="text-left max-w-xs">
@@ -54,8 +58,15 @@ const DemoModal = () => {
               <p className="text-gray-300 text-xs">{m.desc}</p>
             </div>
             <div className="flex items-center space-x-6">
-              <CopyButton text={`${window.location.host}/stage/${stage || 'a'}?role=${m.role}`} />
-              <LinkButton className="w-[200px]" href={`/stage/${stage || 'a'}?role=${m.role}`}>
+              <CopyButton
+                text={`${window.location.host}/stage/${stage || "a"}?role=${
+                  m.role
+                }`}
+              />
+              <LinkButton
+                className="w-[200px] bg-yellow-300"
+                href={`/stage/${stage || "a"}?role=${m.role}`}
+              >
                 Join as {m.name} <ArrowRightIcon height={20} color="black" />
               </LinkButton>
             </div>
@@ -63,27 +74,33 @@ const DemoModal = () => {
         ))}
 
         <div className="flex items-center justify-center mt-4 ">
-          Powered by <IconLogo width="50" height="50" backgroundColor="var(--accents-1)" foregroundColor="black" />
+          Powered by{" "}
+          <IconLogo
+            width="50"
+            height="50"
+            backgroundColor="var(--accents-1)"
+            foregroundColor="black"
+          />
           dao999nft
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DemoModal
+export default DemoModal;
 
-export const CopyButton = ({ text = '' }) => {
-  const [copied, setCopied] = useState(false)
+export const CopyButton = ({ text = "" }) => {
+  const [copied, setCopied] = useState(false);
   const copy = () => {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard.writeText(text);
     if (!copied) {
-      setCopied(true)
+      setCopied(true);
       setTimeout(() => {
-        setCopied(false)
-      }, 3000)
+        setCopied(false);
+      }, 3000);
     }
-  }
+  };
   return (
     <div className="relative">
       {copied ? (
@@ -95,5 +112,5 @@ export const CopyButton = ({ text = '' }) => {
         Invite
       </Button>
     </div>
-  )
-}
+  );
+};
