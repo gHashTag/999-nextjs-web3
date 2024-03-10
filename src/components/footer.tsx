@@ -45,48 +45,9 @@ export function HostedByVercel() {
 export default function Footer() {
   return (
     <footer className={cn(styles.footer)}>
-      <div className={styles["footer-legal"]}>
-        <div className={styles["footer-hostedby"]}>
-          <HostedByVercel />
-          <div className={styles["footer-separator"]} />
-        </div>
-        <div className={styles["footer-copyright"]}>
-          Copyright © {`${new Date().getFullYear()} `}{" "}
-          {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All rights reserved.
-        </div>
-        <div className={styles["footer-center-group"]}>
-          {/* <p className={styles["footer-paragraph"]}>
-            <Link
-              href={REPO}
-              className={styles["footer-link"]}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Source Code
-            </Link>
-          </p> */}
-          <div className={styles["footer-separator"]} />
-          {/* <p className={styles['footer-paragraph']}>
-            <Link href={CODE_OF_CONDUCT} className={styles['footer-link']} target="_blank" rel="noopener noreferrer">
-              Code of Conduct
-            </Link>
-          </p> */}
-          {LEGAL_URL && (
-            <>
-              <div className={styles["footer-separator"]} />
-              <p className={styles["footer-paragraph"]}>
-                <Link
-                  href={LEGAL_URL}
-                  className={styles["footer-link"]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Legal
-                </Link>
-              </p>
-            </>
-          )}
-        </div>
+      <div className={styles["footer-copyright"]} style={{ paddingBottom: 50 }}>
+        Copyright © {`${new Date().getFullYear()} `}{" "}
+        {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All rights reserved.
       </div>
     </footer>
   );
