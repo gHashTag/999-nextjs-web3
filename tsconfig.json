@@ -20,7 +20,8 @@
       "@helpers/*": ["./src/helpers/*"],
       "@pages/*": ["./src/pages/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@types/*": ["./src/types/*"]
     },
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
