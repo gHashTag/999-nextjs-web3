@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useWeb3Auth } from "@hooks/useWeb3Auth";
 import { Button, User, Card, CardBody } from "@nextui-org/react";
 import Layout from "@/components/layout";
+import { useRouter } from "next/router";
 
 export default function Wallet() {
   const {
@@ -16,9 +17,17 @@ export default function Wallet() {
     getAccounts,
     getBalance,
     signMessage,
+    createSupabaseUser,
   } = useWeb3Auth();
 
+  const router = useRouter();
+  const { inviteCode } = router.query;
+
+  const createdUser = async () =>
+    await createSupabaseUser(inviteCode as string);
+
   useEffect(() => {
+    createdUser();
     console.log("loggedIn", loggedIn);
     if (loggedIn) {
       // Выполнить действия после успешного входа

@@ -24,7 +24,7 @@ const useWeb3Auth = () => {
   const [userInfo, setUserInfo] = useState<OpenloginUserInfo | null>(null);
   const [balance, setBalance] = useState<string | null>(null);
 
-  const getUserInfo = async () => {
+  const createSupabaseUser = async (inviteCode: string) => {
     try {
       const user = await web3auth.getUserInfo();
 
@@ -43,6 +43,7 @@ const useWeb3Auth = () => {
           verifier: user.verifier,
           profileimage: user.profileImage,
           typeoflogin: user.typeOfLogin,
+          inviter: inviteCode,
         };
 
         const data = await supabase.from("users").insert([{ ...newUser }]);
@@ -56,6 +57,17 @@ const useWeb3Auth = () => {
         // Пользователь с таким email уже существует, создание не требуется
         console.log("Пользователь с таким email уже существует");
       }
+    } catch (error) {
+      console.error("Ошибка при получении информации о пользователе:", error);
+      console.log("Ошибка при получении информации о пользователе");
+    }
+  };
+
+  const getUserInfo = async () => {
+    try {
+      const user = await web3auth.getUserInfo();
+
+      setUserInfo((user as OpenloginUserInfo) ?? {});
     } catch (error) {
       console.error("Ошибка при получении информации о пользователе:", error);
       console.log("Ошибка при получении информации о пользователе");
@@ -167,6 +179,7 @@ const useWeb3Auth = () => {
     getBalance,
     getAccounts,
     getUserInfo,
+    createSupabaseUser,
   };
 };
 

@@ -16,18 +16,17 @@
 
 import { useState, useCallback } from "react";
 import cn from "classnames";
-import useConfData from "@lib/hooks/use-conf-data";
+
 import { useRouter } from "next/router";
-import FormError from "@lib/form-error";
+
 import LoadingDots from "./loading-dots";
 import styleUtils from "./utils.module.css";
 import styles from "./form.module.css";
 import useEmailQueryParam from "@lib/hooks/use-email-query-param";
-import { register } from "@lib/user-api";
-import Captcha, { useCaptcha } from "./captcha";
-import { Typography, Button } from "@supabase/ui";
 
-const { Title } = Typography;
+import Captcha, { useCaptcha } from "./captcha";
+
+import { checkUsername } from "@/utils/supabase";
 
 type FormState = "default" | "loading" | "error";
 
@@ -36,12 +35,11 @@ type Props = {
 };
 
 export default function Form({ sharePage }: Props) {
-  const [email, setEmail] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [errorTryAgain, setErrorTryAgain] = useState(false);
   const [focused, setFocused] = useState(false);
   const [formState, setFormState] = useState<FormState>("default");
-  const { setPageState, setUserData } = useConfData();
   const router = useRouter();
   const {
     ref: captchaRef,
@@ -50,59 +48,23 @@ export default function Form({ sharePage }: Props) {
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
 
-  const handleRegister = useCallback(
-    (token?: string) => {
-      register(email, token)
-        .then(async (res) => {
-          if (!res.ok) {
-            throw new FormError(res);
-          }
+  const handleRegister = useCallback(async () => {
+    if (inviteCode) {
+      const userId = await checkUsername(inviteCode);
 
-          const data = await res.json();
-          const params = {
-            id: data.id,
-            ticketNumber: data.ticketNumber,
-            name: data.name,
-            username: data.username,
-          };
-
-          if (sharePage) {
-            const queryString = Object.keys(params)
-              .map(
-                (key) =>
-                  `${encodeURIComponent(key)}=${encodeURIComponent(
-                    params[key as keyof typeof params] || ""
-                  )}`
-              )
-              .join("&");
-            await router.replace(`/?${queryString}`, "/");
-          } else {
-            setUserData(params);
-            setPageState("ticket");
-          }
-        })
-        .catch(async (err) => {
-          let message = "Error! Please try again.";
-
-          if (err instanceof FormError) {
-            const { res } = err;
-            const data = res.headers
-              .get("Content-Type")
-              ?.includes("application/json")
-              ? await res.json()
-              : null;
-
-            if (data?.error?.code === "bad_email") {
-              message = "Please enter a valid email";
-            }
-          }
-
-          setErrorMsg(message);
-          setFormState("error");
+      if (userId) {
+        router.push({
+          pathname: "/wallet",
+          query: { inviteCode: inviteCode },
         });
-    },
-    [email, router, setPageState, setUserData, sharePage]
-  );
+      } else {
+        setErrorMsg("Invite code not correct");
+        setFormState("error");
+        setTimeout(() => setFormState("default"), 3000);
+        return;
+      }
+    }
+  }, [inviteCode]);
 
   const onSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -134,7 +96,7 @@ export default function Form({ sharePage }: Props) {
     [resetCaptcha]
   );
 
-  useEmailQueryParam("email", setEmail);
+  useEmailQueryParam("inviteCode", setInviteCode);
 
   return formState === "error" ? (
     <div
@@ -177,10 +139,10 @@ export default function Form({ sharePage }: Props) {
           <input
             className={styles.input}
             autoComplete="off"
-            type="email"
+            type="text"
             id="email-input-field"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={inviteCode}
+            onChange={(e) => setInviteCode(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder="Enter invite code to register"
