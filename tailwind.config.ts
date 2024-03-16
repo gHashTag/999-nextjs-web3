@@ -4,6 +4,10 @@ const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
+const BLACK = "#0f0f0c";
+const YELLOW = "#f6ff00";
+const WHITE = "#ECEDEE";
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -96,6 +100,19 @@ const config: Config = {
     //     "pos-100": "100% 100%",
     //   },
     // },
+    animation: {
+      "meteor-effect": "meteor 5s linear infinite",
+    },
+    keyframes: {
+      meteor: {
+        "0%": { transform: "rotate(215deg) translateX(0)", opacity: "1" },
+        "70%": { opacity: "1" },
+        "100%": {
+          transform: "rotate(215deg) translateX(-500px)",
+          opacity: "0",
+        },
+      },
+    },
   },
   plugins: [
     addVariablesForColors,
@@ -116,11 +133,11 @@ const config: Config = {
       themes: {
         light: {
           colors: {
-            background: "#FFFFFF", // or DEFAULT
-            foreground: "#0f0f0c", // or 50 to 900 DEFAULT
+            background: WHITE, // or DEFAULT
+            foreground: BLACK, // or 50 to 900 DEFAULT
             primary: {
               //... 50 to 900
-              foreground: "#FFFFFF",
+              foreground: WHITE,
               DEFAULT: "#006FEE",
             },
             // ... rest of the colors
@@ -128,27 +145,27 @@ const config: Config = {
         },
         dark: {
           colors: {
-            background: "#0f0f0c", // or DEFAULT
-            foreground: "#ECEDEE", // or 50 to 900 DEFAULT
+            background: BLACK, // or DEFAULT
+            foreground: WHITE, // or 50 to 900 DEFAULT
             primary: {
               //... 50 to 900
-              foreground: "#FFFFFF",
-              DEFAULT: "#f6ff00",
+              foreground: BLACK,
+              DEFAULT: YELLOW,
             },
           },
           // ... rest of the colors
         },
-        mytheme: {
-          // custom theme
-          extend: "dark",
-          colors: {
-            primary: {
-              DEFAULT: "#BEF264",
-              foreground: "#000000",
-            },
-            focus: "#BEF264",
-          },
-        },
+        // mytheme: {
+        //   // custom theme
+        //   extend: "dark",
+        //   colors: {
+        //     primary: {
+        //       DEFAULT: "#BEF264",
+        //       foreground: "#000000",
+        //     },
+        //     focus: "#BEF264",
+        //   },
+        // },
       },
     }),
   ],

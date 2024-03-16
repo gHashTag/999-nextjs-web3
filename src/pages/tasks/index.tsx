@@ -1,18 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useWeb3Auth } from "@hooks/useWeb3Auth";
+// import { useWeb3Auth } from "@hooks/useWeb3Auth";
 import {
   Spacer,
   Image,
-  Button,
+  // Button,
   Pagination,
-  Card,
-  CardBody,
+  // Card,
+  // CardBody,
 } from "@nextui-org/react";
 import Layout from "@/components/layout";
 import { supabase } from "@/utils/supabase";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { Space } from "@supabase/ui";
+// import { Space } from "@supabase/ui";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<any[] | null>();
@@ -29,14 +29,16 @@ export default function Tasks() {
     getTasks();
   }, []);
 
+  const handleOnClick = () => {};
+
   return (
     <Layout>
       <main className="flex flex-col items-center justify-between p-24">
         <div className="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
           {tasks &&
-            tasks.map((task: any) => {
+            tasks.map((task: any, index) => {
               return (
-                <div style={{ paddingTop: 20 }}>
+                <div style={{ paddingTop: 20 }} key={index}>
                   <BackgroundGradient>
                     <Image
                       width="100%"
@@ -57,7 +59,14 @@ export default function Tasks() {
                     </div>
                     <div
                       className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-                      style={{ padding: 10, color: "gray" }}
+                      style={{
+                        padding: 10,
+                        color: "gray",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
                     >
                       {task.description}
                     </div>
@@ -68,7 +77,7 @@ export default function Tasks() {
             })}
         </div>
         <div style={{ padding: 30 }} />
-        <Pagination total={10} initialPage={1} />
+        <Pagination total={10} initialPage={1} color="primary" />
       </main>
     </Layout>
   );
