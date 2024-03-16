@@ -26,7 +26,7 @@ import useEmailQueryParam from "@lib/hooks/use-email-query-param";
 
 import Captcha, { useCaptcha } from "./captcha";
 
-import { checkUsername } from "@/utils/supabase";
+import { checkUsername } from "@/hooks/useWeb3Auth";
 
 type FormState = "default" | "loading" | "error";
 

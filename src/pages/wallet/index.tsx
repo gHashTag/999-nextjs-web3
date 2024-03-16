@@ -23,9 +23,6 @@ export default function Wallet() {
   const router = useRouter();
   const { inviteCode } = router.query;
 
-  const createdUser = async () =>
-    await createSupabaseUser(inviteCode as string);
-
   useEffect(() => {
     console.log("loggedIn", loggedIn);
     if (loggedIn) {
@@ -37,12 +34,17 @@ export default function Wallet() {
       getBalance();
       // Или получить список аккаунтов
       getAccounts();
-    } else if (inviteCode) {
-      createdUser();
+
+      if (inviteCode) {
+        const createdUser = async (inviteCode: string) =>
+          await createSupabaseUser(inviteCode);
+
+        createdUser(inviteCode as string);
+      }
     } else {
       router.push("/");
     }
-  }, [loggedIn, inviteCode]); // Зависимость от состояния loggedIn
+  }, [loggedIn, inviteCode]);
 
   const loggedInView = (
     <>

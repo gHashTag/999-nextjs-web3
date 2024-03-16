@@ -14,19 +14,4 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-export const checkUsername = async (username: string) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", username);
-
-  console.log(data, "data checkUsername");
-  if (error) {
-    console.error("Ошибка при запросе к Supabase", error);
-    return false;
-  }
-
-  return data.length > 0 ? data[0].user_id : false;
-};
-
 export { supabase };

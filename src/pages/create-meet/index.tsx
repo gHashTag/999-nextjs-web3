@@ -28,7 +28,7 @@ const CreateMeet = () => {
   const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
   if (!managementToken) {
-    throw new Error("NEXT_PUBLIC_100MS_TOKEN_SECRET is not set");
+    throw new Error("NEXT_PUBLIC_MANAGEMENT_TOKEN is not set");
   }
 
   const getAssets = async () => {

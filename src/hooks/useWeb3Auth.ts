@@ -12,6 +12,21 @@ import { useRouter } from "next/router";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 // import { Web3Auth } from '@web3auth/modal'
 
+export const checkUsername = async (username: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  console.log(data, "data checkUsername");
+  if (error) {
+    console.error("Ошибка при запросе к Supabase", error);
+    return false;
+  }
+
+  return data.length > 0 ? data[0].user_id : false;
+};
+
 const useWeb3Auth = () => {
   // const client = supabaseClient();
   const router = useRouter();
