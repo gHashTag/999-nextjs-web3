@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { MeteorsCard } from "@/components/ui/meteor-card";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 const CreateMeet = () => {
   const router = useRouter();
@@ -68,10 +69,9 @@ const CreateMeet = () => {
   return (
     <>
       <Layout>
-        <LandingCards
-          title="Get started quickly"
-          type="Guide"
+        <div
           className="flex-col mt-10"
+          style={{ paddingRight: 20, paddingLeft: 20, paddingBottom: 70 }}
         >
           <div className="grid lg:grid-cols-3 gap-4 grid-cols-1 mt-6">
             <SubCard
@@ -90,7 +90,7 @@ const CreateMeet = () => {
               onClick={getTokenGated}
             />
           </div>
-        </LandingCards>
+        </div>
         <div
           style={{
             marginTop: "30px",

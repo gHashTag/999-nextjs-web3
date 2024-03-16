@@ -1,32 +1,50 @@
-import React from 'react'
-import Image from 'next/image'
-import LandingIcons from '@components/assets/LandingIcons'
-import Link from 'next/link'
+import React from "react";
+import Image from "next/image";
+import LandingIcons from "@components/assets/LandingIcons";
+import Link from "next/link";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 type SubCardProps = {
-  title: string
-  img: string
-  onClick: () => void
-}
+  title: string;
+  img: string;
+  onClick: () => void;
+};
 
 const SubCard: React.FC<SubCardProps> = ({ title, img, onClick }) => {
   return (
     <a onClick={onClick}>
-      <div className="border rounded-lg border-custom-1 p-4 flex flex-col cursor-pointer hover:bg-[#fff]/50 transition duration-300 ease-in-out">
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
+      <BackgroundGradient>
+        {/* <div className="border rounded-lg border-custom-1 p-4 flex flex-col cursor-pointer hover:bg-[#fff]/50 transition duration-300 ease-in-out"> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "20px",
+            marginTop: "20px",
+          }}
+        >
           <Image
             src={`/images/${img}`}
-            alt={title ?? 'landing- card'}
+            alt={title ?? "landing-card"}
             width={400}
             height={400}
             className="object-contain"
-            style={{ marginBottom: '20px' }}
+            style={{ marginBottom: "20px" }}
           />
         </div>
-        <div className="flex items-center justify-center">{LandingIcons[title]}</div>
-        <div className="flex items-center justify-center text-slate-400 text-base font-medium mt-2">{title}</div>
-      </div>
+        <div className="flex items-center justify-center">
+          {LandingIcons[title]}
+        </div>
+        <div
+          className="flex items-center justify-center text-slate-400 text-base font-medium mt-2"
+          style={{ marginBottom: 20 }}
+        >
+          {title}
+        </div>
+      </BackgroundGradient>
+      {/* </div> */}
     </a>
-  )
-}
-export default React.memo(SubCard)
+  );
+};
+export default React.memo(SubCard);
