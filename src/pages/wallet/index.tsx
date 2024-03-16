@@ -27,7 +27,6 @@ export default function Wallet() {
     await createSupabaseUser(inviteCode as string);
 
   useEffect(() => {
-    createdUser();
     console.log("loggedIn", loggedIn);
     if (loggedIn) {
       // Выполнить действия после успешного входа
@@ -38,8 +37,12 @@ export default function Wallet() {
       getBalance();
       // Или получить список аккаунтов
       getAccounts();
+    } else if (inviteCode) {
+      createdUser();
+    } else {
+      router.push("/");
     }
-  }, [loggedIn]); // Зависимость от состояния loggedIn
+  }, [loggedIn, inviteCode]); // Зависимость от состояния loggedIn
 
   const loggedInView = (
     <>
