@@ -19,8 +19,8 @@ function Board() {
   const [showForm, setShowForm] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(0);
 
-  const { tasks, setTasks, boardData, setBoardData } = useSupabaseBoard();
-
+  const { setTasks, boardData, setBoardData } = useSupabaseBoard();
+  console.log(boardData, "boardData");
   if (boardData === null) {
     // Обработка состояния загрузки или отсутствия данных
     return <div>Loading...</div>;
@@ -97,7 +97,6 @@ function Board() {
                     </h4>
                     {board.items.length > 0 &&
                       board.items.map((item, iIndex) => {
-                        console.log(item, "item");
                         return (
                           <CardItem key={item.id} data={item} index={iIndex} />
                         );

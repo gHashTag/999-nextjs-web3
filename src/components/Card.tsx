@@ -23,7 +23,7 @@ const CardItem: React.FC<CardItemProps> = ({ data, index }) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            <div style={{ paddingTop: 20 }} key={index}>
+            <div style={{ paddingTop: 5 }} key={index}>
               <div
                 className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
                 style={{ padding: 5 }}
