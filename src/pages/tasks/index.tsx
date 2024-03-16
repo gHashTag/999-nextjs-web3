@@ -10,6 +10,7 @@ import {
   // CardBody,
 } from "@nextui-org/react";
 import Layout from "@/components/layout";
+import Board from "@/components/Board";
 import { supabase } from "@/utils/supabase";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 // import { Space } from "@supabase/ui";
@@ -33,7 +34,9 @@ export default function Tasks() {
 
   return (
     <Layout>
-      <main className="flex flex-col items-center justify-between p-24">
+      <span>h</span>
+      {/* <Board /> */}
+      {/* <main className="flex flex-col items-center justify-between p-24">
         <div className="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
           {tasks &&
             tasks.map((task: any, index) => {
@@ -78,7 +81,7 @@ export default function Tasks() {
         </div>
         <div style={{ padding: 30 }} />
         <Pagination total={10} initialPage={1} color="primary" />
-      </main>
+      </main> */}
     </Layout>
   );
 }
