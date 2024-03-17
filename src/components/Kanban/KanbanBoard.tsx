@@ -12,56 +12,29 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Column from "./Column";
 import { useState } from "react";
 import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { BoardData } from "@/types";
 
 function KanbanBoard() {
-  // 仮データを定義
-  // const data: ColumnType[] = [
-  //   {
-  //     id: 33393,
-  //     title: "Backlog",
-  //     cards: [
-  //       {
-  //         id: 122,
-  //         title: "Card1",
-  //       },
-  //       {
-  //         id: 233,
-  //         title: "Card2",
-  //       },
-  //       {
-  //         id: 3939,
-  //         title: "Card4",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 949494,
-  //     title: "In Progress",
-  //     cards: [
-  //       {
-  //         id: 3992,
-  //         title: "Card3",
-  //       },
-  //     ],
-  //   },
-  // ];
   const { boardData, setBoardData } = useSupabaseBoard();
-  console.log(boardData, "boardData");
 
   const findColumn = (unique: string | null) => {
-    if (!unique) {
+    if (!unique || !boardData) {
       return null;
     }
 
-    if (boardData.some((c) => c.id === unique)) {
-      return boardData.find((c) => c.id === unique) ?? null;
+    if (boardData.some((c) => String(c.id) === String(unique))) {
+      return boardData.find((c) => String(c.id) === String(unique)) ?? null;
     }
+
     const id = String(unique);
     const itemWithColumnId = boardData.flatMap((c) => {
       const columnId = c.id;
       return c.cards.map((i) => ({ itemId: i.id, columnId: columnId }));
     });
-    const columnId = itemWithColumnId.find((i) => i.itemId === id)?.columnId;
+
+    const columnId = itemWithColumnId.find(
+      (i) => String(i.itemId) === id
+    )?.columnId;
     return boardData.find((c) => c.id === columnId) ?? null;
   };
 
@@ -74,20 +47,25 @@ function KanbanBoard() {
     if (!activeColumn || !overColumn || activeColumn === overColumn) {
       return null;
     }
-    setBoardData((prevState) => {
+    setBoardData((prevState: BoardData | null) => {
+      if (!prevState) {
+        return null;
+      }
       const activeItems = activeColumn.cards;
       const overItems = overColumn.cards;
-      const activeIndex = activeItems.findIndex((i) => i.id === activeId);
-      const overIndex = overItems.findIndex((i) => i.id === overId);
+      const activeIndex = activeItems.findIndex(
+        (i) => String(i.id) === activeId
+      );
+      const overIndex = overItems.findIndex((i) => String(i.id) === overId);
       const newIndex = () => {
         const putOnBelowLastItem =
           overIndex === overItems.length - 1 && delta.y > 0;
         const modifier = putOnBelowLastItem ? 1 : 0;
         return overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
       };
-      return prevState.map((c) => {
+      return prevState?.map((c) => {
         if (c.id === activeColumn.id) {
-          c.cards = activeItems.filter((i) => i.id !== activeId);
+          c.cards = activeItems.filter((i) => String(i.id) !== activeId);
           return c;
         } else if (c.id === overColumn.id) {
           c.cards = [
@@ -112,10 +90,17 @@ function KanbanBoard() {
     if (!activeColumn || !overColumn || activeColumn !== overColumn) {
       return null;
     }
-    const activeIndex = activeColumn.cards.findIndex((i) => i.id === activeId);
-    const overIndex = overColumn.cards.findIndex((i) => i.id === overId);
+    const activeIndex = activeColumn.cards.findIndex(
+      (i) => String(i.id) === activeId
+    );
+    const overIndex = overColumn.cards.findIndex(
+      (i) => String(i.id) === overId
+    );
     if (activeIndex !== overIndex) {
       setBoardData((prevState) => {
+        if (!prevState) {
+          return null;
+        }
         return prevState.map((column) => {
           if (column.id === activeColumn.id) {
             column.cards = arrayMove(overColumn.cards, activeIndex, overIndex);
