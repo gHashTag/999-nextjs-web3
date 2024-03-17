@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Task, BoardData, TasksArray, BoardItem, TaskStatus } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
 import { supabase } from "@/utils/supabase";
+// @ts-ignore
 import { v4 as uuidv4 } from "uuid";
 
 export function useSupabaseBoard() {
@@ -11,15 +12,15 @@ export function useSupabaseBoard() {
   const [error, setError] = useState<string | null>(null);
   console.log(error, "error");
   // console.log(boardData, "boardData");
-  const statusToColumnName = {
+  const statusToColumnName: Record<number, string> = {
     1: "To Do",
     2: "In Progress",
     3: "Review",
     4: "Done",
   };
-  console.log(boardData, "boardData");
+
   const transformTasksToBoardData = useCallback(
-    (tasksFromServer: TasksArray[]): BoardData[] => {
+    (tasksFromServer: TasksArray): BoardData[] => {
       const board: Record<string, Task[]> = {
         "To Do": [],
         "In Progress": [],
@@ -29,7 +30,7 @@ export function useSupabaseBoard() {
 
       tasksFromServer.forEach((task) => {
         const columnName = statusToColumnName[task.status];
-        if (columnName) {
+        if (columnName && board[columnName]) {
           board[columnName].push(task);
         } else {
           console.error(
@@ -39,11 +40,14 @@ export function useSupabaseBoard() {
         }
       });
 
-      return Object.entries(board).map(([title, cards]) => ({
-        id: uuidv4(),
-        title,
-        cards,
-      }));
+      return Object.entries(board).map(
+        ([title, cards]) =>
+          ({
+            id: uuidv4(),
+            title,
+            cards,
+          } as unknown as BoardData)
+      ) as BoardData[];
     },
     []
   );

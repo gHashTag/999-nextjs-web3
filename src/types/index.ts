@@ -48,8 +48,9 @@ export interface AssignedUser {
 }
 
 export interface BoardColumn {
-  name: string;
-  items: Task[];
+  id: number;
+  title: string;
+  cards: Task[];
 }
 
 export type BoardData = BoardColumn[];
@@ -57,9 +58,5 @@ export type BoardData = BoardColumn[];
 export type ColumnType = {
   id: number;
   title: string;
-  cards: CardType[];
-};
-export type CardType = {
-  id: string;
-  title: string;
+  cards: TasksArray;
 };

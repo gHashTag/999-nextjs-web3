@@ -148,7 +148,7 @@ function KanbanBoard() {
         {boardData &&
           boardData.map((column) => (
             <Column
-              key={column.title}
+              key={column.id}
               id={column.id}
               title={column.title}
               cards={column.cards}
