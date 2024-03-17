@@ -1,14 +1,12 @@
 // hooks/useSupabaseBoard.ts
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { Task, BoardData, TasksArray, BoardItem, TaskStatus } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
+import { Task, BoardData, TasksArray } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
 import { supabase } from "@/utils/supabase";
-// @ts-ignore
-import { v4 as uuidv4 } from "uuid";
 
 export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
-  const [boardData, setBoardData] = useState<BoardData | null>(null);
+  const [boardData, setBoardData] = useState<BoardData[]>([]);
+  console.log(boardData, "boardData");
   const [error, setError] = useState<string | null>(null);
   console.log(error, "error");
   // console.log(boardData, "boardData");
@@ -21,17 +19,22 @@ export function useSupabaseBoard() {
 
   const transformTasksToBoardData = useCallback(
     (tasksFromServer: TasksArray): BoardData[] => {
-      const board: Record<string, Task[]> = {
+      const board = {
         "To Do": [],
         "In Progress": [],
         Review: [],
         Done: [],
       };
-
+      console.log(board, "board");
       tasksFromServer.forEach((task) => {
-        const columnName = statusToColumnName[task.status];
+        const columnName =
+          task.status !== undefined ? statusToColumnName[task.status] : "";
+
         if (columnName && board[columnName]) {
-          board[columnName].push(task);
+          board[columnName].push({
+            ...task,
+            id: task.id.toString(), // FIXME Преобразование id к строке очень важно иначе ломается скрипт DND @dnd-kit
+          });
         } else {
           console.error(
             `Status '${task.status}' does not have a corresponding column. Current board:`,
@@ -43,7 +46,7 @@ export function useSupabaseBoard() {
       return Object.entries(board).map(
         ([title, cards]) =>
           ({
-            id: uuidv4(),
+            id: title,
             title,
             cards,
           } as unknown as BoardData)

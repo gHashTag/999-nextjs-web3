@@ -12,10 +12,10 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Column from "./Column";
 import { useState } from "react";
 import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
-import { BoardData } from "@/types";
+import { BoardData, StatusMap } from "@/types";
 
 function KanbanBoard() {
-  const { boardData, setBoardData } = useSupabaseBoard();
+  const { boardData, setBoardData, updateTaskStatus } = useSupabaseBoard();
 
   const findColumn = (unique: string | null) => {
     if (!unique || !boardData) {
@@ -90,6 +90,22 @@ function KanbanBoard() {
     if (!activeColumn || !overColumn || activeColumn !== overColumn) {
       return null;
     }
+
+    function getColumnStatus(columnId: string): number {
+      const statusMap: StatusMap = {
+        "To Do": 1,
+        "In Progress": 2,
+        Review: 3,
+        Done: 4,
+      };
+      return statusMap[columnId] || 1;
+    }
+    // Предположим, что у вас есть функция getColumnStatus, которая возвращает статус задачи на основе id колонки
+    const newStatus = getColumnStatus(overColumn.id.toString());
+    console.log(newStatus, "newStatus");
+    // Вызов функции обновления статуса задачи
+    updateTaskStatus(Number(activeId), newStatus);
+
     const activeIndex = activeColumn.cards.findIndex(
       (i) => String(i.id) === activeId
     );

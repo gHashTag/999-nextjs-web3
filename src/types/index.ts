@@ -1,6 +1,9 @@
 // Определение типа статуса задачи
 export type TaskStatus = 1 | 2 | 3 | 4;
 
+export type StatusMap = {
+  [key: string]: number;
+};
 // Использование Record для BoardItem
 export type BoardItem = Record<TaskStatus, Task[]>;
 
@@ -19,20 +22,15 @@ export interface DropResult {
     index: number;
   };
 }
-export type Id = string | number;
 
-export type Column = {
-  id: Id;
-  title: string;
-};
 export interface Task {
-  id: number;
-  user_id: string;
-  created_at: string;
+  id: string;
+  user_id?: string;
+  created_at?: string;
   updated_at?: string;
   title: string;
   description?: string;
-  status: TaskStatus;
+  status?: TaskStatus;
   due_date?: string;
   priority?: number;
   assigned_to?: AssignedUser[];
@@ -48,15 +46,9 @@ export interface AssignedUser {
 }
 
 export interface BoardColumn {
-  id: number;
+  id: string;
   title: string;
   cards: Task[];
 }
 
 export type BoardData = BoardColumn[];
-
-export type ColumnType = {
-  id: number;
-  title: string;
-  cards: TasksArray;
-};
