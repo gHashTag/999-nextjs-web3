@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Task, BoardData, TasksArray, BoardItem, TaskStatus } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
 import { supabase } from "@/utils/supabase";
+import { v4 as uuidv4 } from "uuid";
 
 export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
@@ -10,29 +11,39 @@ export function useSupabaseBoard() {
   const [error, setError] = useState<string | null>(null);
   console.log(error, "error");
   // console.log(boardData, "boardData");
-
+  const statusToColumnName = {
+    1: "To Do",
+    2: "In Progress",
+    3: "Review",
+    4: "Done",
+  };
+  console.log(boardData, "boardData");
   const transformTasksToBoardData = useCallback(
-    (tasks: TasksArray): BoardData => {
-      const board: Record<TaskStatus, Task[]> = {
-        1: [],
-        2: [],
-        3: [],
-        4: [],
+    (tasksFromServer: TasksArray[]): BoardData[] => {
+      const board: Record<string, Task[]> = {
+        "To Do": [],
+        "In Progress": [],
+        Review: [],
+        Done: [],
       };
 
-      tasks.forEach((task) => {
-        const status = task.status as TaskStatus;
-        if (board[status]) {
-          board[status].push(task);
+      tasksFromServer.forEach((task) => {
+        const columnName = statusToColumnName[task.status];
+        if (columnName) {
+          board[columnName].push(task);
         } else {
           console.error(
-            `Status '${status}' does not exist on the board. Current board:`,
+            `Status '${task.status}' does not have a corresponding column. Current board:`,
             board
           );
         }
       });
 
-      return Object.entries(board).map(([name, items]) => ({ name, items }));
+      return Object.entries(board).map(([title, cards]) => ({
+        id: uuidv4(),
+        title,
+        cards,
+      }));
     },
     []
   );

@@ -10,11 +10,14 @@ import {
   // CardBody,
 } from "@nextui-org/react";
 import Layout from "@/components/layout";
-import Board from "@/components/Board";
+import KanbanBoard from "@/components/Kanban/KanbanBoard";
 import { supabase } from "@/utils/supabase";
+import dynamic from "next/dynamic";
 
 // import { Space } from "@supabase/ui";
-
+const Kanban = dynamic(() => import("@/components/Kanban/KanbanBoard"), {
+  ssr: false,
+});
 export default function Tasks() {
   // const [tasks, setTasks] = useState<any[] | null>();
   // useEffect(() => {
@@ -34,7 +37,7 @@ export default function Tasks() {
   const handleOnClick = () => {};
   return (
     <Layout>
-      <Board />
+      <Kanban />
     </Layout>
   );
 }

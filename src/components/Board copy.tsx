@@ -13,7 +13,7 @@ import {
   TaskStatus,
   TasksArray,
 } from "@/types";
-import { useSupabaseBoard } from "@/hooks/useSupabase";
+import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
 
 const statusMapping: {
   [key: number]: number;

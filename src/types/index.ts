@@ -19,7 +19,12 @@ export interface DropResult {
     index: number;
   };
 }
+export type Id = string | number;
 
+export type Column = {
+  id: Id;
+  title: string;
+};
 export interface Task {
   id: number;
   user_id: string;
@@ -48,3 +53,13 @@ export interface BoardColumn {
 }
 
 export type BoardData = BoardColumn[];
+
+export type ColumnType = {
+  id: number;
+  title: string;
+  cards: CardType[];
+};
+export type CardType = {
+  id: string;
+  title: string;
+};
