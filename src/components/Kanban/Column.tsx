@@ -2,7 +2,7 @@ import { FC } from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import Card from "./Card";
-import { BoardColumn } from "@/types";
+import { BoardData } from "@/types";
 
 const Column: FC<BoardColumn> = ({ id, title, cards }) => {
   const { setNodeRef } = useDroppable({ id: id });

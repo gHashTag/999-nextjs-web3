@@ -25,11 +25,11 @@ export interface DropResult {
 
 export interface Task {
   id: string;
+  title?: string;
+  description?: string;
   user_id?: string;
   created_at?: string;
   updated_at?: string;
-  title: string;
-  description?: string;
   status?: TaskStatus;
   due_date?: string;
   priority?: number;
@@ -45,10 +45,12 @@ export interface AssignedUser {
   // Дополнительные поля, если необходимо
 }
 
-export interface BoardColumn {
-  id: string;
+export interface BoardData {
   title: string;
-  cards: Task[];
+  id: string;
+  cards?: Task[];
 }
 
-export type BoardData = BoardColumn[];
+export type Board = {
+  [key: string]: Task[];
+};

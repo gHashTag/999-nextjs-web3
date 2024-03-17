@@ -1,14 +1,14 @@
 // hooks/useSupabaseBoard.ts
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Task, BoardData, TasksArray } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
+import { Task, BoardData, TasksArray, Board } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
 import { supabase } from "@/utils/supabase";
 
 export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
-  console.log(boardData, "boardData");
+
   const [error, setError] = useState<string | null>(null);
-  console.log(error, "error");
+
   // console.log(boardData, "boardData");
   const statusToColumnName: Record<number, string> = {
     1: "To Do",
@@ -19,13 +19,13 @@ export function useSupabaseBoard() {
 
   const transformTasksToBoardData = useCallback(
     (tasksFromServer: TasksArray): BoardData[] => {
-      const board = {
+      const board: Board = {
         "To Do": [],
         "In Progress": [],
         Review: [],
         Done: [],
       };
-      console.log(board, "board");
+
       tasksFromServer.forEach((task) => {
         const columnName =
           task.status !== undefined ? statusToColumnName[task.status] : "";
@@ -33,7 +33,7 @@ export function useSupabaseBoard() {
         if (columnName && board[columnName]) {
           board[columnName].push({
             ...task,
-            id: task.id.toString(), // FIXME Преобразование id к строке очень важно иначе ломается скрипт DND @dnd-kit
+            id: task.id.toString(),
           });
         } else {
           console.error(
@@ -65,8 +65,8 @@ export function useSupabaseBoard() {
       console.log(transformedData, "transformedData");
       setBoardData(transformedData);
     } catch (error: any) {
-      console.error(error); // Логируем полную ошибку для дебага
-      setError(`Ошибка при загрузке данных доски: ${error.message}`);
+      console.error("fetchBoardData", error);
+      setError(`Ошибка при загрузке данных доски: ${error}`);
     }
   }, [transformTasksToBoardData]);
 
@@ -103,7 +103,11 @@ export function useSupabaseBoard() {
     } else if (data) {
       // Проверяем, что data не null и является массивом
       setTasks(
-        tasks.map((task) => (task.id === id ? { ...task, ...data[0] } : task))
+        tasks.map((task) =>
+          String(task.id) === String(id)
+            ? { ...task, ...(data[0] as Task) }
+            : task
+        )
       );
     }
   };
@@ -114,7 +118,7 @@ export function useSupabaseBoard() {
     if (error) {
       console.error("Ошибка при удалении задачи:", error);
     } else {
-      setTasks(tasks.filter((task) => task.id !== id));
+      setTasks(tasks.filter((task) => String(task.id) !== String(id)));
     }
   };
 
@@ -126,8 +130,6 @@ export function useSupabaseBoard() {
         .match({ id: taskId });
       if (error) {
         console.error("Ошибка при обновлении статуса задачи:", error);
-      } else {
-        console.log(data, "updateTaskStatus data");
       }
     } catch (error) {
       console.error("Ошибка при обновлении статуса задачи:", error);

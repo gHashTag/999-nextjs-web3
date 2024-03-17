@@ -5,7 +5,7 @@ import CardItem from "./Card";
 
 import { supabase } from "@/utils/supabase";
 import {
-  BoardColumn,
+  BoardData,
   BoardData,
   BoardItem,
   DropResult,
