@@ -8,25 +8,27 @@ export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  console.log(boardData, "boardData");
+  console.log(error, "error");
+  // console.log(boardData, "boardData");
+
   const transformTasksToBoardData = useCallback(
     (tasks: TasksArray): BoardData => {
       const board: Record<TaskStatus, Task[]> = {
-        Backlog: [],
-        "In Progress": [],
-        "In Review": [],
-        Completed: [],
+        1: [],
+        2: [],
+        3: [],
+        4: [],
       };
 
       tasks.forEach((task) => {
         const status = task.status as TaskStatus;
-        if (!board[status]) {
+        if (board[status]) {
+          board[status].push(task);
+        } else {
           console.error(
             `Status '${status}' does not exist on the board. Current board:`,
             board
           );
-        } else {
-          board[status].push(task);
         }
       });
 
@@ -44,8 +46,9 @@ export function useSupabaseBoard() {
       const transformedData = transformTasksToBoardData(data);
       console.log(transformedData, "transformedData");
       setBoardData(transformedData);
-    } catch (error) {
-      setError("Ошибка при загрузке данных доски");
+    } catch (error: any) {
+      console.error(error); // Логируем полную ошибку для дебага
+      setError(`Ошибка при загрузке данных доски: ${error.message}`);
     }
   }, [transformTasksToBoardData]);
 
@@ -97,6 +100,22 @@ export function useSupabaseBoard() {
     }
   };
 
+  const updateTaskStatus = async (taskId: number, newStatus: number) => {
+    try {
+      const { data, error } = await supabase
+        .from("tasks")
+        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .match({ id: taskId });
+      if (error) {
+        console.error("Ошибка при обновлении статуса задачи:", error);
+      } else {
+        console.log(data, "updateTaskStatus data");
+      }
+    } catch (error) {
+      console.error("Ошибка при обновлении статуса задачи:", error);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
     fetchBoardData().then(() => {
@@ -118,5 +137,6 @@ export function useSupabaseBoard() {
     createTask,
     updateTask,
     deleteTask,
+    updateTaskStatus,
   };
 }

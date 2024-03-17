@@ -4,80 +4,88 @@ import { DotsVerticalIcon, PlusCircleIcon } from "@heroicons/react/outline";
 import CardItem from "./Card";
 
 import { supabase } from "@/utils/supabase";
-import { BoardData, BoardItem, DropResult, Task, TasksArray } from "@/types";
+import {
+  BoardColumn,
+  BoardData,
+  BoardItem,
+  DropResult,
+  Task,
+  TaskStatus,
+  TasksArray,
+} from "@/types";
 import { useSupabaseBoard } from "@/hooks/useSupabase";
 
-function createGuidId() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
+const statusMapping: {
+  [key: number]: number;
+} = {
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+};
 
 function Board() {
   const [showForm, setShowForm] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(0);
 
-  const { setTasks, boardData, setBoardData } = useSupabaseBoard();
-  console.log(boardData, "boardData");
+  const {
+    setTasks,
+    boardData,
+    fetchBoardData,
+    updateTaskStatus,
+    setBoardData,
+  } = useSupabaseBoard();
+
   if (boardData === null) {
     // Обработка состояния загрузки или отсутствия данных
     return <div>Loading...</div>;
   }
 
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
 
-    const newBoardData: BoardData = boardData?.map((board, index) => {
-      if (index.toString() === result.source.droppableId) {
-        const newItems = Array.from(board.items);
-        const [reorderedItem] = newItems.splice(result.source.index, 1);
-        if (result.destination) {
-          newItems.splice(result.destination.index, 0, reorderedItem);
-        }
-        return { ...board, items: newItems };
+    const taskId = parseInt(result.draggableId);
+    const newStatusId = parseInt(result.destination.droppableId) + 1;
+
+    if (!statusMapping[newStatusId]) {
+      console.error(`Статус '${newStatusId}' не существует на доске.`);
+      return;
+    }
+
+    const newStatus = newStatusId as TaskStatus;
+
+    // Сохраняем текущее состояние для возможного отката
+    const previousBoardData = [...boardData];
+
+    const optimisticUpdatedBoardData = boardData.map((board, index) => {
+      if (index === parseInt(result.source.droppableId)) {
+        const copiedItems = [...board.items];
+        const [removed] = copiedItems.splice(result.source.index, 1);
+        copiedItems.splice(result.destination.index, 0, removed);
+        return { ...board, items: copiedItems };
       }
       return board;
     });
 
-    // Преобразование BoardData обратно в TasksArray
-    const newTasksArray: Task[] = newBoardData.reduce((acc: Task[], column) => {
-      return acc.concat(column.items);
-    }, []);
+    setBoardData(optimisticUpdatedBoardData);
 
-    setTasks(newTasksArray);
+    try {
+      await updateTaskStatus(taskId, newStatus);
+      // Подтверждаем изменения, обновляя данные с сервера
+      fetchBoardData();
+    } catch (error) {
+      console.error("Ошибка при обновлении статуса задачи:", error);
+      // Откатываем изменения в случае ошибки
+      setBoardData(previousBoardData);
+    }
   };
 
-  const addTaskHandler = (e) => {
+  const addTaskHandler = (e: any) => {
     e.preventDefault();
     setShowForm(true);
   };
 
-  const onTextAreaKeyPress = (e) => {
-    // if (e.keyCode === 13) {
-    //   //Enter
-    //   const val = e.target.value;
-    //   if (val.length === 0) {
-    //     setShowForm(false);
-    //   } else {
-    //     const boardId = e.target.attributes["data-id"].value;
-    //     const item = {
-    //       id: createGuidId(),
-    //       title: val,
-    //       priority: 0,
-    //       chat: 0,
-    //       attachment: 0,
-    //       assignees: [],
-    //     };
-    //     let newBoardData = boardData;
-    //     newBoardData[boardId].items.push(item);
-    //     setTasks(newBoardData);
-    //     setShowForm(false);
-    //     e.target.value = "";
-    //   }
-    // }
-  };
+  const onTextAreaKeyPress = (e: any) => {};
 
   return (
     <>

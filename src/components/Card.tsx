@@ -1,8 +1,5 @@
 import { Draggable } from "react-beautiful-dnd";
 
-import Image from "next/image";
-import { Task } from "./Board";
-
 interface CardItemProps {
   data: { id: number; [key: string]: any }; // Assuming `id` is a number
   index: number;

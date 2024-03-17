@@ -1,5 +1,5 @@
 // Определение типа статуса задачи
-export type TaskStatus = "Backlog" | "In Progress" | "In Review" | "Completed";
+export type TaskStatus = 1 | 2 | 3 | 4;
 
 // Использование Record для BoardItem
 export type BoardItem = Record<TaskStatus, Task[]>;
@@ -27,7 +27,7 @@ export interface Task {
   updated_at?: string;
   title: string;
   description?: string;
-  status: string;
+  status: TaskStatus;
   due_date?: string;
   priority?: number;
   assigned_to?: AssignedUser[];
