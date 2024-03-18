@@ -3,7 +3,7 @@ import React from "react";
 // UI Primitive
 import * as RadixTabs from "@radix-ui/react-tabs";
 
-import { cn } from "../../@helpers/utils";
+import { cn } from "@helpers/utils";
 
 interface Props {
   activeTab: number;

@@ -13,9 +13,11 @@ import Column from "./Column";
 
 import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
 import { BoardData, StatusMap, Task } from "@/types";
+import { Button } from "@nextui-org/react";
 
 function KanbanBoard() {
-  const { boardData, setBoardData, updateTaskStatus } = useSupabaseBoard();
+  const { boardData, createTask, setBoardData, updateTaskStatus } =
+    useSupabaseBoard();
 
   const findColumn = (unique: string | null) => {
     if (!unique || !boardData) {
@@ -153,17 +155,32 @@ function KanbanBoard() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  const onSubmit = () => {
+    createTask({
+      user_id: "2293774f-3e08-467e-9252-196150f15f6d",
+      title: "New task",
+      description: "New task description",
+    });
+  };
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragEnd={handleDragEnd}
-      onDragOver={handleDragOver}
-    >
-      <div className="container-tasks">
-        {boardData &&
-          boardData.map(
-            (value: BoardData, index: number, array: BoardData[]) => {
+    <div>
+      <Button
+        color="warning"
+        variant="ghost"
+        onClick={onSubmit}
+        style={{ position: "fixed", top: 89, right: 100 }}
+      >
+        Create task
+      </Button>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+      >
+        <div className="container-tasks">
+          {boardData &&
+            boardData.map((value: BoardData) => {
               return (
                 <Column
                   key={value.id}
@@ -172,12 +189,11 @@ function KanbanBoard() {
                   cards={value.cards}
                 />
               );
-            }
-          )}
-      </div>
-    </DndContext>
+            })}
+        </div>
+      </DndContext>
+    </div>
   );
 }
 
 export default KanbanBoard;
-//https://codesandbox.io/p/sandbox/dnd-kit-kanban-board-1df69n?

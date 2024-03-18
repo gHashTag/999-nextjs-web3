@@ -58,6 +58,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
             fontWeight: "500",
             color: "#575757",
             marginBottom: "20px",
+            fontSize: "15px",
           }}
         >
           {title}

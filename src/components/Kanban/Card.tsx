@@ -32,22 +32,26 @@ const Card: FC<CardProps> = ({
 
   return (
     <a onClick={handleClick}>
-      <div id={id.toString()} ref={setNodeRef} {...attributes} {...listeners}>
-        <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-zinc-300">
+      <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-zinc-300">
+        <div ref={setNodeRef} {...attributes} {...listeners}>
           <div
             className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
             style={{ paddingTop: 10, paddingLeft: 5, paddingRight: 5 }}
           >
             {title}
           </div>
+
           <div
             className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
             style={{ padding: 10, color: "gray" }}
           >
             {description}
           </div>
-        </BackgroundGradient>
-        <Spacer x={40} />
+        </div>
+      </BackgroundGradient>
+      <Spacer x={40} />
+      <div id={id.toString()}>
+        <span>edit</span>
       </div>
     </a>
   );

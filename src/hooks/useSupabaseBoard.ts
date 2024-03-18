@@ -83,6 +83,7 @@ export function useSupabaseBoard() {
   // Создание новой задачи
   const createTask = async (task: Omit<Task, "id">) => {
     const { data, error } = await supabase.from("tasks").insert([task]);
+
     if (error) {
       console.error("Ошибка при создании задачи:", error);
     } else if (data) {
