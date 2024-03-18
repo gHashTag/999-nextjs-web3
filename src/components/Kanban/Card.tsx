@@ -5,6 +5,8 @@ import { Task } from "@/types";
 import { BackgroundGradient } from "../ui/background-gradient";
 import { card } from "@nextui-org/theme";
 import { Spacer } from "@nextui-org/react";
+import TrashIcon from "./icons/TrashIcon";
+import PlusIcon from "./icons/PlusIcon";
 
 interface CardProps extends Task {
   onClick?: () => void;
@@ -30,29 +32,33 @@ const Card: FC<CardProps> = ({
     openModal(id); // Вызов функции openModal с id карточки
   };
 
+  const style = {
+    opacity: 1,
+    transform: CSS.Transform.toString(transform),
+  };
+
   return (
     <a onClick={handleClick}>
-      <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-zinc-300">
-        <div ref={setNodeRef} {...attributes} {...listeners}>
+      <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-black">
+        <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
           <div
             className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
-            style={{ paddingTop: 10, paddingLeft: 5, paddingRight: 5 }}
+            style={{ paddingTop: 10, paddingLeft: 10 }}
           >
             {title}
           </div>
 
           <div
             className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-            style={{ padding: 10, color: "gray" }}
+            style={{ padding: 10 }}
           >
             {description}
           </div>
+          <PlusIcon />
         </div>
       </BackgroundGradient>
       <Spacer x={40} />
-      <div id={id.toString()}>
-        <span>edit</span>
-      </div>
+      <div id={id.toString()} />
     </a>
   );
 };

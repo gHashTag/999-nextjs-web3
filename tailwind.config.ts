@@ -2,6 +2,11 @@ import type { Config } from "tailwindcss";
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
+const { nextui } = require("@nextui-org/react");
+
+const BLACK = "#0f0f0c";
+const YELLOW = "#f6ff00";
+const WHITE = "#ECEDEE";
 
 const config = {
   darkMode: ["class"],
@@ -11,6 +16,7 @@ const config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   prefix: "",
   theme: {
@@ -91,7 +97,50 @@ const config = {
       },
     },
   },
-  plugins: [addVariablesForColors, require("tailwindcss-animate")],
+  plugins: [
+    nextui({
+      layout: {
+        disabledOpacity: "0.3", // opacity-[0.3]
+        radius: {
+          small: "2px", // rounded-small
+          medium: "4px", // rounded-medium
+          large: "6px", // rounded-large
+        },
+        borderWidth: {
+          small: "1px", // border-small
+          medium: "1px", // border-medium
+          large: "2px", // border-large
+        },
+      },
+      themes: {
+        light: {
+          colors: {
+            background: WHITE, // or DEFAULT
+            foreground: BLACK, // or 50 to 900 DEFAULT
+            primary: {
+              //... 50 to 900
+              foreground: WHITE,
+              DEFAULT: "#006FEE",
+            },
+            // ... rest of the colors
+          },
+        },
+        dark: {
+          colors: {
+            background: BLACK, // or DEFAULT
+            foreground: WHITE, // or 50 to 900 DEFAULT
+            primary: {
+              //... 50 to 900
+              foreground: BLACK,
+              DEFAULT: YELLOW,
+            },
+          },
+        },
+      },
+    }),
+    addVariablesForColors,
+    require("tailwindcss-animate"),
+  ],
 } satisfies Config;
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).

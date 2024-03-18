@@ -5,7 +5,7 @@ function TrashIcon() {
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={1.5}
-      className="w-6 h-6"
+      className="w-6 h-6 text-red-500"
     >
       <path
         strokeLinecap="round"

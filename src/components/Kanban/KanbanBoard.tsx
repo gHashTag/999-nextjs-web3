@@ -156,7 +156,7 @@ function KanbanBoard() {
   );
   const onSubmit = () => {};
   return (
-    <div>
+    <div style={{ paddingLeft: 40, paddingTop: 40 }}>
       <div style={{ position: "fixed", top: 100, right: 30 }}>
         <Button onClick={onSubmit}>Create task</Button>
       </div>
@@ -166,20 +166,18 @@ function KanbanBoard() {
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}
       >
-        <div className="container-tasks">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-1">
           {boardData &&
-            boardData.map(
-              (value: BoardData, index: number, array: BoardData[]) => {
-                return (
-                  <Column
-                    key={value.id}
-                    id={value.id}
-                    title={value.title}
-                    cards={value.cards}
-                  />
-                );
-              }
-            )}
+            boardData.map((value: BoardData) => {
+              return (
+                <Column
+                  key={value.id}
+                  id={value.id}
+                  title={value.title}
+                  cards={value.cards}
+                />
+              );
+            })}
         </div>
       </DndContext>
     </div>
