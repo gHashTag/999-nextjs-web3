@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { MeteorsCard } from "@/components/ui/meteor-card";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { HoverEffect } from "@/components/ui/card-hover-effect";
 
 const CreateMeet = () => {
   const router = useRouter();
@@ -34,7 +35,9 @@ const CreateMeet = () => {
   const getAssets = async () => {
     try {
       let { data, error } = await supabase.from("room_assets").select("*");
+      console.log(data, "data");
       if (error) console.error("Error fetching assets:", error);
+
       setAssets(data);
     } catch (error) {
       console.log("error", error);
@@ -55,6 +58,7 @@ const CreateMeet = () => {
       }
 
       const data = await response.json();
+      console.log(data, "data");
       return data;
     } catch (error) {
       console.error("Error", error);
@@ -62,7 +66,7 @@ const CreateMeet = () => {
   };
 
   useEffect(() => {
-    getRecordings();
+    // getRecordings();
     getAssets();
   }, []);
 
@@ -99,8 +103,10 @@ const CreateMeet = () => {
           }}
         >
           {assets?.map((asset, index) => (
-            <MeteorsCard key={index} title={asset?.summary_short} />
+            <MeteorsCard key={index} asset={asset} />
           ))}
+
+          {/* <HoverEffect items={assets || []} /> */}
         </div>
       </Layout>
     </>

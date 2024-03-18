@@ -1,12 +1,9 @@
 import React from "react";
 import { Meteors } from "./meteors";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { RecordingAsset } from "@/types";
 
-interface MeteorsCardProps {
-  title: string;
-}
-
-export function MeteorsCard({ title }: MeteorsCardProps) {
+export function MeteorsCard({ asset }: RecordingAsset) {
   return (
     <div
       className=""
@@ -31,9 +28,9 @@ export function MeteorsCard({ title }: MeteorsCardProps) {
                 textOverflow: "ellipsis",
               }}
             >
-              {title}
+              {asset.summary_short}
             </h1>
-            <Meteors number={10} />
+            {/* <Meteors number={10} /> */}
           </div>
         </div>
       </BackgroundGradient>

@@ -54,3 +54,34 @@ export interface BoardData {
 export type Board = {
   [key: string]: Task[];
 };
+
+export type RecordingAsset = {
+  asset: {
+    account_id: string;
+    app_id: string;
+    duration: number;
+    email: string | null;
+    id: number;
+    metadata_id: string;
+    metadata_timestamp: string;
+    recording_id: string;
+    room_id: string;
+    room_name: string;
+    session_id: string;
+    summary_json_asset_id: string;
+    summary_json_path: string;
+    summary_json_presigned_url: string;
+    summary_short: string;
+    transcript_json_asset_id: string;
+    transcript_json_path: string;
+    transcript_json_presigned_url: string;
+    transcript_srt_asset_id: string;
+    transcript_srt_path: string;
+    transcript_srt_presigned_url: string;
+    transcript_txt_asset_id: string;
+    transcript_txt_path: string;
+    transcript_txt_presigned_url: string;
+    transcription: string;
+    transcription_id: string;
+  };
+};
