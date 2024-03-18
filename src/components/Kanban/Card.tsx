@@ -6,15 +6,33 @@ import { BackgroundGradient } from "../ui/background-gradient";
 import { card } from "@nextui-org/theme";
 import { Spacer } from "@nextui-org/react";
 
-const Card: FC<Task> = ({ id, title, description }) => {
+interface CardProps extends Task {
+  onClick?: () => void;
+  openModal: (id: string) => void; // Добавление функции openModal в пропсы
+}
+
+const Card: FC<CardProps> = ({
+  id,
+  title,
+  description,
+  onClick,
+  openModal,
+}) => {
   const { attributes, listeners, setNodeRef, transform } = useSortable({
     id: id,
   });
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick(); // Вызов существующего onClick
+    }
+    openModal(id); // Вызов функции openModal с id карточки
+  };
+
   return (
-    <div ref={setNodeRef} {...attributes} {...listeners}>
+    <a href="#" onClick={handleClick}>
       <div id={id.toString()}>
-        <BackgroundGradient>
+        <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-zinc-300">
           <div
             className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
             style={{ paddingTop: 10, paddingLeft: 5, paddingRight: 5 }}
@@ -30,7 +48,7 @@ const Card: FC<Task> = ({ id, title, description }) => {
         </BackgroundGradient>
         <Spacer x={40} />
       </div>
-    </div>
+    </a>
   );
 };
 

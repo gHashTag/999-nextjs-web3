@@ -3,13 +3,6 @@
 @tailwind utilities;
 @tailwind base;
 
-.customPrimaryButton {
-  color: "#fcfcfd";
-  border: 1.5px solid #12367f;
-  background: linear-gradient(0deg, #246bfd, #246bfd),
-    linear-gradient(0deg, #12367f, #12367f);
-}
-
 .customSecondaryButton {
   transition: all ease-in-out 300ms;
   border: 1px solid rgba(255, 255, 255, 0.2);

@@ -10,6 +10,7 @@ import ResizeHandler from "@components/resize-handler";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import BackgroundBeams from "@components/ui/background-beams";
 import BackgroundBeamsTwo from "@components/ui/background-beams-two";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import {
   authenticateUser,
@@ -42,13 +43,15 @@ export default function App({ Component, pageProps }: AppProps) {
     <HuddleProvider client={huddleClient}>
       <HMSRoomProvider>
         <NextUIProvider>
-          <main className="dark text-foreground bg-background">
-            <BackgroundBeams />
-            <Component {...pageProps} />
-            <ResizeHandler />
-            <NProgress />
-            {/* <BackgroundBeamsTwo /> */}
-          </main>
+          <NextThemesProvider attribute="class" defaultTheme="dark">
+            <main className="dark text-foreground bg-background">
+              <BackgroundBeams />
+              <Component {...pageProps} />
+              <ResizeHandler />
+              <NProgress />
+              {/* <BackgroundBeamsTwo /> */}
+            </main>
+          </NextThemesProvider>
         </NextUIProvider>
       </HMSRoomProvider>
     </HuddleProvider>

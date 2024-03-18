@@ -62,7 +62,7 @@ export function useSupabaseBoard() {
       if (error) throw error;
 
       const transformedData = transformTasksToBoardData(data);
-      console.log(transformedData, "transformedData");
+      // console.log(transformedData, "transformedData");
       setBoardData(transformedData);
     } catch (error: any) {
       console.error("fetchBoardData", error);
