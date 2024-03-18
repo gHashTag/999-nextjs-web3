@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import cn from "classnames";
 
 import { useRouter } from "next/router";
@@ -48,6 +48,13 @@ export default function Form({ sharePage }: Props) {
     reset: resetCaptcha,
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      (inputRef.current as any)?.focus();
+    }
+  }, []);
 
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
@@ -138,6 +145,7 @@ export default function Form({ sharePage }: Props) {
           })}
         >
           <input
+            ref={inputRef}
             className={styles.input}
             autoComplete="off"
             type="text"
