@@ -11,6 +11,13 @@ import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import BackgroundBeams from "@components/ui/background-beams";
 import BackgroundBeamsTwo from "@components/ui/background-beams-two";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { Inter as FontSans } from "next/font/google";
+import { cn } from "@/utils/cn";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 import {
   authenticateUser,
@@ -40,20 +47,22 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <HuddleProvider client={huddleClient}>
-      <HMSRoomProvider>
-        <NextUIProvider>
-          <NextThemesProvider attribute="class" defaultTheme="dark">
-            <main className="dark text-foreground bg-background">
-              <BackgroundBeams />
-              <Component {...pageProps} />
-              <ResizeHandler />
-              <NProgress />
-              {/* <BackgroundBeamsTwo /> */}
-            </main>
-          </NextThemesProvider>
-        </NextUIProvider>
-      </HMSRoomProvider>
-    </HuddleProvider>
+    <div>
+      <HuddleProvider client={huddleClient}>
+        <HMSRoomProvider>
+          <NextUIProvider>
+            <NextThemesProvider attribute="class" defaultTheme="dark">
+              <main className="dark text-foreground bg-background">
+                <BackgroundBeams />
+                <Component {...pageProps} />
+                <ResizeHandler />
+                <NProgress />
+                {/* <BackgroundBeamsTwo /> */}
+              </main>
+            </NextThemesProvider>
+          </NextUIProvider>
+        </HMSRoomProvider>
+      </HuddleProvider>
+    </div>
   );
 }
