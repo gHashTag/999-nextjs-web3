@@ -89,9 +89,6 @@ dependencies:
   '@react-stately/overlays':
     specifier: ^3.6.5
     version: 3.6.5(react@18.2.0)
-  '@supabase/realtime-js':
-    specifier: ^2.9.3
-    version: 2.9.3
   '@supabase/supabase-js':
     specifier: ^2.39.7
     version: 2.39.8

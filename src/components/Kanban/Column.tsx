@@ -72,7 +72,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
               openModal={openModal}
             />
 
-            <Modal isOpen={openModalId === card.id} onOpenChange={closeModal}>
+            {/* <Modal isOpen={openModalId === card.id} onOpenChange={closeModal}>
               <ModalContent>
                 <ModalHeader>
                   <span>Edit task</span>
@@ -127,7 +127,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                   </Button>
                 </ModalFooter>
               </ModalContent>
-            </Modal>
+            </Modal> */}
           </div>
         ))}
       </div>
