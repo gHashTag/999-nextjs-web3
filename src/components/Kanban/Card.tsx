@@ -23,6 +23,7 @@ const Card: FC<CardProps> = ({
   });
 
   const handleClick = () => {
+    console.log(handleClick, "handleClick");
     if (onClick) {
       onClick(); // Вызов существующего onClick
     }
@@ -30,8 +31,8 @@ const Card: FC<CardProps> = ({
   };
 
   return (
-    <a href="#" onClick={handleClick}>
-      <div ref={setNodeRef} {...attributes} {...listeners}>
+    <a onClick={handleClick}>
+      <div id={id.toString()} ref={setNodeRef} {...attributes} {...listeners}>
         <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-zinc-300">
           <div
             className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
