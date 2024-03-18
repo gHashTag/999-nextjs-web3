@@ -41,10 +41,11 @@
 }
 
 .header {
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--sidebar);
+  background: var(--background);
   border-bottom: 1px solid var(--accents-7);
   height: var(--header-height);
   z-index: 2;
