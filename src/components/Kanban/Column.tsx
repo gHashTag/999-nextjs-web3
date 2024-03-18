@@ -4,15 +4,15 @@ import { useDroppable } from "@dnd-kit/core";
 import Card from "./Card";
 import { BoardData } from "@/types";
 
-const Column: FC<BoardColumn> = ({ id, title, cards }) => {
-  const { setNodeRef } = useDroppable({ id: id });
+const Column: FC<BoardData> = ({ id, title, cards }) => {
+  const { setNodeRef } = useDroppable({ id });
   return (
-    <SortableContext id={id} items={cards} strategy={rectSortingStrategy}>
+    <SortableContext id={id} items={cards || []} strategy={rectSortingStrategy}>
       <div
         ref={setNodeRef}
         style={{
-          width: "200px",
-          background: "rgba(245,247,249,1.00)",
+          width: "300px",
+          background: "transparent",
           marginRight: "10px",
         }}
       >
@@ -26,8 +26,13 @@ const Column: FC<BoardColumn> = ({ id, title, cards }) => {
         >
           {title}
         </p>
-        {cards.map((card) => (
-          <Card key={card.id} id={card.id} title={card.title}></Card>
+        {cards?.map((card) => (
+          <Card
+            key={card.id}
+            id={card.id}
+            title={card.title}
+            description={card.description}
+          />
         ))}
       </div>
     </SortableContext>

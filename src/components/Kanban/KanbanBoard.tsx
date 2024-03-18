@@ -160,10 +160,7 @@ function KanbanBoard() {
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
     >
-      <div
-        className="App"
-        style={{ display: "flex", flexDirection: "row", padding: "20px" }}
-      >
+      <div className="container-tasks">
         {boardData &&
           boardData.map(
             (value: BoardData, index: number, array: BoardData[]) => {

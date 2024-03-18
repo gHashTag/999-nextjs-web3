@@ -3,7 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 import { Task } from "@/types";
 
-const Card: FC<Task> = ({ id, title }) => {
+const Card: FC<Task> = ({ id, title, description }) => {
   const { attributes, listeners, setNodeRef, transform } = useSortable({
     id: id,
   });
@@ -21,6 +21,7 @@ const Card: FC<Task> = ({ id, title }) => {
     <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
       <div id={id.toString()}>
         <p>{title}</p>
+        <p>{description}</p>
       </div>
     </div>
   );
