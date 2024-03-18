@@ -5,8 +5,7 @@ import { Task } from "@/types";
 import { BackgroundGradient } from "../ui/background-gradient";
 import { card } from "@nextui-org/theme";
 import { Spacer } from "@nextui-org/react";
-import TrashIcon from "./icons/TrashIcon";
-import PlusIcon from "./icons/PlusIcon";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 interface CardProps extends Task {
   onClick?: () => void;
@@ -36,6 +35,9 @@ const Card: FC<CardProps> = ({
     opacity: 1,
     transform: CSS.Transform.toString(transform),
   };
+  const onTrash = () => {
+    console.log("click");
+  };
 
   return (
     <a onClick={handleClick}>
@@ -54,7 +56,12 @@ const Card: FC<CardProps> = ({
           >
             {description}
           </div>
-          <PlusIcon />
+          {/* <a onClick={onTrash}>
+            <TrashIcon
+              className="h-6 w-6 text-gray-500"
+              style={{ right: 10, marginBottom: 5 }}
+            />
+          </a> */}
         </div>
       </BackgroundGradient>
       <Spacer x={40} />

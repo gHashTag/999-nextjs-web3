@@ -14,6 +14,7 @@ import Column from "./Column";
 import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
 import { BoardData, StatusMap, Task } from "@/types";
 import { Button } from "@/components/ui/moving-border";
+import { MultipleContainers } from "./MultipleContainers";
 
 function KanbanBoard() {
   const { boardData, setBoardData, updateTaskStatus } = useSupabaseBoard();
@@ -180,6 +181,7 @@ function KanbanBoard() {
             })}
         </div>
       </DndContext>
+      {/* <MultipleContainers /> */}
     </div>
   );
 }
