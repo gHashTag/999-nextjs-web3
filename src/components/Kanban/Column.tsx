@@ -14,14 +14,16 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
           width: "300px",
           background: "transparent",
           marginRight: "10px",
+          marginBottom: "80px",
         }}
       >
         <p
           style={{
-            padding: "5px 20px",
+            padding: "5px 40px",
             textAlign: "left",
             fontWeight: "500",
             color: "#575757",
+            marginBottom: "20px",
           }}
         >
           {title}

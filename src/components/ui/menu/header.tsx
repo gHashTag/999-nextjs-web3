@@ -1,36 +1,50 @@
-'use-client'
+"use-client";
 
-import React, { useState, useEffect } from 'react'
-import { IProvider } from '@web3auth/base'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from '@nextui-org/react'
-import IconLogo from './icon-logo'
-import { usePathname } from 'next/navigation'
-import DropdownMenuApp from './dropdown'
-import useDeviceDetect from '@/hooks/useDeviceDetect'
-import { useWeb3Auth } from '@/hooks/useWeb3Auth'
-import { web3auth } from '@/utils/web3Auth'
-import { ADAPTER_EVENTS } from '@web3auth/base'
-import { login } from '@/utils/auth'
+import React, { useState, useEffect } from "react";
+import { IProvider } from "@web3auth/base";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  Button,
+} from "@nextui-org/react";
+import IconLogo from "./icon-logo";
+import { usePathname } from "next/navigation";
+import DropdownMenuApp from "./dropdown";
+import useDeviceDetect from "@/hooks/useDeviceDetect";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { web3auth } from "@/utils/web3Auth";
+import { ADAPTER_EVENTS } from "@web3auth/base";
+import { login } from "@/utils/auth";
 // import { getPublicCompressed } from '@toruslabs/eccrypto'
 
 export default function Header() {
-  const { loggedIn } = useWeb3Auth()
-  console.log('Header - loggedIn', loggedIn)
-  const { isMobile } = useDeviceDetect()
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false)
-  const pathname = usePathname()
+  const { loggedIn } = useWeb3Auth();
+  console.log("Header - loggedIn", loggedIn);
+  const { isMobile } = useDeviceDetect();
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const pathname = usePathname();
 
   const isTabActive = (path: string) => {
-    return pathname === path
-  }
+    return pathname === path;
+  };
 
   const handleLogoClick = () => {
-    setIsDropdownVisible(!isDropdownVisible)
-  }
+    setIsDropdownVisible(!isDropdownVisible);
+  };
 
   return (
     <Navbar shouldHideOnScroll>
-      {!isMobile && <IconLogo width="40" height="40" backgroundColor="var(--brand)" foregroundColor="black" />}
+      {!isMobile && (
+        <IconLogo
+          width="40"
+          height="40"
+          backgroundColor="var(--brand)"
+          foregroundColor="black"
+        />
+      )}
       {isMobile && (
         <NavbarBrand>
           <div onClick={handleLogoClick}>
@@ -38,20 +52,29 @@ export default function Header() {
           </div>
         </NavbarBrand>
       )}
-      <div style={{ padding: '20px' }} />
+      <div style={{ padding: "20px" }} />
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem isActive={isTabActive('/meets')}>
-          <Link color={isTabActive('/meets') ? 'primary' : 'foreground'} href="/meets">
+        <NavbarItem isActive={isTabActive("/meets")}>
+          <Link
+            color={isTabActive("/meets") ? "primary" : "foreground"}
+            href="/meets"
+          >
             Meets
           </Link>
         </NavbarItem>
-        <NavbarItem isActive={isTabActive('/tasks')}>
-          <Link color={isTabActive('/tasks') ? 'primary' : 'foreground'} href="/tasks">
+        <NavbarItem isActive={isTabActive("/tasks")}>
+          <Link
+            color={isTabActive("/tasks") ? "primary" : "foreground"}
+            href="/tasks"
+          >
             Tasks
           </Link>
         </NavbarItem>
-        <NavbarItem isActive={isTabActive('/wallet')}>
-          <Link color={isTabActive('/wallet') ? 'primary' : 'foreground'} href="/wallet">
+        <NavbarItem isActive={isTabActive("/wallet")}>
+          <Link
+            color={isTabActive("/wallet") ? "primary" : "foreground"}
+            href="/wallet"
+          >
             Wallet
           </Link>
         </NavbarItem>
@@ -71,5 +94,5 @@ export default function Header() {
         )}
       </NavbarContent>
     </Navbar>
-  )
+  );
 }

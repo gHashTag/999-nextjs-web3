@@ -100,6 +100,9 @@ const config: Config = {
     //     "pos-100": "100% 100%",
     //   },
     // },
+    colors: {
+      brand: YELLOW,
+    },
     animation: {
       "meteor-effect": "meteor 5s linear infinite",
     },
