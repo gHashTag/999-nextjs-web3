@@ -137,6 +137,24 @@ export function useSupabaseBoard() {
   };
 
   useEffect(() => {
+    const channels = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tasks" },
+        (payload) => {
+          console.log("Change received!", payload);
+          fetchBoardData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channels.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     let isMounted = true;
     fetchBoardData().then(() => {
       if (!isMounted) return;

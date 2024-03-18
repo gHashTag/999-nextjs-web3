@@ -21,7 +21,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
   const { setNodeRef } = useDroppable({ id });
   const { updateTask } = useSupabaseBoard();
   const { control, handleSubmit, getValues, setValue } = useForm();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { onOpen } = useDisclosure();
   const [openModalId, setOpenModalId] = useState<string | null>(null);
 
   const openModal = (cardId: string) => {
@@ -32,12 +32,6 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
   const closeModal = () => {
     setOpenModalId(null);
   };
-
-  // const handleInputChange = async (e, fieldName) => {
-  //   const fieldValue = e.target.value;
-  //   const updatedFields = { [fieldName]: fieldValue };
-  //   await updateTask(taskId, updatedFields);
-  // };
 
   const onSubmit = () => {
     const formData = getValues();
