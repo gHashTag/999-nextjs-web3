@@ -68,7 +68,9 @@
 .input-label.error {
   background: red;
 }
-
+.form_input__e25ND {
+  width: 100%;
+}
 .input-label.success {
   background: #0070f3;
 }

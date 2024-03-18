@@ -18,7 +18,8 @@ import { useState, useCallback } from "react";
 import cn from "classnames";
 
 import { useRouter } from "next/router";
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import LoadingDots from "./loading-dots";
 import styleUtils from "./utils.module.css";
 import styles from "./form.module.css";
@@ -109,13 +110,13 @@ export default function Form({ sharePage }: Props) {
           <div className={cn(styles.input, styles["input-text"])}>
             {errorMsg}
           </div>
-          <button
+          <Button
             type="button"
             className={cn(styles.submit, styles.register, styles.error)}
             onClick={onTryAgainClick}
           >
             Try Again
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -145,12 +146,12 @@ export default function Form({ sharePage }: Props) {
             onChange={(e) => setInviteCode(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            placeholder="Enter invite code to register"
+            placeholder="Enter invite code"
             aria-label="Your invite code address"
             required
           />
         </label>
-        <button
+        <Button
           type="submit"
           className={cn(styles.submit, styles.register, styles[formState])}
           disabled={formState === "loading"}
@@ -160,7 +161,7 @@ export default function Form({ sharePage }: Props) {
           ) : (
             <p className={styles["register-text"]}>Register</p>
           )}
-        </button>
+        </Button>
       </div>
       <Captcha ref={captchaRef} onVerify={handleRegister} />
     </form>
