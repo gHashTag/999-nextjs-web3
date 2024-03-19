@@ -6,9 +6,10 @@ import { web3auth } from "@/utils/web3Auth";
 // Corrected the import path for supabaseClient
 import { supabase } from "@/utils/supabase";
 import Web3 from "web3";
-import { OpenloginUserInfo } from "@toruslabs/openlogin-utils";
+
 // Corrected the import path for useRouter
 import { useRouter } from "next/router";
+import { ExtendedOpenloginUserInfo } from "@/types";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 // import { Web3Auth } from '@web3auth/modal'
 
@@ -36,19 +37,50 @@ const useWeb3Auth = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
 
   const [address, setAddress] = useState<string | null>(null);
-  const [userInfo, setUserInfo] = useState<OpenloginUserInfo | null>(null);
+  const [userInfo, setUserInfo] = useState<ExtendedOpenloginUserInfo | null>(
+    null
+  );
   const [balance, setBalance] = useState<string | null>(null);
+
+  const getSupabaseUser = async (email: string) => {
+    try {
+      const response = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .single();
+
+      if (response.error && response.error.code === "PGRST116") {
+        console.error("Пользователь не найден");
+        return null;
+      }
+
+      if (response.error) {
+        console.error(
+          "Ошибка при получении информации о пользователе:",
+          response.error
+        );
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Ошибка при получении информации о пользователе:", error);
+      return null;
+    }
+  };
 
   const createSupabaseUser = async (inviteCode: string) => {
     try {
       const user = await web3auth.getUserInfo();
-
-      // Ensure that user object has all the properties of IUserInfo, with fallbacks for undefined properties
-      setUserInfo((user as OpenloginUserInfo) ?? {});
-
-      let { data: users, error } = await supabase.from("users").select("email");
-
-      if (users && users.length === 0 && user.email) {
+      if (!user.email) {
+        console.error("Email пользователя не найден");
+        return;
+      }
+      const userData = await getSupabaseUser(user.email);
+      if (!userData) {
+        console.log("Создание нового пользователя, так как текущий не найден");
+        // Логика создания пользователя
         // Пользователя с таким email нет в базе, создаем нового
         const newUser = {
           email: user.email,
@@ -56,36 +88,26 @@ const useWeb3Auth = () => {
           username: user.name,
           aggregateverifier: user.aggregateVerifier,
           verifier: user.verifier,
-          profileimage: user.profileImage,
+          avatar: user.profileImage,
           typeoflogin: user.typeOfLogin,
           inviter: inviteCode,
         };
 
-        const data = await supabase.from("users").insert([{ ...newUser }]);
+        const { error } = await supabase.from("users").insert([{ ...newUser }]);
 
-        if (error) {
-          console.error("Ошибка при создании пользователя:", error);
+        if (!error) {
+          const userData = await getSupabaseUser(user.email);
+          setUserInfo({ ...userData } as ExtendedOpenloginUserInfo);
+          localStorage.setItem("user_id", userData.user_id);
         } else {
-          console.log("Пользователь создан:", data);
+          console.log(error, "Ошибка создания пользователя");
         }
       } else {
-        // Пользователь с таким email уже существует, создание не требуется
-        console.log("Пользователь с таким email уже существует");
+        setUserInfo(userData as ExtendedOpenloginUserInfo);
+        localStorage.setItem("user_id", userData.user_id);
       }
     } catch (error) {
       console.error("Ошибка при получении информации о пользователе:", error);
-      console.log("Ошибка при получении информации о пользователе");
-    }
-  };
-
-  const getUserInfo = async () => {
-    try {
-      const user = await web3auth.getUserInfo();
-
-      setUserInfo((user as OpenloginUserInfo) ?? {});
-    } catch (error) {
-      console.error("Ошибка при получении информации о пользователе:", error);
-      console.log("Ошибка при получении информации о пользователе");
     }
   };
 
@@ -96,6 +118,13 @@ const useWeb3Auth = () => {
 
       if (web3auth.connected) {
         setLoggedIn(true);
+        const userInfo = await web3auth.getUserInfo();
+        if (userInfo) {
+          setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
+          if (userInfo.email) {
+            localStorage.setItem("email", userInfo.email);
+          }
+        }
       }
     } catch (error) {
       if (error instanceof Error && error.message === "User closed the modal") {
@@ -193,8 +222,8 @@ const useWeb3Auth = () => {
     signMessage,
     getBalance,
     getAccounts,
-    getUserInfo,
     createSupabaseUser,
+    getSupabaseUser,
   };
 };
 

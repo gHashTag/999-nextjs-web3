@@ -14,10 +14,22 @@ import Column from "./Column";
 import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
 import { BoardData, StatusMap, Task } from "@/types";
 import { Button } from "@/components/ui/moving-border";
+import { useState } from "react";
+import TaskModal from "./TaskModal";
+import useModalTask from "@/hooks/useModalTask";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 
 function KanbanBoard() {
   const { boardData, setBoardData, updateTaskStatus } = useSupabaseBoard();
-
+  //const { isOpen, onOpen, onOpenChange } = useModalTask();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const findColumn = (unique: string | null) => {
     if (!unique || !boardData) {
       return null;
@@ -154,12 +166,14 @@ function KanbanBoard() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  const onSubmit = () => {};
+
   return (
     <div style={{ paddingLeft: 40, paddingTop: 40 }}>
       <div style={{ position: "fixed", top: 100, right: 30 }}>
-        <Button onClick={onSubmit}>Create task</Button>
+        <Button onClick={onOpen}>Create task</Button>
       </div>
+
+      <TaskModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}

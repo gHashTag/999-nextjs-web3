@@ -13,7 +13,6 @@ export default function Wallet() {
     login,
     loggedIn,
     logout,
-    getUserInfo,
     getAccounts,
     getBalance,
     signMessage,
@@ -28,42 +27,27 @@ export default function Wallet() {
     if (loggedIn) {
       // Выполнить действия после успешного входа
       console.log("Успешный вход");
-      // Например, получить информацию о пользователе
-      getUserInfo();
+
       // Или получить баланс
       getBalance();
       // Или получить список аккаунтов
       getAccounts();
 
-      if (inviteCode) {
-        const createdUser = async (inviteCode: string) =>
-          await createSupabaseUser(inviteCode);
+      // if (inviteCode) {
+      const createdUser = async (inviteCode: string) =>
+        await createSupabaseUser(inviteCode);
 
-        createdUser(inviteCode as string);
-      }
-    } else {
-      router.push("/");
+      createdUser(inviteCode as string);
+      //}
     }
+    // else {
+    //   router.push("/");
+    // }
   }, [loggedIn, inviteCode]);
 
   const loggedInView = (
     <>
       <div className="flex gap-4 items-center">
-        <div>
-          <Button onClick={getUserInfo} color="primary" variant="faded">
-            Get User Info
-          </Button>
-        </div>
-        <div>
-          <Button onClick={getAccounts} color="primary" variant="faded">
-            Get Accounts
-          </Button>
-        </div>
-        <div>
-          <Button onClick={getBalance} color="primary" variant="faded">
-            Get Balance
-          </Button>
-        </div>
         {/* <div>
           <Button onClick={signMessage} color="primary" variant="faded">
             Sign Message
@@ -80,9 +64,8 @@ export default function Wallet() {
 
   const name = userInfo?.name;
   const description = userInfo?.email;
-  const profileImage = userInfo?.profileImage;
-  console.log("profileImage", profileImage);
-  console.log("loggedIn - Wallet", loggedIn);
+  const avatar = userInfo?.avatar;
+
   return (
     <Layout>
       <main className="flex flex-col items-center justify-between p-24">
@@ -90,7 +73,7 @@ export default function Wallet() {
           <User
             name={name}
             description={description}
-            avatarProps={{ src: profileImage }}
+            avatarProps={{ src: avatar }}
           />
         )}
         <div style={{ padding: "20px" }} />

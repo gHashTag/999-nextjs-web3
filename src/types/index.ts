@@ -1,3 +1,5 @@
+import { OpenloginUserInfo } from "@toruslabs/openlogin-utils";
+
 // Определение типа статуса задачи
 export type TaskStatus = 1 | 2 | 3 | 4;
 
@@ -90,4 +92,12 @@ export type RecordingAsset = {
     transcription: string;
     transcription_id: string;
   };
+};
+
+export type ExtendedOpenloginUserInfo = Omit<
+  OpenloginUserInfo,
+  "profileImage"
+> & {
+  avatar?: string;
+  user_id: string;
 };

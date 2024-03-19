@@ -2,10 +2,12 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Task, BoardData, TasksArray, Board } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
 import { supabase } from "@/utils/supabase";
+import { useWeb3Auth } from "./useWeb3Auth";
 
 export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
+  const { userInfo } = useWeb3Auth();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -80,16 +82,26 @@ export function useSupabaseBoard() {
     }
   }, []);
 
-  // Создание новой задачи
   const createTask = async (task: Omit<Task, "id">) => {
-    const { data, error } = await supabase.from("tasks").insert([task]);
-    fetchBoardData();
-    if (error) {
-      console.error("Ошибка при создании задачи:", error);
-    } else if (data) {
-      // Убедитесь, что data не null и является массивом
-      setTasks([...tasks, ...data]);
+    const user_id = localStorage.getItem("user_id");
+    // Проверка наличия user_id
+    if (!user_id) {
+      console.error("Ошибка: User Id не найден. Создание задачи невозможно.");
+      return; // Ранний возврат, если user_id отсутствует
     }
+
+    // Попытка создания задачи
+    const { error } = await supabase
+      .from("tasks")
+      .insert([{ user_id, ...task }]);
+
+    if (error) {
+      console.error("Ошибка при создании задачи:", error.message);
+      return; // Ранний возврат, если произошла ошибка
+    }
+
+    // Обновление данных доски после успешного создания задачи
+    fetchBoardData();
   };
 
   // Обновление задачи
