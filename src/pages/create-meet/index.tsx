@@ -75,7 +75,11 @@ const CreateMeet = () => {
       <Layout>
         <div
           className="flex-col mt-10"
-          style={{ paddingRight: 20, paddingLeft: 20, paddingBottom: 70 }}
+          style={{
+            paddingRight: 20,
+            paddingLeft: 20,
+            paddingBottom: 70,
+          }}
         >
           <div className="grid lg:grid-cols-3 gap-4 grid-cols-1 mt-6">
             <SubCard
@@ -100,6 +104,8 @@ const CreateMeet = () => {
             marginTop: "30px",
             display: "flex",
             flexWrap: "wrap",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           {assets?.map((asset, index) => (

@@ -6,7 +6,6 @@ import { RecordingAsset } from "@/types";
 export function MeteorsCard({ asset }: RecordingAsset) {
   return (
     <div
-      className=""
       style={{
         maxWidth: "calc(100% / 4)",
         paddingLeft: 20,
@@ -17,9 +16,12 @@ export function MeteorsCard({ asset }: RecordingAsset) {
       <BackgroundGradient>
         <div>
           {/* <div className="absolute inset-0 h-full w-full transform scale-[0.80] rounded-full blur-2xl" /> */}
-          <div className="relative px-5 py-5 h-full rounded-2xl flex">
+          <div
+            className="relative px-5 py-5 h-full rounded-2xl flex rounded-[22px]"
+            style={{ backgroundColor: "#0c0a09" }}
+          >
             <h1
-              className="font-bold text-4xl text-white mb-4 relative z-50"
+              className="font-bold text-3xl text-white mb-4 relative z-50"
               style={{
                 display: "-webkit-box",
                 WebkitLineClamp: 6,
