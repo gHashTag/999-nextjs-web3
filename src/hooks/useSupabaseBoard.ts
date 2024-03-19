@@ -7,7 +7,7 @@ import { useWeb3Auth } from "./useWeb3Auth";
 export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
-
+  const [assets, setAssets] = useState<any[] | null>();
   const [error, setError] = useState<string | null>(null);
 
   // console.log(boardData, "boardData");
@@ -146,6 +146,18 @@ export function useSupabaseBoard() {
     }
   };
 
+  const getAllAssets = async () => {
+    try {
+      let { data, error } = await supabase.from("room_assets").select("*");
+      console.log(data, "data");
+      if (error) console.error("Error fetching assets:", error);
+
+      setAssets(data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     const channels = supabase
       .channel("custom-all-channel")
@@ -165,6 +177,7 @@ export function useSupabaseBoard() {
 
   useEffect(() => {
     let isMounted = true;
+    getAllAssets();
     fetchBoardData().then(() => {
       if (!isMounted) return;
       // ...другие действия, если компонент все еще смонтирован
@@ -175,6 +188,7 @@ export function useSupabaseBoard() {
   }, [fetchBoardData]);
 
   return {
+    assets,
     tasks,
     setTasks,
     boardData,
@@ -185,5 +199,6 @@ export function useSupabaseBoard() {
     updateTask,
     deleteTask,
     updateTaskStatus,
+    getAllAssets,
   };
 }

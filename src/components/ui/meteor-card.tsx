@@ -3,9 +3,16 @@ import { Meteors } from "./meteors";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { RecordingAsset } from "@/types";
 
-export function MeteorsCard({ asset }: RecordingAsset) {
+export function MeteorsCard({
+  asset,
+  onClick,
+}: {
+  asset: RecordingAsset;
+  onClick: () => void;
+}) {
   return (
     <div
+      onClick={onClick}
       style={{
         maxWidth: "calc(100% / 4)",
         paddingLeft: 20,

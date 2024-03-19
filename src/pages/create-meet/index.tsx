@@ -3,16 +3,16 @@ import LandingCards from "@components/revamp/LandingCards/LandingCards";
 import SubCard from "@/components/revamp/LandingCards/SubCard";
 import Layout from "@/components/layout";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase";
 import { MeteorsCard } from "@/components/ui/meteor-card";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { RecordingAsset } from "@/types";
+import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
 
 const CreateMeet = () => {
   const router = useRouter();
 
-  const [assets, setAssets] = useState<any[] | null>();
+  const { assets } = useSupabaseBoard();
 
   const getRoom = async () => {
     router.push(`/create-meet/meets`);
@@ -32,43 +32,9 @@ const CreateMeet = () => {
     throw new Error("NEXT_PUBLIC_MANAGEMENT_TOKEN is not set");
   }
 
-  const getAssets = async () => {
-    try {
-      let { data, error } = await supabase.from("room_assets").select("*");
-      console.log(data, "data");
-      if (error) console.error("Error fetching assets:", error);
-
-      setAssets(data);
-    } catch (error) {
-      console.log("error", error);
-    }
+  const goToRecording = (recordings_id: string, asset: RecordingAsset) => {
+    router.push(`/create-meet/${recordings_id}`);
   };
-
-  const getRecordings = async () => {
-    try {
-      const response = await fetch("https://api.100ms.live/v2/recordings", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${managementToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Ошибка при получении сессий");
-      }
-
-      const data = await response.json();
-      console.log(data, "data");
-      return data;
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
-
-  useEffect(() => {
-    // getRecordings();
-    getAssets();
-  }, []);
 
   return (
     <>
@@ -109,7 +75,11 @@ const CreateMeet = () => {
           }}
         >
           {assets?.map((asset, index) => (
-            <MeteorsCard key={index} asset={asset} />
+            <MeteorsCard
+              key={index}
+              asset={asset}
+              onClick={() => goToRecording(asset.recording_id, asset)}
+            />
           ))}
 
           {/* <HoverEffect items={assets || []} /> */}
@@ -120,3 +90,23 @@ const CreateMeet = () => {
 };
 
 export default CreateMeet;
+// const getRecordings = async () => {
+//   try {
+//     const response = await fetch("https://api.100ms.live/v2/recordings", {
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${managementToken}`,
+//       },
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Ошибка при получении сессий");
+//     }
+
+//     const data = await response.json();
+//     console.log(data, "data");
+//     return data;
+//   } catch (error) {
+//     console.error("Error", error);
+//   }
+// };
