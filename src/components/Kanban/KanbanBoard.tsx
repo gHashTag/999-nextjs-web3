@@ -16,7 +16,7 @@ import { BoardData, StatusMap, Task } from "@/types";
 import { Button } from "@/components/ui/moving-border";
 import { useState } from "react";
 import TaskModal from "./TaskModal";
-import useModalTask from "@/hooks/useModalTask";
+
 import {
   Modal,
   ModalContent,

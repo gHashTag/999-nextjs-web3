@@ -117,3 +117,9 @@
   display: flex;
   width: 40px;
 }
+
+@media screen and (max-width: 600px) {
+  .menu {
+    display: none; /* Скрыть элементы на экранах с шириной до 768px */
+  }
+}

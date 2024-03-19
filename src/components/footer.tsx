@@ -20,7 +20,7 @@ import styles from "./footer.module.css";
 import {
   COPYRIGHT_HOLDER,
   SITE_NAME,
-  CODE_OF_CONDUCT,
+  // CODE_OF_CONDUCT,
   LEGAL_URL,
   REPO,
 } from "@lib/constants";

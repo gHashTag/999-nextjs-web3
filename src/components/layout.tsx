@@ -69,21 +69,23 @@ export default function Layout({
                 <Logo />
               </Link>
             </div>
-            <NavigationMenu>
-              <NavigationMenuList>
-                {NAVIGATION.map(({ name, route }) => (
-                  <NavigationMenuItem key={name}>
-                    <Link href={route} legacyBehavior passHref>
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                      >
-                        {name.toUpperCase()}
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
+            <div className={styles.menu}>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {NAVIGATION.map(({ name, route }) => (
+                    <NavigationMenuItem key={name}>
+                      <Link href={route} legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          {name.toUpperCase()}
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
 
             {(hmsConfig.hmsIntegration &&
               isLive &&
