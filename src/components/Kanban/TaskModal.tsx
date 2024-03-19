@@ -14,12 +14,18 @@ import { Button } from "@/components/ui/button";
 
 import { useToast } from "@/components/ui/use-toast";
 import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import styled from "styled-components";
 
 type Modal = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
 };
+
+const CustomModalContent = styled(ModalContent)`
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+`;
 
 function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
   const { createTask } = useSupabaseBoard();
@@ -53,7 +59,7 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <Button onClick={onOpen}>Open Modal</Button>
-      <ModalContent>
+      <CustomModalContent>
         {(onClose) => (
           <>
             <ModalHeader>
@@ -62,6 +68,7 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
             <ModalBody>
               <form onSubmit={handleSubmit(onCreate)}>
                 <Label htmlFor="text">Title</Label>
+                <div style={{ padding: 5 }} />
                 <Controller
                   name="title"
                   control={control}
@@ -79,6 +86,7 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
                 <div style={{ padding: 10 }} />
 
                 <Label htmlFor="text">Description</Label>
+                <div style={{ padding: 5 }} />
                 <Controller
                   name="description"
                   control={control}
@@ -109,7 +117,7 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
             </ModalFooter>
           </>
         )}
-      </ModalContent>
+      </CustomModalContent>
     </Modal>
   );
 }

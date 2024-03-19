@@ -105,10 +105,13 @@ export function useSupabaseBoard() {
 
   // Обновление задачи
   const updateTask = async (id: number, updatedFields: Partial<Task>) => {
+    console.log(id, "id");
     const { error } = await supabase
       .from("tasks")
       .update(updatedFields)
       .match({ id });
+
+    console.log(error, "error");
     fetchBoardData();
     if (error) {
       console.error("Ошибка при обновлении задачи:", error);
@@ -119,6 +122,7 @@ export function useSupabaseBoard() {
 
   // Удаление задачи
   const deleteTask = async (id: number) => {
+    console.log(id, "id");
     const { error } = await supabase.from("tasks").delete().match({ id });
     fetchBoardData();
     if (error) {

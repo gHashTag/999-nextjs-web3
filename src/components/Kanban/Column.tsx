@@ -31,8 +31,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 
 const CustomModalContent = styled(ModalContent)`
-  background-color: bg-stone-950;
-  color: var(--secondary-foreground);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 `;
 
 const Column: FC<BoardData> = ({ id, title, cards }) => {
