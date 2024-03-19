@@ -50,10 +50,10 @@ export const NAVIGATION = [
     name: "Tasks",
     route: "/tasks",
   },
-  {
-    name: "Schedule",
-    route: "/schedule",
-  },
+  // {
+  //   name: "Schedule",
+  //   route: "/schedule",
+  // },
   {
     name: "Wallet",
     route: "/wallet",

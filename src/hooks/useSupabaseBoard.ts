@@ -8,6 +8,7 @@ export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<any[] | null>();
+
   const [error, setError] = useState<string | null>(null);
 
   // console.log(boardData, "boardData");
@@ -158,6 +159,20 @@ export function useSupabaseBoard() {
     }
   };
 
+  const getAssetById = async (recording_id: string) => {
+    try {
+      let { data, error } = await supabase
+        .from("room_assets")
+        .select("*")
+        .eq("recording_id", recording_id);
+      console.log(data, "data");
+      if (error) console.error("Error fetching assets:", error);
+      return data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     const channels = supabase
       .channel("custom-all-channel")
@@ -188,6 +203,7 @@ export function useSupabaseBoard() {
   }, [fetchBoardData]);
 
   return {
+    getAssetById,
     assets,
     tasks,
     setTasks,
