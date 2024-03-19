@@ -83,7 +83,7 @@ export function useSupabaseBoard() {
   // Создание новой задачи
   const createTask = async (task: Omit<Task, "id">) => {
     const { data, error } = await supabase.from("tasks").insert([task]);
-
+    fetchBoardData();
     if (error) {
       console.error("Ошибка при создании задачи:", error);
     } else if (data) {
@@ -98,7 +98,7 @@ export function useSupabaseBoard() {
       .from("tasks")
       .update(updatedFields)
       .match({ id });
-
+    fetchBoardData();
     if (error) {
       console.error("Ошибка при обновлении задачи:", error);
     } else if (data) {
@@ -116,6 +116,7 @@ export function useSupabaseBoard() {
   // Удаление задачи
   const deleteTask = async (id: number) => {
     const { error } = await supabase.from("tasks").delete().match({ id });
+    fetchBoardData();
     if (error) {
       console.error("Ошибка при удалении задачи:", error);
     } else {

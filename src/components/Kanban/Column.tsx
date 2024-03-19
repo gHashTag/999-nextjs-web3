@@ -30,23 +30,15 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/use-toast";
-
-const FormSchema = z.object({
-  title: z.string().min(2, {
-    message: "Description must be at least 2 characters.",
-  }),
-  description: z.string().min(2, {
-    message: "Description must be at least 2 characters.",
-  }),
-});
+import { useToast } from "@/components/ui/use-toast";
 
 const Column: FC<BoardData> = ({ id, title, cards }) => {
   const { setNodeRef } = useDroppable({ id });
-  const { updateTask } = useSupabaseBoard();
+  const { updateTask, deleteTask } = useSupabaseBoard();
   const { control, handleSubmit, getValues, setValue } = useForm();
   const { onOpen } = useDisclosure();
   const [openModalId, setOpenModalId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const openModal = (cardId: string) => {
     setOpenModalId(cardId);
@@ -57,11 +49,41 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
     setOpenModalId(null);
   };
 
-  const onSubmit = () => {
+  const onUpdate = () => {
     const formData = getValues();
-
+    console.log("formData", formData);
     const { title, description } = formData;
+    console.log(openModalId, "openModalId");
     openModalId && updateTask(+openModalId, { title, description });
+    toast({
+      title: "You task has been updated:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify(formData, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
+    closeModal();
+  };
+
+  const onDelete = () => {
+    const formData = getValues();
+    console.log("formData", formData);
+
+    console.log(openModalId, "openModalId");
+    openModalId && deleteTask(+openModalId);
+    toast({
+      title: "You task has been deleted",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify(formData, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
     closeModal();
   };
 
@@ -103,7 +125,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                   <span>Edit task</span>
                 </ModalHeader>
                 <ModalBody>
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form onSubmit={handleSubmit(onUpdate)}>
                     <Label htmlFor="text">Title</Label>
                     <Controller
                       name="title"
@@ -141,7 +163,10 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                   </form>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="warning" variant="ghost" onClick={onSubmit}>
+                  <Button color="warning" variant="ghost" onClick={onDelete}>
+                    Delete
+                  </Button>
+                  <Button color="warning" variant="ghost" onClick={onUpdate}>
                     Save
                   </Button>
                 </ModalFooter>
