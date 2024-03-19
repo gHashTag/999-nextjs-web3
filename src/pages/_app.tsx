@@ -13,6 +13,7 @@ import BackgroundBeamsTwo from "@components/ui/background-beams-two";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/utils/cn";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -52,13 +53,20 @@ export default function App({ Component, pageProps }: AppProps) {
         <HMSRoomProvider>
           <NextUIProvider>
             <NextThemesProvider attribute="class" defaultTheme="dark">
-              <main className="dark text-foreground bg-background">
-                <BackgroundBeams />
-                <Component {...pageProps} />
-                <ResizeHandler />
-                <NProgress />
-                {/* <BackgroundBeamsTwo /> */}
-              </main>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <main className="dark text-foreground bg-background">
+                  {/* <BackgroundBeams /> */}
+                  <Component {...pageProps} />
+                  <ResizeHandler />
+                  <NProgress />
+                  {/* <BackgroundBeamsTwo /> */}
+                </main>
+              </ThemeProvider>
             </NextThemesProvider>
           </NextUIProvider>
         </HMSRoomProvider>

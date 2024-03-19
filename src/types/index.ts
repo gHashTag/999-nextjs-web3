@@ -51,6 +51,12 @@ export interface BoardData {
   cards?: Task[];
 }
 
+export interface CardInfo {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export type Board = {
   [key: string]: Task[];
 };

@@ -2,20 +2,44 @@ import React, { FC, useState } from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import Card from "./Card";
-import { BoardData } from "@/types";
+import { BoardData, CardInfo } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { Button } from "@/components/ui/button";
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
   useDisclosure,
-  Input,
-  Textarea,
+
+  // Textarea,
 } from "@nextui-org/react";
-import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
-import { useForm, Controller } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/components/ui/use-toast";
+
+const FormSchema = z.object({
+  title: z.string().min(2, {
+    message: "Description must be at least 2 characters.",
+  }),
+  description: z.string().min(2, {
+    message: "Description must be at least 2 characters.",
+  }),
+});
 
 const Column: FC<BoardData> = ({ id, title, cards }) => {
   const { setNodeRef } = useDroppable({ id });
@@ -40,12 +64,13 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
     openModalId && updateTask(+openModalId, { title, description });
     closeModal();
   };
+
   return (
     <SortableContext id={id} items={cards || []} strategy={rectSortingStrategy}>
       <div
         ref={setNodeRef}
         style={{
-          width: "300px",
+          width: "280px",
           background: "transparent",
           marginRight: "10px",
           marginBottom: "80px",
@@ -63,6 +88,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
         >
           {title}
         </p>
+
         {cards?.map((card) => (
           <div key={card.id}>
             <Card
@@ -70,9 +96,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
               title={card.title}
               description={card.description}
               onClick={() => openModal(card.id)}
-              openModal={openModal}
             />
-
             <Modal isOpen={openModalId === card.id} onOpenChange={closeModal}>
               <ModalContent>
                 <ModalHeader>
@@ -80,17 +104,13 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                 </ModalHeader>
                 <ModalBody>
                   <form onSubmit={handleSubmit(onSubmit)}>
+                    <Label htmlFor="text">Title</Label>
                     <Controller
                       name="title"
                       control={control}
                       defaultValue={card.title}
                       render={({ field }) => (
-                        <Textarea
-                          label="Title"
-                          variant="bordered"
-                          size="sm"
-                          radius="full"
-                          labelPlacement="outside"
+                        <Input
                           placeholder="Enter your title"
                           className="w-full h-15"
                           {...field}
@@ -101,16 +121,14 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                       )}
                     />
                     <div style={{ padding: 10 }} />
+
+                    <Label htmlFor="text">Description</Label>
                     <Controller
                       name="description"
                       control={control}
                       defaultValue={card.description}
                       render={({ field }) => (
-                        <Textarea
-                          label="Description"
-                          variant="bordered"
-                          radius="full"
-                          labelPlacement="outside"
+                        <Input
                           placeholder="Enter your description"
                           className="w-full"
                           {...field}
