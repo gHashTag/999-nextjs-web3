@@ -1,9 +1,11 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useWeb3Auth } from "@hooks/useWeb3Auth";
 import { Button, User, Card, CardBody } from "@nextui-org/react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
+import { Snippet } from "@nextui-org/react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function Wallet() {
   const {
@@ -18,6 +20,12 @@ export default function Wallet() {
     signMessage,
     createSupabaseUser,
   } = useWeb3Auth();
+  const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
+  const [copyStatus, setCopyStatus] = useState(false); // To indicate if the text was copied
+  const onCopyText = () => {
+    setCopyStatus(true);
+    setTimeout(() => setCopyStatus(false), 2000); // Reset status after 2 seconds
+  };
 
   const router = useRouter();
   const { inviteCode } = router.query;
@@ -78,11 +86,16 @@ export default function Wallet() {
         )}
         <div style={{ padding: "20px" }} />
         {address && (
-          <Card>
-            <CardBody>
-              <p>{address}</p>
-            </CardBody>
-          </Card>
+          <>
+            <Card>
+              <CardBody>
+                <CopyToClipboard text={address} onCopy={onCopyText}>
+                  <span>{address}</span>
+                </CopyToClipboard>
+              </CardBody>
+            </Card>
+            {copyStatus && <p>Text copied to clipboard!</p>}
+          </>
         )}
 
         <div style={{ padding: "20px" }} />
@@ -93,6 +106,7 @@ export default function Wallet() {
             </CardBody>
           </Card>
         )}
+
         <div style={{ padding: "20px" }} />
         <div className="grid">{loggedIn && loggedInView}</div>
       </main>
