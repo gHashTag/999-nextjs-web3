@@ -5,7 +5,7 @@ import Card from "./Card";
 import { BoardData, CardInfo } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
-
+import styled from "styled-components";
 import { z } from "zod";
 import {
   Form,
@@ -25,12 +25,15 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-
-  // Textarea,
 } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+
+const CustomModalContent = styled(ModalContent)`
+  background-color: bg-stone-950;
+  color: var(--secondary-foreground);
+`;
 
 const Column: FC<BoardData> = ({ id, title, cards }) => {
   const { setNodeRef } = useDroppable({ id });
@@ -51,9 +54,8 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
 
   const onUpdate = () => {
     const formData = getValues();
-    console.log("formData", formData);
+
     const { title, description } = formData;
-    console.log(openModalId, "openModalId");
     openModalId && updateTask(+openModalId, { title, description });
     toast({
       title: "You task has been updated:",
@@ -70,9 +72,6 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
 
   const onDelete = () => {
     const formData = getValues();
-    console.log("formData", formData);
-
-    console.log(openModalId, "openModalId");
     openModalId && deleteTask(+openModalId);
     toast({
       title: "You task has been deleted",
@@ -120,13 +119,14 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
               onClick={() => openModal(card.id)}
             />
             <Modal isOpen={openModalId === card.id} onOpenChange={closeModal}>
-              <ModalContent>
+              <CustomModalContent>
                 <ModalHeader>
                   <span>Edit task</span>
                 </ModalHeader>
                 <ModalBody>
                   <form onSubmit={handleSubmit(onUpdate)}>
                     <Label htmlFor="text">Title</Label>
+                    <div style={{ padding: 5 }} />
                     <Controller
                       name="title"
                       control={control}
@@ -145,6 +145,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                     <div style={{ padding: 10 }} />
 
                     <Label htmlFor="text">Description</Label>
+                    <div style={{ padding: 5 }} />
                     <Controller
                       name="description"
                       control={control}
@@ -170,7 +171,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                     Save
                   </Button>
                 </ModalFooter>
-              </ModalContent>
+              </CustomModalContent>
             </Modal>
           </div>
         ))}

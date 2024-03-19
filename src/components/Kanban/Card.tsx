@@ -25,19 +25,21 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
 
     return (
       <div ref={ref} onClick={onClick}>
-        <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-black">
-          <div
-            className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
-            style={{ paddingTop: 10, paddingLeft: 10 }}
-          >
-            {title}
-          </div>
-          <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+        <BackgroundGradient className="rounded-[22px] sm:p-1">
+          <div className="bg-stone-950 rounded-[21px]">
             <div
-              className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-              style={{ padding: 10 }}
+              className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
+              style={{ paddingTop: 10, paddingLeft: 10 }}
             >
-              {description}
+              {title}
+            </div>
+            <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+              <div
+                className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
+                style={{ padding: 10 }}
+              >
+                {description}
+              </div>
             </div>
           </div>
         </BackgroundGradient>
