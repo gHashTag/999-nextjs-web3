@@ -33,6 +33,7 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
 
   const onCreate = () => {
     const formData = getValues();
+
     console.log("formData", formData);
     const { title, description } = formData;
 
@@ -95,7 +96,14 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
               </form>
             </ModalBody>
             <ModalFooter>
-              <Button color="warning" variant="ghost" onClick={onCreate}>
+              <Button
+                color="warning"
+                variant="ghost"
+                onClick={() => {
+                  onCreate();
+                  onClose();
+                }}
+              >
                 Create
               </Button>
             </ModalFooter>

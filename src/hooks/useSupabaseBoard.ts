@@ -7,7 +7,6 @@ import { useWeb3Auth } from "./useWeb3Auth";
 export function useSupabaseBoard() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
-  const { userInfo } = useWeb3Auth();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -95,33 +94,26 @@ export function useSupabaseBoard() {
       .from("tasks")
       .insert([{ user_id, ...task }]);
 
+    // Обновление данных доски после успешного создания задачи
+    fetchBoardData();
+
     if (error) {
       console.error("Ошибка при создании задачи:", error.message);
       return; // Ранний возврат, если произошла ошибка
     }
-
-    // Обновление данных доски после успешного создания задачи
-    fetchBoardData();
   };
 
   // Обновление задачи
   const updateTask = async (id: number, updatedFields: Partial<Task>) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("tasks")
       .update(updatedFields)
       .match({ id });
     fetchBoardData();
     if (error) {
       console.error("Ошибка при обновлении задачи:", error);
-    } else if (data) {
-      // Проверяем, что data не null и является массивом
-      setTasks(
-        tasks.map((task) =>
-          String(task.id) === String(id)
-            ? { ...task, ...(data[0] as Task) }
-            : task
-        )
-      );
+    } else {
+      fetchBoardData();
     }
   };
 

@@ -49,28 +49,28 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div>
-      <HuddleProvider client={huddleClient}>
-        <HMSRoomProvider>
-          <NextUIProvider>
-            <NextThemesProvider attribute="class" defaultTheme="dark">
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <main className="dark text-foreground bg-background">
-                  {/* <BackgroundBeams /> */}
-                  <Component {...pageProps} />
-                  <ResizeHandler />
-                  <NProgress />
-                  {/* <BackgroundBeamsTwo /> */}
-                </main>
-              </ThemeProvider>
-            </NextThemesProvider>
-          </NextUIProvider>
-        </HMSRoomProvider>
-      </HuddleProvider>
+      {/* <HuddleProvider client={huddleClient}> */}
+      <HMSRoomProvider>
+        <NextUIProvider>
+          <NextThemesProvider attribute="class" defaultTheme="dark">
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <main className="dark text-foreground bg-background">
+                <BackgroundBeams />
+                <Component {...pageProps} />
+                <ResizeHandler />
+                <NProgress />
+                {/* <BackgroundBeamsTwo /> */}
+              </main>
+            </ThemeProvider>
+          </NextThemesProvider>
+        </NextUIProvider>
+      </HMSRoomProvider>
+      {/* </HuddleProvider> */}
     </div>
   );
 }
