@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 import { useToast } from "@/components/ui/use-toast";
-import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { useSupabase } from "@/hooks/useSupabase";
 import styled from "styled-components";
 
 type Modal = {
@@ -28,7 +28,7 @@ const CustomModalContent = styled(ModalContent)`
 `;
 
 function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
-  const { createTask } = useSupabaseBoard();
+  const { createTask } = useSupabase();
   const { toast } = useToast();
   const { control, handleSubmit, getValues, setValue } = useForm({
     defaultValues: {

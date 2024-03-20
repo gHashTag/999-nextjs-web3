@@ -3,132 +3,24 @@
 import { useState, useEffect } from "react";
 import { IProvider } from "@web3auth/base";
 import { web3auth } from "@/utils/web3Auth";
-// Corrected the import path for supabaseClient
-import { supabase } from "@/utils/supabase";
 import Web3 from "web3";
 
 // Corrected the import path for useRouter
 import { useRouter } from "next/router";
 import { ExtendedOpenloginUserInfo, SupabaseUser } from "@/types";
+import { useSupabase } from "./useSupabase";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
-// import { Web3Auth } from '@web3auth/modal'
-
-export const checkUsername = async (username: string) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", username);
-
-  if (error) {
-    console.error("Ошибка при запросе к Supabase", error);
-    return false;
-  }
-
-  return data.length > 0 ? data[0].user_id : false;
-};
 
 const useWeb3Auth = () => {
   const router = useRouter();
+  const { setUserInfo } = useSupabase();
   const [loggedIn, setLoggedIn] = useState(false);
-  const [workspaceSlug, setWorkspaceSlug] = useState("");
-
-  useEffect(() => {
-    const getUserId = localStorage.getItem("user_id");
-    getUserId && setWorkspaceSlug(getUserId);
-  }, []);
 
   const [provider, setProvider] = useState<IProvider | null>(null);
 
   const [address, setAddress] = useState<string | null>(null);
-  const [userSupabase, setUserSupabase] = useState<SupabaseUser | null>(null);
-  const [userInfo, setUserInfo] = useState<ExtendedOpenloginUserInfo | null>(
-    null
-  );
-
-  const getUserSupabase = async () => {
-    try {
-      const user_id = localStorage.getItem("user_id");
-      const response = await supabase
-        .from("users")
-        .select("*")
-        .eq("user_id", user_id)
-        .single();
-
-      setUserSupabase(response.data);
-    } catch (error) {
-      console.log("");
-    }
-  };
 
   const [balance, setBalance] = useState<string | null>(null);
-
-  const getSupabaseUser = async (email: string) => {
-    try {
-      const response = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", email)
-        .single();
-
-      if (response.error && response.error.code === "PGRST116") {
-        console.error("Пользователь не найден");
-        return null;
-      }
-
-      if (response.error) {
-        console.error(
-          "Ошибка при получении информации о пользователе:",
-          response.error
-        );
-        return null;
-      }
-
-      return response.data;
-    } catch (error) {
-      console.error("Ошибка при получении информации о пользователе:", error);
-      return null;
-    }
-  };
-
-  const createSupabaseUser = async (inviteCode: string) => {
-    try {
-      const user = await web3auth.getUserInfo();
-      if (!user.email) {
-        console.error("Email пользователя не найден");
-        return;
-      }
-      const userData = await getSupabaseUser(user.email);
-      if (!userData) {
-        console.log("Создание нового пользователя, так как текущий не найден");
-        // Логика создания пользователя
-        // Пользователя с таким email нет в базе, создаем нового
-        const newUser = {
-          email: user.email,
-          first_name: user.name,
-          aggregateverifier: user.aggregateVerifier,
-          verifier: user.verifier,
-          avatar: user.profileImage,
-          typeoflogin: user.typeOfLogin,
-          inviter: inviteCode,
-        };
-
-        const { error } = await supabase.from("users").insert([{ ...newUser }]);
-
-        if (!error) {
-          const userData = await getSupabaseUser(user.email);
-          setUserInfo({ ...userData } as ExtendedOpenloginUserInfo);
-          localStorage.setItem("user_id", userData.user_id);
-        } else {
-          console.log(error, "Ошибка создания пользователя");
-        }
-      } else {
-        setUserInfo(userData as ExtendedOpenloginUserInfo);
-        localStorage.setItem("user_id", userData.user_id);
-      }
-    } catch (error) {
-      console.error("Ошибка при получении информации о пользователе:", error);
-    }
-  };
 
   const login = async () => {
     try {
@@ -155,7 +47,6 @@ const useWeb3Auth = () => {
   };
 
   useEffect(() => {
-    getUserSupabase();
     login();
   }, []);
 
@@ -185,8 +76,6 @@ const useWeb3Auth = () => {
     // Get user's Ethereum public address
     const accounts = await web3.eth.getAccounts();
     setAddress(accounts[0]);
-    console.log("accounts", accounts);
-    console.log("provider not initialized yet");
   };
 
   const getBalance = async () => {
@@ -204,7 +93,7 @@ const useWeb3Auth = () => {
       await web3.eth.getBalance(address), // Balance is in wei
       "ether"
     );
-    console.log("balance", bal);
+
     setBalance(bal);
   };
 
@@ -231,7 +120,6 @@ const useWeb3Auth = () => {
   return {
     address,
     balance,
-    userInfo,
     provider,
     loggedIn,
     login,
@@ -241,11 +129,6 @@ const useWeb3Auth = () => {
     signMessage,
     getBalance,
     getAccounts,
-    createSupabaseUser,
-    getSupabaseUser,
-    workspaceSlug,
-    userSupabase,
-    setUserSupabase,
   };
 };
 

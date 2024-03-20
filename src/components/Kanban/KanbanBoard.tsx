@@ -11,7 +11,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Column from "./Column";
 
-import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { useSupabase } from "@/hooks/useSupabase";
 import { BoardData, StatusMap, Task } from "@/types";
 import { Button } from "@/components/ui/moving-border";
 import { useState } from "react";
@@ -27,7 +27,7 @@ import {
 } from "@nextui-org/react";
 
 function KanbanBoard() {
-  const { boardData, setBoardData, updateTaskStatus } = useSupabaseBoard();
+  const { boardData, setBoardData, updateTaskStatus } = useSupabase();
   //const { isOpen, onOpen, onOpenChange } = useModalTask();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const findColumn = (unique: string | null) => {

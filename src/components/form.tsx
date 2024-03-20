@@ -27,7 +27,7 @@ import useEmailQueryParam from "@lib/hooks/use-email-query-param";
 
 import Captcha, { useCaptcha } from "./captcha";
 
-import { checkUsername, useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { useSupabase } from "@/hooks/useSupabase";
 
 type FormState = "default" | "loading" | "error";
 
@@ -36,7 +36,7 @@ type Props = {
 };
 
 export default function Form({ sharePage }: Props) {
-  const [inviteCode, setInviteCode] = useState("");
+  const [inviteCode, setInviteCode] = useState("koshey999nft");
   const [errorMsg, setErrorMsg] = useState("");
   const [errorTryAgain, setErrorTryAgain] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -49,7 +49,7 @@ export default function Form({ sharePage }: Props) {
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
 
-  const { workspaceSlug } = useWeb3Auth();
+  const { workspaceSlug, checkUsername } = useSupabase();
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function Form({ sharePage }: Props) {
 
       if (userId) {
         router.push({
-          pathname: `/${workspaceSlug}/wallet`,
+          pathname: `/workspaceSlug/wallet`,
           query: { inviteCode: inviteCode },
         });
       } else {

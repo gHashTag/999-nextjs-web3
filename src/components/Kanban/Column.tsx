@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { useSupabase } from "@/hooks/useSupabase";
 import { Button } from "@/components/ui/button";
 import {
   Modal,
@@ -37,7 +37,7 @@ const CustomModalContent = styled(ModalContent)`
 
 const Column: FC<BoardData> = ({ id, title, cards }) => {
   const { setNodeRef } = useDroppable({ id });
-  const { updateTask, deleteTask } = useSupabaseBoard();
+  const { updateTask, deleteTask } = useSupabase();
   const { control, handleSubmit, getValues, setValue } = useForm();
   const { onOpen } = useDisclosure();
   const [openModalId, setOpenModalId] = useState<string | null>(null);

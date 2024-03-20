@@ -30,16 +30,13 @@ import { hmsConfig } from "./hms/config";
 import ViewSource from "./view-source";
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { useSupabase } from "@/hooks/useSupabase";
 
 type Props = {
   children: React.ReactNode;
@@ -57,7 +54,7 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
-  const { workspaceSlug } = useWeb3Auth();
+  const { workspaceSlug } = useSupabase();
 
   const activeRoute = router.asPath;
   const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];

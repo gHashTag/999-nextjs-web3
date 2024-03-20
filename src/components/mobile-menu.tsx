@@ -30,14 +30,14 @@ import { useDialog } from "@react-aria/dialog";
 import { FocusScope } from "@react-aria/focus";
 import { useButton } from "@react-aria/button";
 import styles from "./mobile-menu.module.css";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { useSupabase } from "@/hooks/useSupabase";
 
 function ModalDialog(
   props: Parameters<typeof useOverlay>[0] & Parameters<typeof useDialog>[0]
 ) {
   const router = useRouter();
   const activeRoute = router.asPath;
-  const { workspaceSlug } = useWeb3Auth();
+  const { workspaceSlug } = useSupabase();
   const ref = useRef<HTMLElement | null>(null);
   const { modalProps } = useModal();
   const { overlayProps } = useOverlay(props, ref);

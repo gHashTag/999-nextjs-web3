@@ -7,19 +7,13 @@ import { useRouter } from "next/router";
 import { Snippet } from "@nextui-org/react";
 // @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useSupabase } from "@/hooks/useSupabase";
 
 export default function Wallet() {
-  const {
-    address,
-    balance,
-    userInfo,
-    login,
-    loggedIn,
-    logout,
-    getAccounts,
-    getBalance,
-    createSupabaseUser,
-  } = useWeb3Auth();
+  const { address, balance, login, loggedIn, logout, getAccounts, getBalance } =
+    useWeb3Auth();
+  const { userInfo, workspaceSlug, createSupabaseUser, getUserSupabase } =
+    useSupabase();
 
   const [copyStatus, setCopyStatus] = useState(false);
   const onCopyText = () => {
@@ -37,14 +31,19 @@ export default function Wallet() {
       getBalance();
       // Или получить список аккаунтов
       getAccounts();
+      getUserSupabase();
     } else if (inviteCode) {
       console.log("User is not logged in and has invite code");
       if (inviteCode) {
-        console.log("Creating new user with invite code");
         const createdUser = async (inviteCode: string) =>
           await createSupabaseUser(inviteCode);
-
+        console.log(createdUser, "createdUser");
         createdUser(inviteCode as string);
+        console.log(workspaceSlug, "workspaceSlug");
+        router.push({
+          pathname: `/[workspaceSlug]/wallet`,
+          query: { workspaceSlug: "workspaceSlug" },
+        });
       } else {
         router.push("/");
       }
@@ -67,7 +66,7 @@ export default function Wallet() {
       </div>
     </>
   );
-
+  console.log(userInfo, "userInfo");
   const name = userInfo?.name;
   const description = userInfo?.email;
   const avatar = userInfo?.avatar;

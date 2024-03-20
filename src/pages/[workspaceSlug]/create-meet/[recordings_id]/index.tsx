@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Layout from "@/components/layout";
 import { useEffect, useState } from "react";
-import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { useSupabase } from "@/hooks/useSupabase";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { twMerge } from "tailwind-merge";
 
@@ -13,7 +13,7 @@ const RecordingPage = () => {
   const id = pathname.split("/").pop();
   const [asset, setAsset] = useState<any[] | null>();
 
-  const { getAssetById } = useSupabaseBoard();
+  const { getAssetById } = useSupabase();
 
   useEffect(() => {
     const fetchAsset = async () => {

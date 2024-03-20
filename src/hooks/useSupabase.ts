@@ -1,15 +1,142 @@
-// hooks/useSupabaseBoard.ts
+// hooks/useSupabase.ts
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Task, BoardData, TasksArray, Board } from "@/types";
+import {
+  Task,
+  BoardData,
+  TasksArray,
+  Board,
+  SupabaseUser,
+  ExtendedOpenloginUserInfo,
+} from "@/types";
 import { supabase } from "@/utils/supabase";
 import { useWeb3Auth } from "./useWeb3Auth";
+import { web3auth } from "@/utils/web3Auth";
 
-export function useSupabaseBoard() {
+export function useSupabase() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<any[] | null>();
-
+  const [userSupabase, setUserSupabase] = useState<SupabaseUser | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const [userInfo, setUserInfo] = useState<ExtendedOpenloginUserInfo | null>(
+    null
+  );
+
+  const [workspaceSlug, setWorkspaceSlug] = useState("");
+
+  const getUserSupabase = async () => {
+    try {
+      const user_id = localStorage.getItem("user_id");
+      const response = await supabase
+        .from("users")
+        .select("*")
+        .eq("user_id", user_id)
+        .single();
+
+      setUserSupabase(response.data);
+    } catch (error) {
+      console.log("");
+    }
+  };
+
+  useEffect(() => {
+    getUserSupabase();
+    const getUserId = localStorage.getItem("user_id");
+    getUserId && setWorkspaceSlug(getUserId);
+  }, []);
+
+  const checkUsername = async (username: string) => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", username);
+
+    if (error) {
+      console.error("Ошибка при запросе к Supabase", error);
+      return false;
+    }
+
+    return data.length > 0 ? data[0].user_id : false;
+  };
+
+  const getSupabaseUser = async (email: string) => {
+    try {
+      const response = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .single();
+
+      if (response.error && response.error.code === "PGRST116") {
+        console.error("Пользователь не найден");
+        return null;
+      }
+
+      if (response.error) {
+        console.error(
+          "Ошибка при получении информации о пользователе:",
+          response.error
+        );
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Ошибка при получении информации о пользователе:", error);
+      return null;
+    }
+  };
+
+  const createSupabaseUser = async (
+    inviteCode: string
+  ): Promise<{ workspaceSlug: string }> => {
+    try {
+      const user = await web3auth.getUserInfo();
+      if (!user.email) {
+        console.error("Email пользователя не найден");
+        return { workspaceSlug: "" };
+      }
+      const userData = await getSupabaseUser(user.email);
+      if (!userData) {
+        console.log("Создание нового пользователя, так как текущий не найден");
+        // Логика создания пользователя
+        // Пользователя с таким email нет в базе, создаем нового
+        const newUser = {
+          email: user.email,
+          first_name: user.name,
+          aggregateverifier: user.aggregateVerifier,
+          verifier: user.verifier,
+          avatar: user.profileImage,
+          typeoflogin: user.typeOfLogin,
+          inviter: inviteCode,
+        };
+
+        const { error } = await supabase.from("users").insert([{ ...newUser }]);
+
+        if (!error) {
+          const userData = await getSupabaseUser(user.email);
+          setUserInfo({ ...userData } as ExtendedOpenloginUserInfo);
+          localStorage.setItem("user_id", userData.user_id);
+          return {
+            workspaceSlug: userData.user_id,
+          };
+        } else {
+          console.log(error, "Ошибка создания пользователя");
+          return { workspaceSlug: "" };
+        }
+      } else {
+        setUserInfo(userData as ExtendedOpenloginUserInfo);
+        localStorage.setItem("user_id", userData.user_id);
+        return {
+          workspaceSlug: userData.user_id,
+        };
+      }
+    } catch (error) {
+      console.error("Ошибка при получении информации о пользователе:", error);
+      return { workspaceSlug: "" };
+    }
+  };
 
   // console.log(boardData, "boardData");
   const statusToColumnName: Record<number, string> = {
@@ -192,6 +319,7 @@ export function useSupabaseBoard() {
   useEffect(() => {
     let isMounted = true;
     getAllAssets();
+    getUserSupabase();
     fetchBoardData().then(() => {
       if (!isMounted) return;
       // ...другие действия, если компонент все еще смонтирован
@@ -215,5 +343,13 @@ export function useSupabaseBoard() {
     deleteTask,
     updateTaskStatus,
     getAllAssets,
+    createSupabaseUser,
+    userSupabase,
+    setUserSupabase,
+    userInfo,
+    setUserInfo,
+    checkUsername,
+    workspaceSlug,
+    getUserSupabase,
   };
 }

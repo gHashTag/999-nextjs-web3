@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+
+import { useSupabase } from "@/hooks/useSupabase";
 
 const Meets = ({ roomId = "gcy-elue-bot" }) => {
   const router = useRouter();
-  const { workspaceSlug } = useWeb3Auth();
+  const { workspaceSlug } = useSupabase();
 
   useEffect(() => {
     // const setRoute = async () => {

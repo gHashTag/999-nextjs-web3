@@ -1,20 +1,16 @@
 import React from "react";
-import LandingCards from "@components/revamp/LandingCards/LandingCards";
 import SubCard from "@/components/revamp/LandingCards/SubCard";
 import Layout from "@/components/layout";
 import { useRouter } from "next/navigation";
 import { MeteorsCard } from "@/components/ui/meteor-card";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { RecordingAsset } from "@/types";
-import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { useSupabase } from "@/hooks/useSupabase";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const CreateMeet = () => {
   const router = useRouter();
 
-  const { assets } = useSupabaseBoard();
-  const { workspaceSlug } = useWeb3Auth();
+  const { workspaceSlug, assets } = useSupabase();
 
   const getRoom = async () => {
     router.push(`/${workspaceSlug}/create-meet/meets`);
