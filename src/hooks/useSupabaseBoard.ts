@@ -150,7 +150,6 @@ export function useSupabaseBoard() {
   const getAllAssets = async () => {
     try {
       let { data, error } = await supabase.from("room_assets").select("*");
-      console.log(data, "data");
       if (error) console.error("Error fetching assets:", error);
 
       setAssets(data);

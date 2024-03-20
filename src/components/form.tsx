@@ -65,7 +65,7 @@ export default function Form({ sharePage }: Props) {
     if (inviteCode) {
       const userId = await checkUsername(inviteCode);
       workspaceSlug;
-      console.log(userId, "userId");
+
       if (userId) {
         router.push({
           pathname: `/${workspaceSlug}/wallet`,

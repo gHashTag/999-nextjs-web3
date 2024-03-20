@@ -39,6 +39,7 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 type Props = {
   children: React.ReactNode;
@@ -56,6 +57,8 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
+  const { workspaceSlug } = useWeb3Auth();
+
   const activeRoute = router.asPath;
   const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];
   return (
@@ -74,13 +77,20 @@ export default function Layout({
                 <NavigationMenuList>
                   {NAVIGATION.map(({ name, route }) => (
                     <NavigationMenuItem key={name}>
-                      <Link href={route} legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
+                      {workspaceSlug && (
+                        <Link
+                          href={{
+                            pathname: `/${workspaceSlug}${route}`,
+                            query: { workspaceSlug: "workspaceSlug" },
+                          }}
                         >
-                          {name.toUpperCase()}
-                        </NavigationMenuLink>
-                      </Link>
+                          <NavigationMenuLink
+                            className={navigationMenuTriggerStyle()}
+                          >
+                            {name.toUpperCase()}
+                          </NavigationMenuLink>
+                        </Link>
+                      )}
                     </NavigationMenuItem>
                   ))}
                 </NavigationMenuList>

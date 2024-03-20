@@ -9,7 +9,7 @@ import Web3 from "web3";
 
 // Corrected the import path for useRouter
 import { useRouter } from "next/router";
-import { ExtendedOpenloginUserInfo } from "@/types";
+import { ExtendedOpenloginUserInfo, SupabaseUser } from "@/types";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 // import { Web3Auth } from '@web3auth/modal'
 
@@ -19,7 +19,6 @@ export const checkUsername = async (username: string) => {
     .select("*")
     .eq("username", username);
 
-  console.log(data, "data checkUsername");
   if (error) {
     console.error("Ошибка при запросе к Supabase", error);
     return false;
@@ -41,9 +40,27 @@ const useWeb3Auth = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
 
   const [address, setAddress] = useState<string | null>(null);
+  const [userSupabase, setUserSupabase] = useState<SupabaseUser | null>(null);
   const [userInfo, setUserInfo] = useState<ExtendedOpenloginUserInfo | null>(
     null
   );
+
+  const getUserSupabase = async () => {
+    try {
+      const user_id = localStorage.getItem("user_id");
+      const response = await supabase
+        .from("users")
+        .select("*")
+        .eq("user_id", user_id)
+        .single();
+
+      setUserSupabase(response.data);
+    } catch (error) {
+      console.log("");
+    }
+  };
+
+  console.log(userInfo, "userInfo");
   const [balance, setBalance] = useState<string | null>(null);
 
   const getSupabaseUser = async (email: string) => {
@@ -139,11 +156,13 @@ const useWeb3Auth = () => {
   };
 
   useEffect(() => {
+    getUserSupabase();
     login();
   }, []);
 
   const logout = async () => {
     // IMP START - Logout
+
     await web3auth.logout();
     // IMP END - Logout
     setLoggedIn(false);
@@ -226,6 +245,8 @@ const useWeb3Auth = () => {
     createSupabaseUser,
     getSupabaseUser,
     workspaceSlug,
+    userSupabase,
+    setUserSupabase,
   };
 };
 

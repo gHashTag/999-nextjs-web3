@@ -8,22 +8,24 @@ import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { RecordingAsset } from "@/types";
 import { useSupabaseBoard } from "@/hooks/useSupabaseBoard";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const CreateMeet = () => {
   const router = useRouter();
 
   const { assets } = useSupabaseBoard();
+  const { workspaceSlug } = useWeb3Auth();
 
   const getRoom = async () => {
-    router.push(`/create-meet/meets`);
+    router.push(`/${workspaceSlug}/create-meet/meets`);
   };
 
   const getSpace = async () => {
-    router.push(`/create-meet/audio-spaces`);
+    router.push(`/${workspaceSlug}/create-meet/audio-spaces`);
   };
 
   const getTokenGated = async () => {
-    router.push(`/create-meet/token-gated`);
+    router.push(`/${workspaceSlug}/create-meet/token-gated`);
   };
 
   const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
@@ -33,7 +35,7 @@ const CreateMeet = () => {
   }
 
   const goToRecording = (recordings_id: string, asset: RecordingAsset) => {
-    router.push(`/create-meet/${recordings_id}`);
+    router.push(`/${workspaceSlug}/create-meet/${recordings_id}`);
   };
 
   return (

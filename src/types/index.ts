@@ -11,6 +11,35 @@ export type BoardItem = Record<TaskStatus, Task[]>;
 
 export type TasksArray = Task[];
 
+export type SupabaseUser = {
+  id: number;
+  created_at: Date;
+  first_name: string | null;
+  last_name: string | null;
+  username: string | null;
+  is_bot: boolean | null;
+  language_code: string | null;
+  telegram_id: number | null;
+  email: string | null;
+  avatar: string | null;
+  user_id: string;
+  aggregateverifier: string | null;
+  verifier: string | null;
+  typeoflogin: string | null;
+  admin_email: string | null;
+  instance_name: string | null;
+  use_case: string | null;
+  onboarding_step: Record<string, any> | null;
+  cover_image: string | null;
+  role: string | null;
+  display_name: string | null;
+  user_timezone: string | null;
+  inviter: string | null;
+};
+
+// Дополнительно, вы можете определить тип для таблицы users
+export type UsersTable = SupabaseUser[];
+
 export interface DropResult {
   draggableId: string;
   type: string;
