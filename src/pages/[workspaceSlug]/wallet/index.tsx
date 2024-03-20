@@ -31,26 +31,23 @@ export default function Wallet() {
   const { inviteCode } = router.query;
 
   useEffect(() => {
-    if (loggedIn || inviteCode) {
-      if (loggedIn) {
-        console.log("Successful login");
-        // Или получить баланс
-        getBalance();
-        // Или получить список аккаунтов
-        getAccounts();
+    if (loggedIn) {
+      console.log("Successful login");
+      // Или получить баланс
+      getBalance();
+      // Или получить список аккаунтов
+      getAccounts();
+    } else if (inviteCode) {
+      console.log("User is not logged in and has invite code");
+      if (inviteCode) {
+        console.log("Creating new user with invite code");
+        const createdUser = async (inviteCode: string) =>
+          await createSupabaseUser(inviteCode);
+
+        createdUser(inviteCode as string);
       } else {
-        if (inviteCode) {
-          console.log("Creating new user with invite code");
-          const createdUser = async (inviteCode: string) =>
-            await createSupabaseUser(inviteCode);
-
-          createdUser(inviteCode as string);
-        }
+        router.push("/");
       }
-    } else {
-      console.log("User is not logged in and has no invite code");
-
-      router.push("/");
     }
   }, [loggedIn, inviteCode]);
 
