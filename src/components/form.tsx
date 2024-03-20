@@ -49,14 +49,12 @@ export default function Form({ sharePage }: Props) {
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
 
-  const { checkUserId } = useWeb3Auth();
+  const { workspaceSlug } = useWeb3Auth();
   const inputRef = useRef(null);
 
   useEffect(() => {
-    const chekId = checkUserId();
-
-    if (chekId) {
-      router.push("/wallet");
+    if (workspaceSlug) {
+      router.push(`/${workspaceSlug}/wallet`);
     }
     if (inputRef.current) {
       (inputRef.current as any)?.focus();
@@ -66,10 +64,11 @@ export default function Form({ sharePage }: Props) {
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
       const userId = await checkUsername(inviteCode);
+      workspaceSlug;
       console.log(userId, "userId");
       if (userId) {
         router.push({
-          pathname: "/wallet",
+          pathname: `/${workspaceSlug}/wallet`,
           query: { inviteCode: inviteCode },
         });
       } else {

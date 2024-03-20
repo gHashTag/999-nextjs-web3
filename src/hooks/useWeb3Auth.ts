@@ -31,6 +31,12 @@ export const checkUsername = async (username: string) => {
 const useWeb3Auth = () => {
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
+  const [workspaceSlug, setWorkspaceSlug] = useState("");
+
+  useEffect(() => {
+    const getUserId = localStorage.getItem("user_id");
+    getUserId && setWorkspaceSlug(getUserId);
+  }, []);
 
   const [provider, setProvider] = useState<IProvider | null>(null);
 
@@ -132,10 +138,6 @@ const useWeb3Auth = () => {
     }
   };
 
-  const checkUserId = () => {
-    return localStorage.getItem("user_id");
-  };
-
   useEffect(() => {
     login();
   }, []);
@@ -223,7 +225,7 @@ const useWeb3Auth = () => {
     getAccounts,
     createSupabaseUser,
     getSupabaseUser,
-    checkUserId,
+    workspaceSlug,
   };
 };
 

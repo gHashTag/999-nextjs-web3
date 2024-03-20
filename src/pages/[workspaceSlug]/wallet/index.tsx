@@ -18,7 +18,6 @@ export default function Wallet() {
     logout,
     getAccounts,
     getBalance,
-    checkUserId,
     createSupabaseUser,
   } = useWeb3Auth();
 
@@ -50,11 +49,8 @@ export default function Wallet() {
       }
     } else {
       console.log("User is not logged in and has no invite code");
-      const chekId = checkUserId();
-      console.log(chekId, "chekId");
-      if (!chekId) {
-        router.push("/");
-      }
+
+      router.push("/");
     }
   }, [loggedIn, inviteCode]);
 
