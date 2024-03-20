@@ -6,7 +6,8 @@
 
 @layer base {
   :root {
-    --brand: #0c0a09;
+    --brand: #f6ff00;
+    --main-background: #0c0a09;
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
@@ -35,11 +36,10 @@
     --space-2x: 10px; /* Example space value */
     --space-4x: 20px; /* Example space value */
     --secondary-color: #f6ff00;
-    --brand: #f6ff00;
   }
 
   .dark {
-    --brand: #0c0a09;
+    --brand: #f6ff00;
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
     --card: 20 14.3% 4.1%;

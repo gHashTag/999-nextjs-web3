@@ -1,4 +1,4 @@
-import '@radix-ui/themes/styles.css'
+import "@radix-ui/themes/styles.css";
 /**
  * Copyright 2020 Vercel Inc.
  *
@@ -15,36 +15,36 @@ import '@radix-ui/themes/styles.css'
  * limitations under the License.
  */
 
-import { useRouter } from 'next/router'
-import { SkipNavContent } from '@reach/skip-nav'
+import { useRouter } from "next/router";
+import { SkipNavContent } from "@reach/skip-nav";
 
-import Page from '@components/page'
-import ConfContent from '@components/index'
-import { META_DESCRIPTION } from '@lib/constants'
+import Page from "@components/page";
+import ConfContent from "@components/index";
+import { META_DESCRIPTION } from "@lib/constants";
 
 export default function Conf() {
-  const { query } = useRouter()
+  const { query } = useRouter();
   const meta = {
-    title: 'Demo - Virtual Event Starter Kit',
-    description: META_DESCRIPTION
-  }
-  const ticketNumber = query.ticketNumber?.toString()
+    title: "Bank of Digital Avatars - 999",
+    description: META_DESCRIPTION,
+  };
+  const ticketNumber = query.ticketNumber?.toString();
   const defaultUserData = {
     id: query.id?.toString(),
     ticketNumber: ticketNumber ? parseInt(ticketNumber, 10) : undefined,
     name: query.name?.toString(),
-    username: query.username?.toString()
-  }
+    username: query.username?.toString(),
+  };
 
   return (
     <Page meta={meta} fullViewport>
       <SkipNavContent />
       <ConfContent
         defaultUserData={defaultUserData}
-        defaultPageState={query.ticketNumber ? 'ticket' : 'registration'}
+        defaultPageState={query.ticketNumber ? "ticket" : "registration"}
       />
     </Page>
-  )
+  );
 }
 
 // import Home from '@pages/Home'
