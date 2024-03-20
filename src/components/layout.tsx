@@ -81,7 +81,6 @@ export default function Layout({
                         <Link
                           href={{
                             pathname: `/${workspaceSlug}${route}`,
-                            query: { workspaceSlug: "workspaceSlug" },
                           }}
                         >
                           <NavigationMenuLink

@@ -60,7 +60,6 @@ const useWeb3Auth = () => {
     }
   };
 
-  console.log(userInfo, "userInfo");
   const [balance, setBalance] = useState<string | null>(null);
 
   const getSupabaseUser = async (email: string) => {

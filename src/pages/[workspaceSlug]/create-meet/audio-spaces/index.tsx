@@ -7,6 +7,21 @@ const Meets = ({ roomId = "gcy-elue-bot" }) => {
   const { workspaceSlug } = useWeb3Auth();
 
   useEffect(() => {
+    // const setRoute = async () => {
+    //   try {
+    //     if (workspaceSlug && roomId) {
+    //       router.push(
+    //         {
+    //           pathname: `/[workspaceSlug]/create-meet/audio-spaces/[roomId]`,
+    //           query: { workspaceSlug, roomId },
+    //         },
+    //         `/${workspaceSlug}/create-meet/audio-spaces/${roomId}`
+    //       );
+    //     }
+    //   } catch (error) {
+    //     console.error("Error", error);
+    //   }
+    // };
     const setRoute = async () => {
       try {
         router.push({

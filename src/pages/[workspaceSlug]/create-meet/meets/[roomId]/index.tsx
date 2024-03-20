@@ -7,11 +7,12 @@ import {
 } from "@100mslive/react-sdk";
 import { HMSPrebuilt } from "@100mslive/roomkit-react";
 import { useRouter } from "next/router";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const Rooms = () => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
-
+  const { userSupabase } = useWeb3Auth();
   const [token, setToken] = useState<string | undefined>(undefined);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
   const hmsActions = useHMSActions();
@@ -59,7 +60,11 @@ const Rooms = () => {
         <HMSPrebuilt
           authToken={token}
           roomCode={roomId}
-          options={{ userName: "test" }}
+          options={{
+            userName:
+              `${userSupabase?.first_name} ${userSupabase?.last_name || ""}` ||
+              "",
+          }}
         />
       )}
     </Layout>
