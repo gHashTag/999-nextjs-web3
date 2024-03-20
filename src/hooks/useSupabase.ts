@@ -18,7 +18,8 @@ export function useSupabase() {
   const [assets, setAssets] = useState<any[] | null>();
   const [userSupabase, setUserSupabase] = useState<SupabaseUser | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+  const [visibleSignIn, setVisibleSignIn] = useState<boolean>(false);
+  console.log(visibleSignIn, "visibleSignIn");
   const [userInfo, setUserInfo] = useState<ExtendedOpenloginUserInfo | null>(
     null
   );
@@ -351,5 +352,7 @@ export function useSupabase() {
     checkUsername,
     workspaceSlug,
     getUserSupabase,
+    visibleSignIn,
+    setVisibleSignIn,
   };
 }

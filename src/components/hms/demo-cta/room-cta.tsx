@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
-import { CrossIcon, PersonIcon } from '@100mslive/react-icons';
-import DemoModal from '../demo-modal';
-import InviteIcon from '@components/icons/icon-invite';
-import { useHMSStore, selectLocalPeerRole } from '@100mslive/react-sdk';
-import { useRouter } from 'next/router';
-import Button from '../Button';
+import React, { useState } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { CrossIcon, PersonIcon } from "@100mslive/react-icons";
+import DemoModal from "../demo-modal";
+import InviteIcon from "@components/icons/icon-invite";
+import { useHMSStore, selectLocalPeerRole } from "@100mslive/react-sdk";
+import { useRouter } from "next/router";
+import Button from "../Button";
 
 const RoomCta = () => {
   const role = useHMSStore(selectLocalPeerRole);
@@ -17,7 +17,7 @@ const RoomCta = () => {
       stageId = router.query.slug as string;
     }
     navigator.clipboard.writeText(
-      `${window.location.host}/stage/${stageId}?role=${role?.name || 'viewer'}`
+      `${window.location.host}/stage/${stageId}?role=${role?.name || "viewer"}`
     );
     if (!copied) {
       setCopied(true);
@@ -52,10 +52,15 @@ const RoomCta = () => {
 
 export default RoomCta;
 
-export const ChangeRoleDialog: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ChangeRoleDialog: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <Dialog.Root>
-      <Dialog.Overlay className="fixed inset-0" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} />
+      <Dialog.Overlay
+        className="fixed inset-0"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      />
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Content className="dialog-content md:w-[700px] w-[95%] md:h-[700px] h-[600px] overflow-y-scroll bg-gray-800 text-center rounded-lg dialog-animation">
         <Dialog.Close asChild className="w-full flex justify-end">

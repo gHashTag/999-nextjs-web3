@@ -117,6 +117,10 @@
   width: 40px;
 }
 
+.menu {
+  margin-right: 120px;
+}
+
 @media screen and (max-width: 600px) {
   .menu {
     display: none; /* Скрыть элементы на экранах с шириной до 768px */

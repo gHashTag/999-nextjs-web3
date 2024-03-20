@@ -49,7 +49,7 @@ export default function Form({ sharePage }: Props) {
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
 
-  const { workspaceSlug, checkUsername } = useSupabase();
+  const { workspaceSlug, checkUsername, setVisibleSignIn } = useSupabase();
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -65,16 +65,13 @@ export default function Form({ sharePage }: Props) {
     if (inviteCode) {
       const userId = await checkUsername(inviteCode);
       workspaceSlug;
-
+      console.log(userId, "userId");
       if (userId) {
-        router.push({
-          pathname: `/workspaceSlug/wallet`,
-          query: { inviteCode: inviteCode },
-        });
+        setVisibleSignIn(true);
       } else {
         setErrorMsg("Invite code not correct");
         setFormState("error");
-        setTimeout(() => setFormState("default"), 3000);
+        setTimeout(() => setFormState("default"), 2000);
         return;
       }
     }

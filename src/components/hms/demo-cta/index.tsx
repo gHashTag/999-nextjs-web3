@@ -6,8 +6,11 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { CrossIcon } from "@100mslive/react-icons";
 import InfoIcon from "@components/icons/icon-info";
 import DemoModal from "../demo-modal";
+import { useSupabase } from "@/hooks/useSupabase";
 
 const DemoButton = () => {
+  const { visibleSignIn } = useSupabase();
+  console.log(visibleSignIn, "visibleSignIn DemoButton");
   React.useEffect(() => {
     setTimeout(() => {
       const el = document.getElementById("cta-btn");
@@ -24,14 +27,25 @@ const DemoButton = () => {
     el?.classList.remove("show-overlay");
   };
   useClickOutside(ctaRef, clickedOutside);
+
+  const handleButtonClick = () => {
+    console.log("clicked");
+  };
   return (
     <Dialog.Root>
       <Dialog.Overlay className={cn(styles["overlay"])} />
-      {/* <Dialog.Trigger asChild>
-        <button ref={ctaRef} id="cta-btn" className={cn(styles["cta-btn"])}>
-          Sign In
-        </button>
-      </Dialog.Trigger> */}
+      {visibleSignIn && (
+        <Dialog.Trigger asChild>
+          <button
+            ref={ctaRef}
+            id="cta-btn"
+            className={cn(styles["cta-btn"])}
+            onClick={handleButtonClick}
+          >
+            Sign In
+          </button>
+        </Dialog.Trigger>
+      )}
       <div id="cta-tooltip" className={cn(styles["tooltip"])}>
         <InfoIcon />
         Click here to demo

@@ -9,7 +9,7 @@ import IconLogo from "@/components/icons/icon-logo";
 const data = [
   {
     name: "DAO",
-    roleName: "dao",
+    roleName: "DAO",
     role: "backstage",
     desc: ` This role is for DAO (Decentralized Autonomous Organizations) organizers. The role has full control and can add or remove members, invite them to the team, remove them from the team, and perform other administrative functions.`,
   },
@@ -21,7 +21,7 @@ const data = [
   // },
   {
     name: "Member",
-    roleName: "member",
+    roleName: "Member",
     role: "viewer",
     desc: `This is the most basic role: he can see and hear everything that happens in his DAO, cannot share his audio and video, and can also leave messages in the public chat section.`,
   },
@@ -58,11 +58,11 @@ const DemoModal = () => {
               <p className="text-gray-300 text-xs">{m.desc}</p>
             </div>
             <div className="flex items-center space-x-6">
-              <CopyButton
+              {/* <CopyButton
                 text={`${window.location.host}/stage/${stage || "a"}?role=${
                   m.role
                 }`}
-              />
+              /> */}
               <LinkButton
                 className="w-[200px] bg-yellow-300"
                 href={`/stage/${stage || "a"}?role=${m.role}`}
@@ -78,7 +78,7 @@ const DemoModal = () => {
           <IconLogo
             width="50"
             height="50"
-            backgroundColor="var(--accents-1)"
+            backgroundColor="var(--brand)"
             foregroundColor="black"
           />
           dao999nft

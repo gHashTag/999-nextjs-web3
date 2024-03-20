@@ -7,7 +7,7 @@ import Web3 from "web3";
 
 // Corrected the import path for useRouter
 import { useRouter } from "next/router";
-import { ExtendedOpenloginUserInfo, SupabaseUser } from "@/types";
+import { ExtendedOpenloginUserInfo } from "@/types";
 import { useSupabase } from "./useSupabase";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 
