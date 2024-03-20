@@ -5,6 +5,7 @@ import { Button, User, Card, CardBody } from "@nextui-org/react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 import { Snippet } from "@nextui-org/react";
+// @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function Wallet() {
@@ -17,40 +18,44 @@ export default function Wallet() {
     logout,
     getAccounts,
     getBalance,
-    signMessage,
+    checkUserId,
     createSupabaseUser,
   } = useWeb3Auth();
-  const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
-  const [copyStatus, setCopyStatus] = useState(false); // To indicate if the text was copied
+
+  const [copyStatus, setCopyStatus] = useState(false);
   const onCopyText = () => {
     setCopyStatus(true);
-    setTimeout(() => setCopyStatus(false), 2000); // Reset status after 2 seconds
+    setTimeout(() => setCopyStatus(false), 2000);
   };
 
   const router = useRouter();
   const { inviteCode } = router.query;
 
   useEffect(() => {
-    console.log("loggedIn", loggedIn);
-    if (loggedIn) {
-      // Выполнить действия после успешного входа
-      console.log("Успешный вход");
+    if (loggedIn || inviteCode) {
+      if (loggedIn) {
+        console.log("Successful login");
+        // Или получить баланс
+        getBalance();
+        // Или получить список аккаунтов
+        getAccounts();
+      } else {
+        if (inviteCode) {
+          console.log("Creating new user with invite code");
+          const createdUser = async (inviteCode: string) =>
+            await createSupabaseUser(inviteCode);
 
-      // Или получить баланс
-      getBalance();
-      // Или получить список аккаунтов
-      getAccounts();
-
-      // if (inviteCode) {
-      const createdUser = async (inviteCode: string) =>
-        await createSupabaseUser(inviteCode);
-
-      createdUser(inviteCode as string);
-      //}
+          createdUser(inviteCode as string);
+        }
+      }
+    } else {
+      console.log("User is not logged in and has no invite code");
+      const chekId = checkUserId();
+      console.log(chekId, "chekId");
+      if (!chekId) {
+        router.push("/");
+      }
     }
-    // else {
-    //   router.push("/");
-    // }
   }, [loggedIn, inviteCode]);
 
   const loggedInView = (

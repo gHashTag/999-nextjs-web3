@@ -1,6 +1,6 @@
 // hooks/useSupabaseBoard.ts
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Task, BoardData, TasksArray, Board } from "@/types"; // Предполагается, что типы определены в отдельном файле types.ts
+import { Task, BoardData, TasksArray, Board } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { useWeb3Auth } from "./useWeb3Auth";
 

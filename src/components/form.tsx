@@ -27,7 +27,7 @@ import useEmailQueryParam from "@lib/hooks/use-email-query-param";
 
 import Captcha, { useCaptcha } from "./captcha";
 
-import { checkUsername } from "@/hooks/useWeb3Auth";
+import { checkUsername, useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 type FormState = "default" | "loading" | "error";
 
@@ -48,9 +48,16 @@ export default function Form({ sharePage }: Props) {
     reset: resetCaptcha,
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
+
+  const { checkUserId } = useWeb3Auth();
   const inputRef = useRef(null);
 
   useEffect(() => {
+    const chekId = checkUserId();
+
+    if (chekId) {
+      router.push("/wallet");
+    }
     if (inputRef.current) {
       (inputRef.current as any)?.focus();
     }
@@ -59,7 +66,7 @@ export default function Form({ sharePage }: Props) {
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
       const userId = await checkUsername(inviteCode);
-
+      console.log(userId, "userId");
       if (userId) {
         router.push({
           pathname: "/wallet",

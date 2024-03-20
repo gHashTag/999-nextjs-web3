@@ -29,9 +29,7 @@ export const checkUsername = async (username: string) => {
 };
 
 const useWeb3Auth = () => {
-  // const client = supabaseClient();
   const router = useRouter();
-  //   const [loggedIn, setLoggedIn] = useLocalStorage('loggedIn', 'false')
   const [loggedIn, setLoggedIn] = useState(false);
 
   const [provider, setProvider] = useState<IProvider | null>(null);
@@ -85,7 +83,6 @@ const useWeb3Auth = () => {
         const newUser = {
           email: user.email,
           first_name: user.name,
-          username: user.name,
           aggregateverifier: user.aggregateVerifier,
           verifier: user.verifier,
           avatar: user.profileImage,
@@ -121,9 +118,6 @@ const useWeb3Auth = () => {
         const userInfo = await web3auth.getUserInfo();
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
-          if (userInfo.email) {
-            localStorage.setItem("email", userInfo.email);
-          }
         }
       }
     } catch (error) {
@@ -136,6 +130,10 @@ const useWeb3Auth = () => {
         console.error("Ошибка входа:", error);
       }
     }
+  };
+
+  const checkUserId = () => {
+    return localStorage.getItem("user_id");
   };
 
   useEffect(() => {
@@ -151,6 +149,7 @@ const useWeb3Auth = () => {
     setAddress(null);
     setUserInfo(null);
     setBalance(null);
+    localStorage.removeItem("user_id");
     router.push("/");
     console.log("logged out");
   };
@@ -224,6 +223,7 @@ const useWeb3Auth = () => {
     getAccounts,
     createSupabaseUser,
     getSupabaseUser,
+    checkUserId,
   };
 };
 
