@@ -14,6 +14,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/utils/cn";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -64,6 +65,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <Component {...pageProps} />
                 <ResizeHandler />
                 <NProgress />
+                <Toaster />
                 {/* <BackgroundBeamsTwo /> */}
               </ThemeProvider>
             </NextThemesProvider>

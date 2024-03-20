@@ -28,6 +28,9 @@ import DemoButton from "./hms/demo-cta";
 import RoomCta from "./hms/demo-cta/room-cta";
 import { hmsConfig } from "./hms/config";
 import ViewSource from "./view-source";
+import { Button } from "@/components/ui/button";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -55,7 +58,7 @@ export default function Layout({
 }: Props) {
   const router = useRouter();
   const { workspaceSlug } = useSupabase();
-
+  const { toast } = useToast();
   const activeRoute = router.asPath;
   const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];
   return (
