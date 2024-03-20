@@ -8,12 +8,15 @@ import { Snippet } from "@nextui-org/react";
 // @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSupabase } from "@/hooks/useSupabase";
+import { useReactiveVar } from "@apollo/client";
+import { userId } from "@/apollo/reactive-store";
 
 export default function Wallet() {
   const { address, balance, login, loggedIn, logout, getAccounts, getBalance } =
     useWeb3Auth();
-  const { userInfo, workspaceSlug, createSupabaseUser, getUserSupabase } =
-    useSupabase();
+  const { userInfo, createSupabaseUser, getUserSupabase } = useSupabase();
+
+  const workspaceSlug = useReactiveVar(userId);
 
   const [copyStatus, setCopyStatus] = useState(false);
   const onCopyText = () => {
@@ -47,6 +50,8 @@ export default function Wallet() {
       } else {
         router.push("/");
       }
+    } else {
+      login();
     }
   }, [loggedIn, inviteCode]);
 

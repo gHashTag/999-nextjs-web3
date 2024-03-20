@@ -5,6 +5,8 @@ import Button from "../Button";
 import LinkButton from "../LinkButton";
 
 import IconLogo from "@/components/icons/icon-logo";
+import { useSupabase } from "@/hooks/useSupabase";
+import { openWeb3ModalVar, openIntroModalVar } from "@/apollo/reactive-store";
 
 const data = [
   {
@@ -29,6 +31,7 @@ const data = [
 
 const DemoModal = () => {
   const [stage, setStage] = React.useState(``);
+
   const router = useRouter();
   React.useEffect(() => {
     if (router.query.slug) {
@@ -65,7 +68,11 @@ const DemoModal = () => {
               /> */}
               <LinkButton
                 className="w-[200px] bg-yellow-300"
-                href={`/stage/${stage || "a"}?role=${m.role}`}
+                onClick={() => {
+                  openWeb3ModalVar(true);
+                  openIntroModalVar(false);
+                }}
+                // href={`${workspaceSlug}/wallet`}
               >
                 Join as {m.name} <ArrowRightIcon height={20} color="black" />
               </LinkButton>

@@ -9,8 +9,8 @@ import {
   ExtendedOpenloginUserInfo,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
-import { useWeb3Auth } from "./useWeb3Auth";
 import { web3auth } from "@/utils/web3Auth";
+import { userId } from "@/apollo/reactive-store";
 
 export function useSupabase() {
   const [tasks, setTasks] = useState<TasksArray>([]);
@@ -18,13 +18,10 @@ export function useSupabase() {
   const [assets, setAssets] = useState<any[] | null>();
   const [userSupabase, setUserSupabase] = useState<SupabaseUser | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [visibleSignIn, setVisibleSignIn] = useState<boolean>(false);
-  console.log(visibleSignIn, "visibleSignIn");
+
   const [userInfo, setUserInfo] = useState<ExtendedOpenloginUserInfo | null>(
     null
   );
-
-  const [workspaceSlug, setWorkspaceSlug] = useState("");
 
   const getUserSupabase = async () => {
     try {
@@ -44,7 +41,7 @@ export function useSupabase() {
   useEffect(() => {
     getUserSupabase();
     const getUserId = localStorage.getItem("user_id");
-    getUserId && setWorkspaceSlug(getUserId);
+    getUserId && userId(getUserId);
   }, []);
 
   const checkUsername = async (username: string) => {
@@ -350,9 +347,6 @@ export function useSupabase() {
     userInfo,
     setUserInfo,
     checkUsername,
-    workspaceSlug,
     getUserSupabase,
-    visibleSignIn,
-    setVisibleSignIn,
   };
 }

@@ -13,9 +13,9 @@ import { useSupabase } from "./useSupabase";
 
 const useWeb3Auth = () => {
   const router = useRouter();
-  const { setUserInfo } = useSupabase();
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { workspaceSlug, setUserInfo } = useSupabase();
 
+  const [loggedIn, setLoggedIn] = useState(false);
   const [provider, setProvider] = useState<IProvider | null>(null);
 
   const [address, setAddress] = useState<string | null>(null);
@@ -25,11 +25,17 @@ const useWeb3Auth = () => {
   const login = async () => {
     try {
       const web3authProvider = await web3auth.connect();
+      console.log(web3authProvider, "web3authProvider");
       setProvider(web3authProvider);
-
+      console.log(web3auth.connected, "web3auth.connected");
       if (web3auth.connected) {
         setLoggedIn(true);
         const userInfo = await web3auth.getUserInfo();
+        console.log(userInfo, "userInfo");
+        if (workspaceSlug) {
+          router.push(`/${workspaceSlug}/wallet`);
+        }
+
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
         }
@@ -46,10 +52,6 @@ const useWeb3Auth = () => {
     }
   };
 
-  useEffect(() => {
-    login();
-  }, []);
-
   const logout = async () => {
     // IMP START - Logout
 
@@ -64,6 +66,10 @@ const useWeb3Auth = () => {
     router.push("/");
     console.log("logged out");
   };
+
+  // useEffect(() => {
+  //   logout();
+  // }, [workspaceSlug]);
 
   // IMP START - Blockchain Calls
   const getAccounts = async () => {

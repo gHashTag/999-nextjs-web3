@@ -40,6 +40,8 @@ import {
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { useSupabase } from "@/hooks/useSupabase";
+import { useReactiveVar } from "@apollo/client";
+import { userId } from "@/apollo/reactive-store";
 
 type Props = {
   children: React.ReactNode;
@@ -57,7 +59,8 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
-  const { workspaceSlug } = useSupabase();
+
+  const workspaceSlug = useReactiveVar(userId);
   const { toast } = useToast();
   const activeRoute = router.asPath;
   const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];

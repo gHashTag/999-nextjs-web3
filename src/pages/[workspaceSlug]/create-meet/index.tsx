@@ -6,11 +6,13 @@ import { MeteorsCard } from "@/components/ui/meteor-card";
 import { RecordingAsset } from "@/types";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { useReactiveVar } from "@apollo/client";
+import { userId } from "@/apollo/reactive-store";
 
 const CreateMeet = () => {
   const router = useRouter();
-
-  const { workspaceSlug, assets } = useSupabase();
+  const workspaceSlug = useReactiveVar(userId);
+  const { assets } = useSupabase();
 
   const getRoom = async () => {
     router.push(`/${workspaceSlug}/create-meet/meets`);

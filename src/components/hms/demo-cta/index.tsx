@@ -1,17 +1,20 @@
 import styles from "./index.module.css";
 import cn from "classnames";
-import React from "react";
+import { useEffect, useState, useRef } from "react";
 import useClickOutside from "@lib/hooks/use-click-outside";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CrossIcon } from "@100mslive/react-icons";
 import InfoIcon from "@components/icons/icon-info";
 import DemoModal from "../demo-modal";
-import { useSupabase } from "@/hooks/useSupabase";
+
+import { useReactiveVar } from "@apollo/client";
+import { visibleSignInVar, openIntroModalVar } from "@/apollo/reactive-store";
 
 const DemoButton = () => {
-  const { visibleSignIn } = useSupabase();
-  console.log(visibleSignIn, "visibleSignIn DemoButton");
-  React.useEffect(() => {
+  const visible = useReactiveVar(visibleSignInVar);
+  const openIntroModal = useReactiveVar(openIntroModalVar);
+
+  useEffect(() => {
     setTimeout(() => {
       const el = document.getElementById("cta-btn");
       el?.classList.add("show-overlay");
@@ -19,7 +22,7 @@ const DemoButton = () => {
       tooltip?.classList.add("fade-in");
     }, 3000);
   }, []);
-  const ctaRef = React.useRef(null);
+  const ctaRef = useRef(null);
   const clickedOutside = () => {
     const el = document.getElementById("cta-btn");
     const tooltip = document.getElementById("cta-tooltip");
@@ -29,12 +32,13 @@ const DemoButton = () => {
   useClickOutside(ctaRef, clickedOutside);
 
   const handleButtonClick = () => {
-    console.log("clicked");
+    openIntroModalVar(!openIntroModal);
   };
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={openIntroModal} onOpenChange={handleButtonClick}>
       <Dialog.Overlay className={cn(styles["overlay"])} />
-      {visibleSignIn && (
+      {!visible && (
         <Dialog.Trigger asChild>
           <button
             ref={ctaRef}

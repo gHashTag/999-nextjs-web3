@@ -31,13 +31,15 @@ import { FocusScope } from "@react-aria/focus";
 import { useButton } from "@react-aria/button";
 import styles from "./mobile-menu.module.css";
 import { useSupabase } from "@/hooks/useSupabase";
+import { useReactiveVar } from "@apollo/client";
+import { userId } from "@/apollo/reactive-store";
 
 function ModalDialog(
   props: Parameters<typeof useOverlay>[0] & Parameters<typeof useDialog>[0]
 ) {
   const router = useRouter();
   const activeRoute = router.asPath;
-  const { workspaceSlug } = useSupabase();
+  const workspaceSlug = useReactiveVar(userId);
   const ref = useRef<HTMLElement | null>(null);
   const { modalProps } = useModal();
   const { overlayProps } = useOverlay(props, ref);

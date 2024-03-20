@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { useSupabase } from "@/hooks/useSupabase";
+import { useReactiveVar } from "@apollo/client";
+import { userId } from "@/apollo/reactive-store";
 
 const Meets = ({ roomId = "gcy-elue-bot" }) => {
   const router = useRouter();
-  const { workspaceSlug } = useSupabase();
+  const workspaceSlug = useReactiveVar(userId);
 
   useEffect(() => {
     // const setRoute = async () => {

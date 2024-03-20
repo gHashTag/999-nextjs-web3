@@ -9,17 +9,10 @@ import NProgress from "@components/nprogress";
 import ResizeHandler from "@components/resize-handler";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import BackgroundBeams from "@components/ui/background-beams";
-import BackgroundBeamsTwo from "@components/ui/background-beams-two";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { Inter as FontSans } from "next/font/google";
-import { cn } from "@/utils/cn";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+import { ThemeProvider } from "@/components/theme-provider";
 
 import {
   authenticateUser,
@@ -27,14 +20,14 @@ import {
   subscribeToEvents,
 } from "@/utils/auth";
 
-const huddleClient = new HuddleClient({
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
-  options: {
-    activeSpeakers: {
-      size: 8,
-    },
-  },
-});
+// const huddleClient = new HuddleClient({
+//   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
+//   options: {
+//     activeSpeakers: {
+//       size: 8,
+//     },
+//   },
+// });
 
 export default function App({ Component, pageProps }: AppProps) {
   const { setLoggedIn } = useWeb3Auth();
