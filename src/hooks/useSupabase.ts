@@ -25,6 +25,7 @@ export function useSupabase() {
   const getUserSupabase = async () => {
     try {
       const user_id = localStorage.getItem("user_id");
+      console.log(user_id, "user_id");
       const response = await supabase
         .from("users")
         .select("*")
@@ -32,6 +33,7 @@ export function useSupabase() {
         .single();
 
       setUserSupabase(response.data);
+      userId(response.data.user_id);
     } catch (error) {
       console.log("");
     }

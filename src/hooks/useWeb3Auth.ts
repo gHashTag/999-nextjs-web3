@@ -39,9 +39,8 @@ const useWeb3Auth = () => {
         setLoggedIn(true);
         const userInfo = await web3auth.getUserInfo();
         console.log(userInfo, "userInfo");
-        if (workspaceSlug) {
-          router.push(`/${workspaceSlug}/wallet`);
-        }
+
+        router.push(`/workspaceSlug/wallet`);
 
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);

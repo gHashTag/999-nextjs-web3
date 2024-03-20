@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+"use client";
 import Link from "next/link";
 import cn from "classnames";
 import { useRouter } from "next/router";
@@ -41,7 +41,8 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useReactiveVar } from "@apollo/client";
-import { userId } from "@/apollo/reactive-store";
+import { userId, visibleSignInVar } from "@/apollo/reactive-store";
+import { usePathname } from "next/navigation";
 
 type Props = {
   children: React.ReactNode;
@@ -59,8 +60,9 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
-
   const workspaceSlug = useReactiveVar(userId);
+  console.log(workspaceSlug, "workspaceSlug");
+  const visible = useReactiveVar(visibleSignInVar);
   const { toast } = useToast();
   const activeRoute = router.asPath;
   const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];
@@ -80,11 +82,13 @@ export default function Layout({
                 <NavigationMenuList>
                   {NAVIGATION.map(({ name, route }) => (
                     <NavigationMenuItem key={name}>
-                      {workspaceSlug && (
+                      {!visible && (
                         <Link
                           href={{
-                            pathname: `/${workspaceSlug}${route}`,
+                            pathname: `/workspaceSlug/${route}`,
                           }}
+                          legacyBehavior
+                          passHref
                         >
                           <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}

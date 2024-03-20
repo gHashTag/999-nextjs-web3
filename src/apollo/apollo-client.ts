@@ -1,7 +1,7 @@
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
 }
-
+import cors from "cors";
 import { supabase } from "@/utils/supabase";
 import {
   ApolloClient,
@@ -49,6 +49,7 @@ const authLink = setContext(async (_, { headers }) => {
     headers: {
       ...headers,
       Authorization: token ? `Bearer ${token}` : "",
+      "access-control-allow-methods": "POST",
     },
   };
 });
