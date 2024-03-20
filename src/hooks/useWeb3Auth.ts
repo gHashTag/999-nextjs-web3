@@ -9,16 +9,23 @@ import Web3 from "web3";
 import { useRouter } from "next/router";
 import { ExtendedOpenloginUserInfo } from "@/types";
 import { useSupabase } from "./useSupabase";
+import { useReactiveVar } from "@apollo/client";
+import {
+  setAddress,
+  setLoggedIn,
+  setUserInfo,
+  userId,
+} from "@/apollo/reactive-store";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 
 const useWeb3Auth = () => {
   const router = useRouter();
-  const { workspaceSlug, setUserInfo } = useSupabase();
 
-  const [loggedIn, setLoggedIn] = useState(false);
+  const workspaceSlug = useReactiveVar(userId);
+  const loggedIn = useReactiveVar(setLoggedIn);
+  const address = useReactiveVar(setAddress);
+
   const [provider, setProvider] = useState<IProvider | null>(null);
-
-  const [address, setAddress] = useState<string | null>(null);
 
   const [balance, setBalance] = useState<string | null>(null);
 
@@ -59,7 +66,7 @@ const useWeb3Auth = () => {
     // IMP END - Logout
     setLoggedIn(false);
     setProvider(null);
-    setAddress(null);
+    setAddress("");
     setUserInfo(null);
     setBalance(null);
     localStorage.removeItem("user_id");

@@ -10,18 +10,17 @@ import {
 } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { web3auth } from "@/utils/web3Auth";
-import { userId } from "@/apollo/reactive-store";
+import { setUserInfo, setUserSupabase, userId } from "@/apollo/reactive-store";
+import { useReactiveVar } from "@apollo/client";
 
 export function useSupabase() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<any[] | null>();
-  const [userSupabase, setUserSupabase] = useState<SupabaseUser | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
-  const [userInfo, setUserInfo] = useState<ExtendedOpenloginUserInfo | null>(
-    null
-  );
+  const userSupabase = useReactiveVar(setUserSupabase);
+  const [error, setError] = useState<string | null>(null);
+  const userInfo = useReactiveVar(setUserInfo);
 
   const getUserSupabase = async () => {
     try {
