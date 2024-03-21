@@ -8,9 +8,10 @@ import { Snippet } from "@nextui-org/react";
 // @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSupabase } from "@/hooks/useSupabase";
+import { Globe } from "@/components/ui/globe";
 
 export default function Wallet() {
-  const { address, balance, login, loggedIn, logout, getAccounts, getBalance } =
+  const { address, balance, loggedIn, logout, getAccounts, getBalance } =
     useWeb3Auth();
   const { userInfo } = useSupabase();
 
@@ -37,17 +38,10 @@ export default function Wallet() {
 
   const loggedInView = (
     <>
-      <div className="flex gap-4 items-center">
-        {/* <div>
-          <Button onClick={signMessage} color="primary" variant="faded">
-            Sign Message
-          </Button>
-        </div> */}
-        <div>
-          <Button onClick={logout} color="primary" variant="faded">
-            Log Out
-          </Button>
-        </div>
+      <div>
+        <Button onClick={logout} color="primary" variant="faded">
+          Log Out
+        </Button>
       </div>
     </>
   );
@@ -66,6 +60,7 @@ export default function Wallet() {
             avatarProps={{ src: avatar }}
           />
         )}
+
         <div style={{ padding: "20px" }} />
         {address && (
           <>

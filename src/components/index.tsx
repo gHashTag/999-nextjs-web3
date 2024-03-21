@@ -22,6 +22,9 @@ import ConfContainer from "./conf-container";
 import Hero from "./hero";
 import Form from "./form";
 import LearnMore from "./learn-more";
+import { useReactiveVar } from "@apollo/client";
+import { setLoggedIn } from "@/apollo/reactive-store";
+import { Globe } from "./ui/globe";
 
 type Props = {
   defaultUserData: UserData;
@@ -36,6 +39,7 @@ export default function Conf({
 }: Props) {
   const [userData, setUserData] = useState<UserData>(defaultUserData);
   const [pageState, setPageState] = useState<PageState>(defaultPageState);
+  const loggedIn = useReactiveVar(setLoggedIn);
 
   return (
     <ConfDataContext.Provider
@@ -49,9 +53,13 @@ export default function Conf({
         <ConfContainer>
           {pageState === "registration" && !sharePage ? (
             <>
-              <Hero />
-              <Form />
-              <LearnMore />
+              {loggedIn ? (
+                <Globe />
+              ) : (
+                <>
+                  <Hero /> <Form /> <LearnMore />
+                </>
+              )}
             </>
           ) : (
             <Ticket

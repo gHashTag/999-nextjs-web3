@@ -45,7 +45,7 @@ export function HostedByVercel() {
 export default function Footer() {
   return (
     <footer className={cn(styles.footer)}>
-      <div style={{ paddingBottom: 50, color: "white" }}>
+      <div style={{ paddingBottom: 50, color: "gray" }}>
         Copyright © {`${new Date().getFullYear()} `}{" "}
         {COPYRIGHT_HOLDER || `${SITE_NAME}.`} All rights reserved.
       </div>

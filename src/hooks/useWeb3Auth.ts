@@ -44,9 +44,10 @@ const useWeb3Auth = () => {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
           const user = await createSupabaseUser();
           console.log(userInfo, "userInfo");
+          visibleHeaderVar(true);
         }
         visibleHeaderVar(true);
-        router.push(`/workspaceSlug/wallet`);
+        // router.push(`/workspaceSlug/wallet`);
 
         return true;
       }

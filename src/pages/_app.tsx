@@ -11,7 +11,7 @@ import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import BackgroundBeams from "@components/ui/background-beams";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-
+import { setLoggedIn } from "@/apollo/reactive-store";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import {
@@ -19,6 +19,7 @@ import {
   initWeb3Auth,
   subscribeToEvents,
 } from "@/utils/auth";
+import { useReactiveVar } from "@apollo/client";
 
 // const huddleClient = new HuddleClient({
 //   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
@@ -30,8 +31,6 @@ import {
 // });
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { setLoggedIn } = useWeb3Auth();
-
   useEffect(() => {
     initWeb3Auth();
     const unsubscribe = subscribeToEvents(async () => {
