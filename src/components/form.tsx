@@ -45,7 +45,7 @@ type Props = {
 
 export default function Form({ sharePage }: Props) {
   const { toast } = useToast();
-  const { login } = useWeb3Auth();
+
   const visible = useReactiveVar(visibleSignInVar);
   const isOpenModalVar = useReactiveVar(openWeb3ModalVar);
   const workspaceSlug = useReactiveVar(userId);
@@ -77,24 +77,11 @@ export default function Form({ sharePage }: Props) {
 
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
+      console.log(inviteCode, "inviteCode");
       const isInviterExist = await checkUsername(inviteCode);
       console.log(isInviterExist, "isInviterExist");
       if (isInviterExist) {
         visibleSignInVar(true);
-        const loggedIn = await login();
-        if (loggedIn) {
-          toast({
-            title: "Success",
-            description: "Welcome to 999 kingdom!!!",
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Create user error",
-            description:
-              "An error occurred while trying to create a new user. Please try again or contact your system administrator for assistance.",
-          });
-        }
       } else {
         setErrorMsg("Invite code not correct");
         setFormState("error");

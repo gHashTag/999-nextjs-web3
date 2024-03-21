@@ -17,7 +17,7 @@
 import cn from "classnames";
 import styleUtils from "./utils.module.css";
 import styles from "./hero.module.css";
-import { BRAND_NAME, DATE, SITE_DESCRIPTION } from "@lib/constants";
+import { BRAND_NAME, SITE_DESCRIPTION } from "@lib/constants";
 
 export default function Hero() {
   return (
@@ -53,6 +53,7 @@ export default function Hero() {
       >
         Avatars
       </h1>
+
       <div
         className={cn(
           styleUtils.appear,

@@ -6,14 +6,16 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { CrossIcon } from "@100mslive/react-icons";
 import InfoIcon from "@components/icons/icon-info";
 import DemoModal from "../demo-modal";
-
+import { useToast } from "@/components/ui/use-toast";
 import { useReactiveVar } from "@apollo/client";
 import { visibleSignInVar, openIntroModalVar } from "@/apollo/reactive-store";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const DemoButton = () => {
   const visible = useReactiveVar(visibleSignInVar);
   const openIntroModal = useReactiveVar(openIntroModalVar);
-
+  const { login } = useWeb3Auth();
+  const { toast } = useToast();
   useEffect(() => {
     setTimeout(() => {
       const el = document.getElementById("cta-btn");
@@ -31,20 +33,34 @@ const DemoButton = () => {
   };
   useClickOutside(ctaRef, clickedOutside);
 
-  const handleButtonClick = () => {
-    openIntroModalVar(!openIntroModal);
+  const handleRegister = async () => {
+    // openIntroModalVar(!openIntroModal);
+    const loggedIn = await login();
+    if (loggedIn) {
+      toast({
+        title: "Success",
+        description: "Welcome to 999 kingdom!!!",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Create user error",
+        description:
+          "An error occurred while trying to create a new user. Please try again or contact your system administrator for assistance.",
+      });
+    }
   };
 
   return (
-    <Dialog.Root open={openIntroModal} onOpenChange={handleButtonClick}>
+    <Dialog.Root open={openIntroModal} onOpenChange={handleRegister}>
       <Dialog.Overlay className={cn(styles["overlay"])} />
-      {!visible && (
+      {visible && (
         <Dialog.Trigger asChild>
           <button
             ref={ctaRef}
             id="cta-btn"
             className={cn(styles["cta-btn"])}
-            onClick={handleButtonClick}
+            onClick={handleRegister}
           >
             Sign In
           </button>

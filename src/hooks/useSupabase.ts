@@ -10,7 +10,6 @@ import {
 import { supabase } from "@/utils/supabase";
 import { web3auth } from "@/utils/web3Auth";
 import {
-  setInviteCode,
   setInviterUserId,
   setUserInfo,
   setUserSupabase,
@@ -20,11 +19,11 @@ import { useReactiveVar } from "@apollo/client";
 
 export function useSupabase() {
   const inviter = useReactiveVar(setInviterUserId);
+  const userSupabase = useReactiveVar(setUserSupabase);
+  const user_id = useReactiveVar(userId);
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<any[] | null>();
-
-  const userSupabase = useReactiveVar(setUserSupabase);
   const [error, setError] = useState<string | null>(null);
   const userInfo = useReactiveVar(setUserInfo);
 
@@ -74,7 +73,7 @@ export function useSupabase() {
     }
   };
 
-  const createSupabaseUser = async (): Promise<{ workspaceSlug: string }> => {
+  const createSupabaseUser = async () => {
     try {
       const user = await web3auth.getUserInfo();
       if (!user.email) {
@@ -104,7 +103,6 @@ export function useSupabase() {
 
         if (!error) {
           setUserInfo({ ...userData } as ExtendedOpenloginUserInfo);
-          localStorage.setItem("user_id", userData.user_id);
           return {
             workspaceSlug: userData.user_id,
           };
@@ -113,15 +111,11 @@ export function useSupabase() {
           return { workspaceSlug: "" };
         }
       } else {
+        console.log(userData, "userData");
         setUserInfo(userData as ExtendedOpenloginUserInfo);
-        localStorage.setItem("user_id", userData.user_id);
-        return {
-          workspaceSlug: userData.user_id,
-        };
       }
     } catch (error) {
       console.error("Ошибка при получении информации о пользователе:", error);
-      return { workspaceSlug: "" };
     }
   };
 
@@ -197,7 +191,6 @@ export function useSupabase() {
   }, []);
 
   const createTask = async (task: Omit<Task, "id">) => {
-    const user_id = localStorage.getItem("user_id");
     // Проверка наличия user_id
     if (!user_id) {
       console.error("Ошибка: User Id не найден. Создание задачи невозможно.");

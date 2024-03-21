@@ -16,12 +16,12 @@ import {
   setInviteCode,
   setLoggedIn,
   setUserInfo,
+  visibleSignInVar,
 } from "@/apollo/reactive-store";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 
 const useWeb3Auth = () => {
   const router = useRouter();
-
   const loggedIn = useReactiveVar(setLoggedIn);
   const address = useReactiveVar(setAddress);
   const balance = useReactiveVar(setBalance);
@@ -33,9 +33,7 @@ const useWeb3Auth = () => {
   const login = async () => {
     try {
       const web3authProvider = await web3auth.connect();
-
       setProvider(web3authProvider);
-      console.log(web3auth.connected, "web3auth.connected");
       if (web3auth.connected) {
         setLoggedIn(true);
         const userInfo = await web3auth.getUserInfo();
@@ -66,6 +64,7 @@ const useWeb3Auth = () => {
     // IMP START - Logout
 
     await web3auth.logout();
+    visibleSignInVar(false);
     // IMP END - Logout
     setLoggedIn(false);
     setProvider(null);

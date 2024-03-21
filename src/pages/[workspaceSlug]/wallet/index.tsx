@@ -29,27 +29,11 @@ export default function Wallet() {
     if (loggedIn) {
       console.log("Successful login");
       // Или получить баланс
-      login();
+
       getBalance();
-      // Или получить список аккаунтов
       getAccounts();
     } else if (inviteCode) {
       console.log("User is not logged in and has invite code");
-      // if (inviteCode) {
-      //   const createdUser = async (inviteCode: string) =>
-      //     await createSupabaseUser(inviteCode);
-      //   console.log(createdUser, "createdUser");
-      //   createdUser(inviteCode as string);
-      //   console.log(workspaceSlug, "workspaceSlug");
-      //   router.push({
-      //     pathname: `/[workspaceSlug]/wallet`,
-      //     query: { workspaceSlug: "workspaceSlug" },
-      //   });
-      // } else {
-      //   router.push("/");
-      // }
-    } else {
-      login();
     }
   }, [loggedIn, inviteCode]);
 
