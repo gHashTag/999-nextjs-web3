@@ -60,8 +60,8 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
-  const workspaceSlug = useReactiveVar(userId);
-  console.log(workspaceSlug, "workspaceSlug");
+  // const workspaceSlug = useReactiveVar(userId);
+  // console.log(workspaceSlug, "workspaceSlug");
   const visible = useReactiveVar(visibleSignInVar);
   const { toast } = useToast();
   const activeRoute = router.asPath;
@@ -85,7 +85,7 @@ export default function Layout({
                       {!visible && (
                         <Link
                           href={{
-                            pathname: `/workspaceSlug/${route}`,
+                            pathname: `/workspaceSlug${route}`,
                           }}
                           legacyBehavior
                           passHref

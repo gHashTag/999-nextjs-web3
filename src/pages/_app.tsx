@@ -54,7 +54,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 enableSystem
                 disableTransitionOnChange
               >
-                <BackgroundBeams />
+                {/* <BackgroundBeams /> */}
                 <Component {...pageProps} />
                 <ResizeHandler />
                 <NProgress />

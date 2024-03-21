@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IProvider } from "@web3auth/base";
 import { web3auth } from "@/utils/web3Auth";
 import Web3 from "web3";
@@ -12,39 +12,42 @@ import { useSupabase } from "./useSupabase";
 import { useReactiveVar } from "@apollo/client";
 import {
   setAddress,
+  setBalance,
+  setInviteCode,
   setLoggedIn,
   setUserInfo,
-  userId,
 } from "@/apollo/reactive-store";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 
 const useWeb3Auth = () => {
   const router = useRouter();
 
-  const workspaceSlug = useReactiveVar(userId);
   const loggedIn = useReactiveVar(setLoggedIn);
   const address = useReactiveVar(setAddress);
+  const balance = useReactiveVar(setBalance);
 
   const [provider, setProvider] = useState<IProvider | null>(null);
 
-  const [balance, setBalance] = useState<string | null>(null);
+  const { createSupabaseUser } = useSupabase();
 
   const login = async () => {
     try {
       const web3authProvider = await web3auth.connect();
-      console.log(web3authProvider, "web3authProvider");
+
       setProvider(web3authProvider);
       console.log(web3auth.connected, "web3auth.connected");
       if (web3auth.connected) {
         setLoggedIn(true);
         const userInfo = await web3auth.getUserInfo();
-        console.log(userInfo, "userInfo");
-
-        router.push(`/workspaceSlug/wallet`);
 
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
+          const user = await createSupabaseUser();
+          console.log(user, "user");
         }
+
+        router.push(`/workspaceSlug/wallet`);
+        return true;
       }
     } catch (error) {
       if (error instanceof Error && error.message === "User closed the modal") {
@@ -55,6 +58,7 @@ const useWeb3Auth = () => {
         // Обработка других видов ошибок
         console.error("Ошибка входа:", error);
       }
+      return false;
     }
   };
 
@@ -68,16 +72,12 @@ const useWeb3Auth = () => {
     setAddress("");
     setUserInfo(null);
     setBalance(null);
+    setInviteCode("");
     localStorage.removeItem("user_id");
     router.push("/");
     console.log("logged out");
   };
 
-  // useEffect(() => {
-  //   logout();
-  // }, [workspaceSlug]);
-
-  // IMP START - Blockchain Calls
   const getAccounts = async () => {
     if (!provider) {
       console.log("provider not initialized yet");

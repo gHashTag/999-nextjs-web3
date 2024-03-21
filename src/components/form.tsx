@@ -26,6 +26,7 @@ import useEmailQueryParam from "@lib/hooks/use-email-query-param";
 import { useReactiveVar } from "@apollo/client";
 import {
   openWeb3ModalVar,
+  setInviteCode,
   userId,
   visibleSignInVar,
 } from "@/apollo/reactive-store";
@@ -45,7 +46,11 @@ type Props = {
 export default function Form({ sharePage }: Props) {
   const { toast } = useToast();
   const { login } = useWeb3Auth();
-  const [inviteCode, setInviteCode] = useState("koshey999nft");
+  const visible = useReactiveVar(visibleSignInVar);
+  const isOpenModalVar = useReactiveVar(openWeb3ModalVar);
+  const workspaceSlug = useReactiveVar(userId);
+  const inviteCode = useReactiveVar(setInviteCode);
+
   const [errorMsg, setErrorMsg] = useState("");
   const [errorTryAgain, setErrorTryAgain] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -58,18 +63,8 @@ export default function Form({ sharePage }: Props) {
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
 
-  const visible = useReactiveVar(visibleSignInVar);
-  const isOpenModalVar = useReactiveVar(openWeb3ModalVar);
-  const workspaceSlug = useReactiveVar(userId);
   const { checkUsername } = useSupabase();
   const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (isOpenModalVar) {
-      console.log(isOpenModalVar, "isOpenModalVar");
-      login();
-    }
-  }, [isOpenModalVar]);
 
   useEffect(() => {
     if (workspaceSlug) {
@@ -82,13 +77,24 @@ export default function Form({ sharePage }: Props) {
 
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
-      const userId = await checkUsername(inviteCode);
-      if (!userId) {
+      const isInviterExist = await checkUsername(inviteCode);
+      console.log(isInviterExist, "isInviterExist");
+      if (isInviterExist) {
         visibleSignInVar(true);
-        toast({
-          title: "Success",
-          description: "Welcome to 999 kingdom!!!",
-        });
+        const loggedIn = await login();
+        if (loggedIn) {
+          toast({
+            title: "Success",
+            description: "Welcome to 999 kingdom!!!",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Create user error",
+            description:
+              "An error occurred while trying to create a new user. Please try again or contact your system administrator for assistance.",
+          });
+        }
       } else {
         setErrorMsg("Invite code not correct");
         setFormState("error");

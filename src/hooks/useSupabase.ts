@@ -5,15 +5,21 @@ import {
   BoardData,
   TasksArray,
   Board,
-  SupabaseUser,
   ExtendedOpenloginUserInfo,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { web3auth } from "@/utils/web3Auth";
-import { setUserInfo, setUserSupabase, userId } from "@/apollo/reactive-store";
+import {
+  setInviteCode,
+  setInviterUserId,
+  setUserInfo,
+  setUserSupabase,
+  userId,
+} from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
 
 export function useSupabase() {
+  const inviter = useReactiveVar(setInviterUserId);
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<any[] | null>();
@@ -21,29 +27,6 @@ export function useSupabase() {
   const userSupabase = useReactiveVar(setUserSupabase);
   const [error, setError] = useState<string | null>(null);
   const userInfo = useReactiveVar(setUserInfo);
-
-  const getUserSupabase = async () => {
-    try {
-      const user_id = localStorage.getItem("user_id");
-      console.log(user_id, "user_id");
-      const response = await supabase
-        .from("users")
-        .select("*")
-        .eq("user_id", user_id)
-        .single();
-
-      setUserSupabase(response.data);
-      userId(response.data.user_id);
-    } catch (error) {
-      console.log("");
-    }
-  };
-
-  useEffect(() => {
-    getUserSupabase();
-    const getUserId = localStorage.getItem("user_id");
-    getUserId && userId(getUserId);
-  }, []);
 
   const checkUsername = async (username: string) => {
     const { data, error } = await supabase
@@ -56,7 +39,11 @@ export function useSupabase() {
       return false;
     }
 
-    return data.length > 0 ? data[0].user_id : false;
+    if (data.length > 0) {
+      const user_id = data[0].user_id;
+      setInviterUserId(user_id);
+    }
+    return data.length > 0 ? true : false;
   };
 
   const getSupabaseUser = async (email: string) => {
@@ -87,9 +74,7 @@ export function useSupabase() {
     }
   };
 
-  const createSupabaseUser = async (
-    inviteCode: string
-  ): Promise<{ workspaceSlug: string }> => {
+  const createSupabaseUser = async (): Promise<{ workspaceSlug: string }> => {
     try {
       const user = await web3auth.getUserInfo();
       if (!user.email) {
@@ -101,20 +86,23 @@ export function useSupabase() {
         console.log("Создание нового пользователя, так как текущий не найден");
         // Логика создания пользователя
         // Пользователя с таким email нет в базе, создаем нового
+        //@ts-ignore
+        const parts = user.name.split(" ");
         const newUser = {
+          // user_id: "5619bcb3-0b78-4270-bd56-0f1069d9e8a1",
           email: user.email,
-          first_name: user.name,
+          first_name: parts[0],
+          last_name: parts.slice(1).join(" "),
           aggregateverifier: user.aggregateVerifier,
           verifier: user.verifier,
           avatar: user.profileImage,
           typeoflogin: user.typeOfLogin,
-          inviter: inviteCode,
+          inviter,
         };
 
         const { error } = await supabase.from("users").insert([{ ...newUser }]);
 
         if (!error) {
-          const userData = await getSupabaseUser(user.email);
           setUserInfo({ ...userData } as ExtendedOpenloginUserInfo);
           localStorage.setItem("user_id", userData.user_id);
           return {
@@ -318,7 +306,6 @@ export function useSupabase() {
   useEffect(() => {
     let isMounted = true;
     getAllAssets();
-    getUserSupabase();
     fetchBoardData().then(() => {
       if (!isMounted) return;
       // ...другие действия, если компонент все еще смонтирован
@@ -348,6 +335,27 @@ export function useSupabase() {
     userInfo,
     setUserInfo,
     checkUsername,
-    getUserSupabase,
   };
 }
+// const getUserSupabase = async () => {
+//   try {
+//     const user_id = localStorage.getItem("user_id");
+//     console.log(user_id, "user_id");
+//     const response = await supabase
+//       .from("users")
+//       .select("*")
+//       .eq("user_id", user_id)
+//       .single();
+
+//     setUserSupabase(response.data);
+//     userId(response.data.user_id);
+//   } catch (error) {
+//     console.log("");
+//   }
+// };
+
+// useEffect(() => {
+//   getUserSupabase();
+//   const getUserId = localStorage.getItem("user_id");
+//   getUserId && userId(getUserId);
+// }, []);
