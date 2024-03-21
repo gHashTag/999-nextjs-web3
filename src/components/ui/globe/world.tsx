@@ -428,11 +428,11 @@ export default function WorldPage() {
           </span>
         </p>
       </div>
-      <div>
+      {/* <div>
         <Button onClick={logout} color="primary" variant="faded">
           Log Out
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

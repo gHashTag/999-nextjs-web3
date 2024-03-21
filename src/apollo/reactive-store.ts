@@ -1,6 +1,8 @@
 import { ExtendedOpenloginUserInfo, SupabaseUser } from "@/types";
 import { makeVar } from "@apollo/client";
 
+export const setUserEmail = makeVar<string>("");
+
 export const visibleSignInVar = makeVar<boolean>(false);
 
 export const visibleHeaderVar = makeVar<boolean>(true);

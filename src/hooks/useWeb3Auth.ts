@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IProvider } from "@web3auth/base";
 import { web3auth } from "@/utils/web3Auth";
 import Web3 from "web3";
+import { useLocalStorage } from "./useLocalStorage";
 
 // Corrected the import path for useRouter
 import { useRouter } from "next/router";
@@ -18,6 +19,7 @@ import {
   setUserInfo,
   visibleHeaderVar,
   visibleSignInVar,
+  setUserEmail,
 } from "@/apollo/reactive-store";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 
@@ -31,6 +33,14 @@ const useWeb3Auth = () => {
 
   const { createSupabaseUser } = useSupabase();
 
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    console.log(email, "email");
+    if (email) {
+      setUserEmail(email);
+    }
+  }, []);
+
   const login = async () => {
     console.log(login, "login");
     try {
@@ -43,6 +53,11 @@ const useWeb3Auth = () => {
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
           const user = await createSupabaseUser();
+
+          if (userInfo.email) {
+            localStorage.setItem("email", userInfo.email);
+          }
+
           console.log(userInfo, "userInfo");
           visibleHeaderVar(true);
         }
@@ -75,7 +90,7 @@ const useWeb3Auth = () => {
     setUserInfo(null);
     setBalance(null);
     setInviteCode("");
-    localStorage.removeItem("user_id");
+    localStorage.removeItem("email");
     router.push("/");
     console.log("logged out");
 

@@ -1,8 +1,7 @@
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
 }
-import cors from "cors";
-import { supabase } from "@/utils/supabase";
+
 import {
   ApolloClient,
   InMemoryCache,
@@ -43,17 +42,18 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
+  //const token = (await supabase.auth.getSession()).data.session?.access_token;
 
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : "",
-      "access-control-allow-methods": "POST",
+      apiKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     },
   };
 });
-
+// Authorization: token
+//         ? `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
+//         : "",
 const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
   cache,
