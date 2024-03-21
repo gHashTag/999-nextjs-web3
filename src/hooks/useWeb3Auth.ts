@@ -66,9 +66,8 @@ const useWeb3Auth = () => {
 
   const logout = async () => {
     // IMP START - Logout
-
-    await web3auth.logout();
     visibleSignInVar(false);
+    visibleHeaderVar(false);
     // IMP END - Logout
     setLoggedIn(false);
     setProvider(null);
@@ -79,6 +78,8 @@ const useWeb3Auth = () => {
     localStorage.removeItem("user_id");
     router.push("/");
     console.log("logged out");
+
+    await web3auth.logout();
   };
 
   const getAccounts = async () => {

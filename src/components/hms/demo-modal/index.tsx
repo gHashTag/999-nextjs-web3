@@ -7,6 +7,8 @@ import LinkButton from "../LinkButton";
 import IconLogo from "@/components/icons/icon-logo";
 import { useSupabase } from "@/hooks/useSupabase";
 import { openWeb3ModalVar, openIntroModalVar } from "@/apollo/reactive-store";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { useToast } from "@/components/ui/use-toast";
 
 const data = [
   {
@@ -31,6 +33,8 @@ const data = [
 
 const DemoModal = () => {
   const [stage, setStage] = React.useState(``);
+  const { login } = useWeb3Auth();
+  const { toast } = useToast();
 
   const router = useRouter();
   React.useEffect(() => {
@@ -38,6 +42,25 @@ const DemoModal = () => {
       setStage(router.query.slug as string);
     }
   }, [router]);
+
+  const handlerCreateUser = async () => {
+    openWeb3ModalVar(true);
+    openIntroModalVar(false);
+    const loggedIn = await login();
+    if (loggedIn) {
+      toast({
+        title: "Success",
+        description: "Welcome to 999 kingdom!!!",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Create user error",
+        description:
+          "An error occurred while trying to create a new user. Please try again or contact your system administrator for assistance.",
+      });
+    }
+  };
   return (
     <div className="font-sans">
       <p className="text-[32px] font-semibold my-0">
@@ -68,10 +91,7 @@ const DemoModal = () => {
               /> */}
               <LinkButton
                 className="w-[200px] bg-yellow-300"
-                onClick={() => {
-                  openWeb3ModalVar(true);
-                  openIntroModalVar(false);
-                }}
+                onClick={handlerCreateUser}
                 // href={`${workspaceSlug}/wallet`}
               >
                 Join as {m.name} <ArrowRightIcon height={20} color="black" />
