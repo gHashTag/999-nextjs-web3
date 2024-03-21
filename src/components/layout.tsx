@@ -41,7 +41,11 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useReactiveVar } from "@apollo/client";
-import { setUserId, visibleSignInVar } from "@/apollo/reactive-store";
+import {
+  setUserId,
+  visibleHeaderVar,
+  visibleSignInVar,
+} from "@/apollo/reactive-store";
 import { usePathname } from "next/navigation";
 
 type Props = {
@@ -62,7 +66,7 @@ export default function Layout({
   const router = useRouter();
   // const workspaceSlug = useReactiveVar(setUserId);
   // console.log(workspaceSlug, "workspaceSlug");
-  const visible = useReactiveVar(visibleSignInVar);
+  const visibleHeader = useReactiveVar(visibleHeaderVar);
   const { toast } = useToast();
   const activeRoute = router.asPath;
   const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];
@@ -82,7 +86,7 @@ export default function Layout({
                 <NavigationMenuList>
                   {NAVIGATION.map(({ name, route }) => (
                     <NavigationMenuItem key={name}>
-                      {!visible && (
+                      {visibleHeader && (
                         <Link
                           href={{
                             pathname: `/workspaceSlug${route}`,

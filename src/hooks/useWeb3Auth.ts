@@ -16,6 +16,7 @@ import {
   setInviteCode,
   setLoggedIn,
   setUserInfo,
+  visibleHeaderVar,
   visibleSignInVar,
 } from "@/apollo/reactive-store";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
@@ -43,8 +44,9 @@ const useWeb3Auth = () => {
           const user = await createSupabaseUser();
           console.log(user, "user");
         }
-
+        visibleHeaderVar(true);
         router.push(`/workspaceSlug/wallet`);
+
         return true;
       }
     } catch (error) {

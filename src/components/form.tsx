@@ -34,8 +34,6 @@ import {
 import Captcha, { useCaptcha } from "./captcha";
 
 import { useSupabase } from "@/hooks/useSupabase";
-import toast from "react-hot-toast";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 type FormState = "default" | "loading" | "error";
 
@@ -47,7 +45,6 @@ export default function Form({ sharePage }: Props) {
   const { toast } = useToast();
 
   const visible = useReactiveVar(visibleSignInVar);
-  const isOpenModalVar = useReactiveVar(openWeb3ModalVar);
   const workspaceSlug = useReactiveVar(setUserId);
   const inviteCode = useReactiveVar(setInviteCode);
 
@@ -82,6 +79,10 @@ export default function Form({ sharePage }: Props) {
       console.log(isInviterExist, "isInviterExist");
       if (isInviterExist) {
         visibleSignInVar(true);
+        toast({
+          title: "Success",
+          description: "Welcome to Kingdom 999!!! Click Sing In to enter",
+        });
       } else {
         setErrorMsg("Invite code not correct");
         setFormState("error");
