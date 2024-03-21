@@ -3,7 +3,7 @@ import { makeVar } from "@apollo/client";
 
 export const visibleSignInVar = makeVar<boolean>(false);
 
-export const visibleHeaderVar = makeVar<boolean>(false);
+export const visibleHeaderVar = makeVar<boolean>(true);
 
 export const openWeb3ModalVar = makeVar<boolean>(false);
 
