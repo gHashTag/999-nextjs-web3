@@ -41,7 +41,7 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useReactiveVar } from "@apollo/client";
-import { userId, visibleSignInVar } from "@/apollo/reactive-store";
+import { setUserId, visibleSignInVar } from "@/apollo/reactive-store";
 import { usePathname } from "next/navigation";
 
 type Props = {
@@ -60,7 +60,7 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
-  // const workspaceSlug = useReactiveVar(userId);
+  // const workspaceSlug = useReactiveVar(setUserId);
   // console.log(workspaceSlug, "workspaceSlug");
   const visible = useReactiveVar(visibleSignInVar);
   const { toast } = useToast();

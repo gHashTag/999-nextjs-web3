@@ -7,7 +7,7 @@ export const openWeb3ModalVar = makeVar<boolean>(false);
 
 export const openIntroModalVar = makeVar<boolean>(false);
 
-export const userId = makeVar<string>("");
+export const setUserId = makeVar<string>("");
 
 export const setLoggedIn = makeVar<boolean>(false);
 

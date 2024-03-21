@@ -13,14 +13,14 @@ import {
   setInviterUserId,
   setUserInfo,
   setUserSupabase,
-  userId,
+  setUserId,
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
 
 export function useSupabase() {
   const inviter = useReactiveVar(setInviterUserId);
   const userSupabase = useReactiveVar(setUserSupabase);
-  const user_id = useReactiveVar(userId);
+  const user_id = useReactiveVar(setUserId);
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<any[] | null>();
@@ -330,25 +330,3 @@ export function useSupabase() {
     checkUsername,
   };
 }
-// const getUserSupabase = async () => {
-//   try {
-//     const user_id = localStorage.getItem("user_id");
-//     console.log(user_id, "user_id");
-//     const response = await supabase
-//       .from("users")
-//       .select("*")
-//       .eq("user_id", user_id)
-//       .single();
-
-//     setUserSupabase(response.data);
-//     userId(response.data.user_id);
-//   } catch (error) {
-//     console.log("");
-//   }
-// };
-
-// useEffect(() => {
-//   getUserSupabase();
-//   const getUserId = localStorage.getItem("user_id");
-//   getUserId && userId(getUserId);
-// }, []);

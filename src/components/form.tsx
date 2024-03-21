@@ -27,7 +27,7 @@ import { useReactiveVar } from "@apollo/client";
 import {
   openWeb3ModalVar,
   setInviteCode,
-  userId,
+  setUserId,
   visibleSignInVar,
 } from "@/apollo/reactive-store";
 
@@ -48,7 +48,7 @@ export default function Form({ sharePage }: Props) {
 
   const visible = useReactiveVar(visibleSignInVar);
   const isOpenModalVar = useReactiveVar(openWeb3ModalVar);
-  const workspaceSlug = useReactiveVar(userId);
+  const workspaceSlug = useReactiveVar(setUserId);
   const inviteCode = useReactiveVar(setInviteCode);
 
   const [errorMsg, setErrorMsg] = useState("");
