@@ -32,6 +32,7 @@ const useWeb3Auth = () => {
   const { createSupabaseUser } = useSupabase();
 
   const login = async () => {
+    console.log(login, "login");
     try {
       const web3authProvider = await web3auth.connect();
       setProvider(web3authProvider);
@@ -42,7 +43,7 @@ const useWeb3Auth = () => {
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
           const user = await createSupabaseUser();
-          console.log(user, "user");
+          console.log(userInfo, "userInfo");
         }
         visibleHeaderVar(true);
         router.push(`/workspaceSlug/wallet`);
