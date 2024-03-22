@@ -38,8 +38,10 @@ export function SignupFormDemo({
 
   const [isEdit, setIsEdit] = useState(false);
 
-  useEffect(() => {
-    const subscription = watch();
+  React.useEffect(() => {
+    const subscription = watch((value, { name, type }) =>
+      console.log(value, name, type)
+    );
     return () => subscription.unsubscribe();
   }, [watch]);
 
