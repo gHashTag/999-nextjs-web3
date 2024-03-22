@@ -39,6 +39,8 @@ const MUTATION = gql`
     $first_name: String!
     $last_name: String!
     $designation: String!
+    $company: String!
+    $position: String!
   ) {
     updateusersCollection(
       filter: { user_id: { eq: $user_id } }
@@ -46,6 +48,8 @@ const MUTATION = gql`
         first_name: $first_name
         last_name: $last_name
         designation: $designation
+        company: $company
+        position: $position
       }
     ) {
       records {
@@ -55,6 +59,8 @@ const MUTATION = gql`
         username
         avatar
         user_id
+        company
+        position
       }
     }
   }
@@ -75,7 +81,7 @@ export default function Wallet() {
   const { loading, error, data, refetch } = useQuery(QUERY, {
     client: apolloClient,
     fetchPolicy: "network-only",
-    variables: { email: email },
+    variables: { email },
   });
 
   // if (loading) return <p>Loading...</p>;
@@ -93,12 +99,14 @@ export default function Wallet() {
   const handleFormData = (data: FieldValues) => {
     console.log(data);
     try {
-      if (data.first_name) {
+      if (data) {
         const variables = {
           user_id: userNode.user_id,
           first_name: data.first_name,
           last_name: data.last_name,
           designation: data.designation,
+          company: data.company,
+          position: data.position,
         };
         console.log(variables, "variables");
         mutateUser({
@@ -130,7 +138,7 @@ export default function Wallet() {
                 {
                   id: 1,
                   name: `${userNode.first_name} ${userNode.last_name}`,
-                  designation: userNode.username,
+                  designation: userNode.position,
                   image: userNode.avatar,
                 },
               ]}

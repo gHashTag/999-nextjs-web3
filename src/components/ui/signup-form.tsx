@@ -5,15 +5,7 @@ import { Input } from "../ui/input";
 import { cn } from "@/utils/cn";
 import { Textarea } from "@/components/ui/textarea";
 import { SubmitHandler, FieldValues } from "react-hook-form";
-import {
-  IconBrandGithub,
-  IconBrandGoogle,
-  IconBrandOnlyfans,
-  // @ts-ignore
-} from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
-import { useToast } from "./use-toast";
-import { updateUserDataType } from "@/pages/[workspaceSlug]/wallet";
 
 export function SignupFormDemo({
   first_name,
@@ -33,7 +25,6 @@ export function SignupFormDemo({
   onSubmit: (data: FieldValues) => void;
 }) {
   const {
-    register,
     handleSubmit,
     watch,
     setValue,
@@ -42,6 +33,9 @@ export function SignupFormDemo({
   const watchedDesignation = watch("designation", designation);
   const watchedFirstName = watch("first_name", first_name);
   const watchedLastName = watch("last_name", last_name);
+  const watchedCompany = watch("company", company);
+  const watchedPosition = watch("position", position);
+
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
@@ -71,6 +65,7 @@ export function SignupFormDemo({
                   onChange={(e) => setValue("first_name", e.target.value)}
                 />
               </LabelInputContainer>
+
               <LabelInputContainer>
                 <Label htmlFor="last_name">Last name</Label>
                 <Input
@@ -82,10 +77,32 @@ export function SignupFormDemo({
                 />
               </LabelInputContainer>
             </div>
+            <LabelInputContainer>
+              <Label htmlFor="last_name">Company</Label>
+              <Input
+                id="company"
+                type="text"
+                defaultValue=""
+                value={watchedCompany}
+                onChange={(e) => setValue("company", e.target.value)}
+              />
+            </LabelInputContainer>
+            <div style={{ padding: "10px" }} />
+            <LabelInputContainer>
+              <Label htmlFor="last_name">Position</Label>
+              <Input
+                id="position"
+                type="text"
+                defaultValue=""
+                value={watchedPosition}
+                onChange={(e) => setValue("position", e.target.value)}
+              />
+            </LabelInputContainer>
+            <div style={{ padding: "15px" }} />
             <Textarea
               defaultValue=""
               value={watchedDesignation}
-              className="min-h-[200px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
+              className="min-h-[100px] flex-1 p-4 md:min-h-[300px] lg:min-h-[300px]"
               onChange={(e) => setValue("designation", e.target.value)}
             />
             <div style={{ padding: "15px" }} />
@@ -103,6 +120,12 @@ export function SignupFormDemo({
             <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
               {first_name} {last_name}
             </h2>
+            <p className="text-neutral-600 text-sm max-w-full mt-2 dark:text-neutral-300">
+              {company}
+            </p>
+            <p className="text-neutral-600 text-sm max-w-full mt-2 dark:text-neutral-300">
+              {position}
+            </p>
             <p className="text-neutral-600 text-sm max-w-full mt-2 dark:text-neutral-300">
               {designation}
             </p>
