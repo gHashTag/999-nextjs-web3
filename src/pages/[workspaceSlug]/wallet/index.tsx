@@ -97,7 +97,6 @@ export default function Wallet() {
   const [mutateUser] = useMutation(MUTATION, { client: apolloClient });
 
   const handleFormData = (data: FieldValues) => {
-    console.log(data);
     try {
       if (data) {
         const variables = {
@@ -108,7 +107,6 @@ export default function Wallet() {
           company: data.company,
           position: data.position,
         };
-        console.log(variables, "variables");
         mutateUser({
           variables,
           onCompleted: () => {

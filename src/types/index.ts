@@ -11,6 +11,25 @@ export type BoardItem = Record<TaskStatus, Task[]>;
 
 export type TasksArray = Task[];
 
+export interface Task {
+  __typename: string;
+  node: {
+    id: string;
+    user_id: string;
+    created_at?: string;
+    title: string;
+    description: string;
+    updated_at?: string;
+    due_date?: string;
+    priority?: number;
+    assigned_to?: AssignedUser[];
+    labels?: string[];
+    completed_at?: string;
+    is_archived?: boolean;
+    status: TaskStatus;
+  };
+}
+
 export type SupabaseUser = {
   id: number;
   created_at: Date;
@@ -52,22 +71,6 @@ export interface DropResult {
     droppableId: string;
     index: number;
   };
-}
-
-export interface Task {
-  id: string;
-  title?: string;
-  description?: string;
-  user_id?: string;
-  created_at?: string;
-  updated_at?: string;
-  status?: TaskStatus;
-  due_date?: string;
-  priority?: number;
-  assigned_to?: AssignedUser[];
-  labels?: string[];
-  completed_at?: string;
-  is_archived?: boolean;
 }
 
 // Если assigned_to использует jsonb для хранения нескольких назначений

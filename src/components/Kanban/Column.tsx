@@ -46,17 +46,18 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
     const formData = getValues();
 
     const { title, description } = formData;
-    openModalId && updateTask(+openModalId, { title, description });
-    toast({
-      title: "You task has been updated:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(formData, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
+    console.log(formData);
+    // openModalId && updateTask(+openModalId, { title, description });
+    // toast({
+    //   title: "You task has been updated:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">
+    //         {JSON.stringify(formData, null, 2)}
+    //       </code>
+    //     </pre>
+    //   ),
+    // });
     closeModal();
   };
 
@@ -77,7 +78,11 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
   };
 
   return (
-    <SortableContext id={id} items={cards || []} strategy={rectSortingStrategy}>
+    <SortableContext
+      id={id}
+      items={cards ? cards.map((card) => ({ id: card.node.id })) : []}
+      strategy={rectSortingStrategy}
+    >
       <div
         ref={setNodeRef}
         style={{
@@ -101,14 +106,19 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
         </p>
 
         {cards?.map((card) => (
-          <div key={card.id}>
+          <div key={card.node.id}>
             <Card
-              id={card.id}
-              title={card.title}
-              description={card.description}
-              onClick={() => openModal(card.id)}
+              node={{
+                id: card.node.id,
+                title: card.node.title,
+                description: card.node.description,
+              }}
+              onClick={() => openModal(card.node.id)}
             />
-            <Modal isOpen={openModalId === card.id} onOpenChange={closeModal}>
+            <Modal
+              isOpen={openModalId === card.node.id}
+              onOpenChange={closeModal}
+            >
               <CustomModalContent>
                 <ModalHeader>
                   <span>Edit task</span>
@@ -120,7 +130,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                     <Controller
                       name="title"
                       control={control}
-                      defaultValue={card.title}
+                      defaultValue={card.node.title}
                       render={({ field }) => (
                         <Input
                           placeholder="Enter your title"
@@ -139,7 +149,7 @@ const Column: FC<BoardData> = ({ id, title, cards }) => {
                     <Controller
                       name="description"
                       control={control}
-                      defaultValue={card.description}
+                      defaultValue={card.node.description}
                       render={({ field }) => (
                         <Input
                           placeholder="Enter your description"

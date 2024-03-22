@@ -328,5 +328,6 @@ export function useSupabase() {
     userInfo,
     setUserInfo,
     checkUsername,
+    transformTasksToBoardData,
   };
 }
