@@ -6,18 +6,10 @@ import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 // @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useForm, Controller, FieldValues } from "react-hook-form";
-import {
-  gql,
-  useQuery,
-  useLazyQuery,
-  useReactiveVar,
-  useMutation,
-} from "@apollo/client";
+import { FieldValues } from "react-hook-form";
+import { gql, useQuery, useReactiveVar, useMutation } from "@apollo/client";
 import apolloClient from "@/apollo/apollo-client";
 import { setUserEmail } from "@/apollo/reactive-store";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
@@ -67,7 +59,7 @@ const MUTATION = gql`
     }
   }
 `;
-type updateUserDataType = {
+export type updateUserDataType = {
   user_id: string;
   first_name: string;
   last_name: string;
@@ -77,7 +69,7 @@ type updateUserDataType = {
 export default function Wallet() {
   const { address, balance, logout, getAccounts, getBalance } = useWeb3Auth();
   const email = useReactiveVar(setUserEmail);
-
+  const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
 
   const { loading, error, data, refetch } = useQuery(QUERY, {
@@ -95,30 +87,36 @@ export default function Wallet() {
   };
 
   const userNode = data?.usersCollection?.edges[0]?.node;
-  console.log(userNode, "userNode");
-  const [
-    mutateUser,
-    { data: mutateData, loading: mutateLoading, error: mutateError },
-  ] = useMutation(MUTATION, { client: apolloClient });
 
-  console.log(mutateError, "mutateError");
-  console.log(mutateData, "mutateData");
+  const [mutateUser] = useMutation(MUTATION, { client: apolloClient });
 
-  const handleFormData = (data: updateUserDataType) => {
+  const handleFormData = (data: FieldValues) => {
     console.log(data);
-    if (data.first_name) {
-      const variables = {
-        user_id: userNode.user_id,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        designation: data.designation,
-      };
-      console.log(variables, "variables");
-      mutateUser({
-        variables,
-        onCompleted: () => {
-          refetch();
-        },
+    try {
+      if (data.first_name) {
+        const variables = {
+          user_id: userNode.user_id,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          designation: data.designation,
+        };
+        console.log(variables, "variables");
+        mutateUser({
+          variables,
+          onCompleted: () => {
+            refetch();
+          },
+        });
+        toast({
+          title: "Success",
+          description: "User data updated successfully",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Closed access",
+        description: JSON.stringify(error),
       });
     }
   };

@@ -4,7 +4,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/utils/cn";
 import { Textarea } from "@/components/ui/textarea";
-import { watch, SubmitHandler } from "react-hook-form";
+import { SubmitHandler, FieldValues } from "react-hook-form";
 import {
   IconBrandGithub,
   IconBrandGoogle,
@@ -13,10 +13,7 @@ import {
 } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { useToast } from "./use-toast";
-
-export interface FieldValues {
-  designation: string;
-}
+import { updateUserDataType } from "@/pages/[workspaceSlug]/wallet";
 
 export function SignupFormDemo({
   first_name,
@@ -46,7 +43,6 @@ export function SignupFormDemo({
   const watchedFirstName = watch("first_name", first_name);
   const watchedLastName = watch("last_name", last_name);
   const [isEdit, setIsEdit] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     const subscription = watch();
