@@ -57,6 +57,15 @@ const authLink = setContext(async (_, { headers }) => {
 const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
   cache,
+  connectToDevTools: true,
 });
+
+declare global {
+  interface Window {
+    __APOLLO_CLIENT__: ApolloClient<any>; // Указание типа ApolloClient
+  }
+}
+
+window.__APOLLO_CLIENT__ = apolloClient;
 
 export default apolloClient;

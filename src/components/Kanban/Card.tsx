@@ -16,7 +16,6 @@ interface CardProps {
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(({ node, onClick }, ref) => {
-  console.log(node);
   const { attributes, listeners, setNodeRef, transform } = useSortable({
     id: node.id,
   });

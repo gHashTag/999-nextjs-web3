@@ -190,27 +190,6 @@ export function useSupabase() {
     }
   }, []);
 
-  const createTask = async (task: Omit<Task, "id">) => {
-    // Проверка наличия user_id
-    if (!user_id) {
-      console.error("Ошибка: User Id не найден. Создание задачи невозможно.");
-      return; // Ранний возврат, если user_id отсутствует
-    }
-
-    // Попытка создания задачи
-    const { error } = await supabase
-      .from("tasks")
-      .insert([{ user_id, ...task }]);
-
-    // Обновление данных доски после успешного создания задачи
-    fetchBoardData();
-
-    if (error) {
-      console.error("Ошибка при создании задачи:", error.message);
-      return; // Ранний возврат, если произошла ошибка
-    }
-  };
-
   // Обновление задачи
   const updateTask = async (id: number, updatedFields: Partial<Task>) => {
     console.log(id, "id");
@@ -279,6 +258,22 @@ export function useSupabase() {
     }
   };
 
+  const getTaskById = async (id: string) => {
+    try {
+      let { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      console.log(data, "data");
+      if (error) console.error("Error fetching assets:", error);
+      return data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     const channels = supabase
       .channel("custom-all-channel")
@@ -317,7 +312,6 @@ export function useSupabase() {
     setBoardData,
     fetchBoardData,
     fetchTasks,
-    createTask,
     updateTask,
     deleteTask,
     updateTaskStatus,
@@ -329,5 +323,6 @@ export function useSupabase() {
     setUserInfo,
     checkUsername,
     transformTasksToBoardData,
+    getTaskById,
   };
 }

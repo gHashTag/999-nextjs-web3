@@ -1,5 +1,5 @@
 // TaskModal.js
-import React, { useState } from "react";
+
 import {
   Modal,
   ModalContent,
@@ -7,19 +7,25 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-
-import { useToast } from "@/components/ui/use-toast";
-import { useSupabase } from "@/hooks/useSupabase";
 import styled from "styled-components";
 
 type Modal = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
+  onCreate: () => void;
+  onUpdate: () => void;
+  onDelete: () => void;
+  isEditing: boolean;
+  card: any;
+  control: any;
+  handleSubmit: any;
+  getValues: any;
+  setValue: any;
 };
 
 const CustomModalContent = styled(ModalContent)`
@@ -27,51 +33,40 @@ const CustomModalContent = styled(ModalContent)`
   color: hsl(var(--foreground));
 `;
 
-function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
-  const { createTask } = useSupabase();
-  const { toast } = useToast();
-  const { control, handleSubmit, getValues, setValue } = useForm({
-    defaultValues: {
-      title: "",
-      description: "",
-    },
-  });
-
-  const onCreate = () => {
-    const formData = getValues();
-
-    console.log("formData", formData);
-    const { title, description } = formData;
-
-    createTask({ title, description });
-    toast({
-      title: "You task has been updated:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(formData, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
-  };
-
+function TaskModal({
+  isOpen,
+  onOpen,
+  onOpenChange,
+  onCreate,
+  onUpdate,
+  onDelete,
+  control,
+  handleSubmit,
+  setValue,
+  isEditing,
+  card,
+}: Modal) {
+  console.log(card?.title, "card.title");
+  console.log(isEditing, "isEditing");
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Button onClick={onOpen}>
+        {isEditing ? "Edit Task" : "Create Task"}
+      </Button>
       <CustomModalContent>
         {(onClose) => (
           <>
             <ModalHeader>
-              <span>Create task</span>
+              <span>{isEditing ? "Edit task" : "Create task"}</span>
             </ModalHeader>
             <ModalBody>
-              <form onSubmit={handleSubmit(onCreate)}>
+              <form onSubmit={handleSubmit(isEditing ? onUpdate : onCreate)}>
                 <Label htmlFor="text">Title</Label>
                 <div style={{ padding: 5 }} />
                 <Controller
                   name="title"
                   control={control}
+                  defaultValue={isEditing ? card?.title : ""}
                   render={({ field }) => (
                     <Input
                       placeholder="Enter your title"
@@ -90,6 +85,7 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
                 <Controller
                   name="description"
                   control={control}
+                  defaultValue={isEditing ? card?.description : ""}
                   render={({ field }) => (
                     <Input
                       placeholder="Enter your description"
@@ -104,15 +100,20 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
               </form>
             </ModalBody>
             <ModalFooter>
+              {isEditing && (
+                <Button color="warning" variant="ghost" onClick={onDelete}>
+                  Delete
+                </Button>
+              )}
               <Button
                 color="warning"
                 variant="ghost"
                 onClick={() => {
-                  onCreate();
+                  isEditing ? onUpdate() : onCreate();
                   onClose();
                 }}
               >
-                Create
+                {isEditing ? "Save" : "Create"}
               </Button>
             </ModalFooter>
           </>
@@ -123,3 +124,63 @@ function TaskModal({ isOpen, onOpen, onOpenChange }: Modal) {
 }
 
 export default TaskModal;
+{
+  /* <Modal
+isOpen={openModalId === card.node.id}
+onOpenChange={closeModal}
+>
+<CustomModalContent>
+  <ModalHeader>
+    <span>Edit task</span>
+  </ModalHeader>
+  <ModalBody>
+    <form onSubmit={handleSubmit(onUpdate)}>
+      <Label htmlFor="text">Title</Label>
+      <div style={{ padding: 5 }} />
+      <Controller
+        name="title"
+        control={control}
+        defaultValue={card.node.title}
+        render={({ field }) => (
+          <Input
+            placeholder="Enter your title"
+            className="w-full h-15"
+            {...field}
+            onChange={(e) => {
+              setValue("title", e.target.value);
+            }}
+          />
+        )}
+      />
+      <div style={{ padding: 10 }} />
+
+      <Label htmlFor="text">Description</Label>
+      <div style={{ padding: 5 }} />
+      <Controller
+        name="description"
+        control={control}
+        defaultValue={card.node.description}
+        render={({ field }) => (
+          <Input
+            placeholder="Enter your description"
+            className="w-full"
+            {...field}
+            onChange={(e) => {
+              setValue("description", e.target.value);
+            }}
+          />
+        )}
+      />
+    </form>
+  </ModalBody>
+  <ModalFooter>
+    <Button color="warning" variant="ghost" onClick={onDelete}>
+      Delete
+    </Button>
+    <Button color="warning" variant="ghost" onClick={onUpdate}>
+      Save
+    </Button>
+  </ModalFooter>
+</CustomModalContent>
+</Modal> */
+}

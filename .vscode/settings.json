@@ -1,0 +1,6 @@
+{
+  "console-ninja.toolsToEnableSupportAutomaticallyFor": {
+    "vite": false,
+    "angular": false
+  }
+}

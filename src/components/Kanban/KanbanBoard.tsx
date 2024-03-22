@@ -10,18 +10,25 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Column from "./Column";
-
-import { useSupabase } from "@/hooks/useSupabase";
 import { Board, BoardData, StatusMap, Task, TasksArray } from "@/types";
 import { Button } from "@/components/ui/moving-border";
 import { useCallback, useEffect, useState } from "react";
 import TaskModal from "./TaskModal";
-import { gql, useQuery, useReactiveVar, useMutation } from "@apollo/client";
+import {
+  gql,
+  useQuery,
+  useReactiveVar,
+  useMutation,
+  ApolloError,
+} from "@apollo/client";
 import apolloClient from "@/apollo/apollo-client";
 import { useDisclosure } from "@nextui-org/react";
 import { setUserId } from "@/apollo/reactive-store";
+import { useToast } from "@/components/ui/use-toast";
+import { useForm } from "react-hook-form";
+import { useSupabase } from "@/hooks/useSupabase";
 
-const QUERY = gql`
+const TASKS_COLLECTION_QUERY = gql`
   query TasksCollection {
     tasksCollection {
       edges {
@@ -45,15 +52,68 @@ const QUERY = gql`
   }
 `;
 
-const MUTATION = gql`
+const TASK_BY_ID_QUERY = gql`
+  query GetTaskById($id: BigInt!) {
+    tasksCollection(filter: { id: { eq: $id } }) {
+      edges {
+        node {
+          id
+          user_id
+          created_at
+          title
+          description
+          updated_at
+          due_date
+          priority
+          assigned_to
+          labels
+          completed_at
+          is_archived
+          status
+        }
+      }
+    }
+  }
+`;
+
+const CREATE_TASK_MUTATION = gql`
+  mutation CreateTasks($objects: [tasksInsertInput!]!) {
+    insertIntotasksCollection(objects: $objects) {
+      records {
+        id
+        user_id
+        created_at
+        title
+        description
+        updated_at
+        due_date
+        priority
+        assigned_to
+        labels
+        completed_at
+        is_archived
+        status
+      }
+    }
+  }
+`;
+
+const MUTATION_TASK_UPDATE = gql`
   mutation updatetasksCollection(
     $id: BigInt!
     $status: BigInt!
+    $title: String!
+    $description: String!
     $updated_at: Datetime!
   ) {
     updatetasksCollection(
       filter: { id: { eq: $id } }
-      set: { status: $status, updated_at: $updated_at }
+      set: {
+        status: $status
+        updated_at: $updated_at
+        title: $title
+        description: $description
+      }
     ) {
       records {
         id
@@ -74,23 +134,115 @@ const MUTATION = gql`
   }
 `;
 
+const DELETE_TASK_MUTATION = gql`
+  mutation DeleteTask($filter: tasksFilter!, $atMost: Int!) {
+    deleteFromtasksCollection(filter: $filter, atMost: $atMost) {
+      records {
+        id
+        title
+      }
+    }
+  }
+`;
+
 function KanbanBoard() {
-  const user_id = useReactiveVar(setUserId);
-  const { loading, error, data, refetch } = useQuery(QUERY, {
-    client: apolloClient,
-    fetchPolicy: "network-only",
-  });
-  console.log(data);
-  const [mutateUpdateTaskStatus] = useMutation(MUTATION, {
+  const { toast } = useToast();
+  const [openModalId, setOpenModalId] = useState<string | null>(null);
+  const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY, {
     client: apolloClient,
   });
-  // const { updateTaskStatus } = useSupabase();
+
+  const { data: taskById } = useQuery(TASK_BY_ID_QUERY, {
+    variables: { id: openModalId },
+    client: apolloClient,
+  });
+  console.log(taskById, "taskById");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
+    useMutation(MUTATION_TASK_UPDATE, {
+      client: apolloClient,
+    });
+
+  if (mutateUpdateTaskStatusError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(mutateUpdateTaskStatusError.message);
+  }
+
+  const [mutateCreateTask, { error: mutateCreateTaskError }] = useMutation(
+    CREATE_TASK_MUTATION,
+    {
+      client: apolloClient,
+    }
+  );
+
+  const [deleteTask, { error: deleteTaskError }] = useMutation(
+    DELETE_TASK_MUTATION,
+    {
+      client: apolloClient,
+    }
+  );
+  if (deleteTaskError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(deleteTaskError.message);
+  }
+  const { getTaskById } = useSupabase();
   const [boardData, setBoardData] = useState<BoardData[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [card, setCard] = useState<Task>();
+  const { control, handleSubmit, getValues, setValue, reset } = useForm({
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
+
   const statusToColumnName: Record<number, string> = {
     1: "To Do",
     2: "In Progress",
     3: "Review",
     4: "Done",
+  };
+
+  const onCreate = () => {
+    const formData = getValues();
+    mutateCreateTask({
+      variables: {
+        objects: [formData],
+      },
+      onCompleted: () => {
+        refetch();
+      },
+    });
+
+    if (mutateCreateTaskError) {
+      toast({
+        title: "Error creating task:",
+        variant: "destructive",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(mutateCreateTaskError, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
+    } else {
+      toast({
+        title: "You task has been created:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(formData.title, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
+      reset({
+        title: "",
+        description: "",
+      });
+    }
   };
 
   const transformTasksToBoardData = useCallback(
@@ -130,11 +282,10 @@ function KanbanBoard() {
   useEffect(() => {
     if (data) {
       const newData = transformTasksToBoardData(data.tasksCollection.edges);
-      console.log(newData, "newData");
       setBoardData(newData);
     }
   }, [data]);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const findColumn = (unique: string | null) => {
     if (!unique || !boardData) {
       return null;
@@ -278,13 +429,96 @@ function KanbanBoard() {
     })
   );
 
+  const openModal = async (cardId: string) => {
+    setOpenModalId(cardId);
+    const card = await getTaskById(cardId);
+    console.log(card, "card");
+
+    setCard(card);
+    onOpen();
+    setIsEditing(true);
+  };
+
+  const closeModal = () => {
+    setOpenModalId(null);
+  };
+
+  const onDelete = () => {
+    const formData = getValues();
+    console.log(openModalId);
+    openModalId &&
+      deleteTask({ variables: { filter: { id: Number(openModalId) } } });
+    toast({
+      title: "You task has been deleted",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify(openModalId, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
+    closeModal();
+  };
+
+  const onUpdate = () => {
+    const formData = getValues();
+    console.log(formData, "formData");
+
+    const variables = {
+      id: openModalId,
+      title: formData.title,
+      description: formData.description,
+      updated_at: new Date().toISOString(),
+    };
+    console.log(variables);
+    mutateUpdateTaskStatus({
+      variables,
+      onCompleted: () => {
+        refetch();
+      },
+    });
+
+    toast({
+      title: "You task has been updated:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify(variables, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
+  };
+
   return (
     <div style={{ paddingLeft: 40, paddingTop: 40 }}>
       <div style={{ position: "fixed", top: 100, right: 30 }}>
-        <Button onClick={onOpen}>Create task</Button>
+        <Button
+          onClick={() => {
+            onOpen();
+            setIsEditing(false);
+          }}
+        >
+          Create task
+        </Button>
       </div>
 
-      <TaskModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
+      <TaskModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        onCreate={onCreate}
+        onDelete={onDelete}
+        onUpdate={onUpdate}
+        control={control}
+        handleSubmit={handleSubmit}
+        getValues={getValues}
+        setValue={setValue}
+        isEditing={isEditing}
+        card={card}
+      />
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -294,15 +528,17 @@ function KanbanBoard() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-1">
           {boardData &&
             boardData.map((value: BoardData) => {
-              console.log(value.cards);
-              return (
-                <Column
-                  key={value.id}
-                  id={value.id}
-                  title={value.title}
-                  cards={value.cards}
-                />
-              );
+              if (value.cards) {
+                return (
+                  <Column
+                    key={value.id}
+                    id={value.id}
+                    title={value.title}
+                    cards={value.cards}
+                    openModal={openModal}
+                  />
+                );
+              }
             })}
         </div>
       </DndContext>
