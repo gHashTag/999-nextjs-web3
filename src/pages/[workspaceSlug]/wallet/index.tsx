@@ -4,40 +4,85 @@ import { useWeb3Auth } from "@hooks/useWeb3Auth";
 import { Button, User, Card, CardBody } from "@nextui-org/react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
-import { Snippet } from "@nextui-org/react";
 // @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useSupabase } from "@/hooks/useSupabase";
-import { Globe } from "@/components/ui/globe";
-import { gql, useQuery, useReactiveVar } from "@apollo/client";
+import { useForm, Controller, FieldValues } from "react-hook-form";
+import {
+  gql,
+  useQuery,
+  useLazyQuery,
+  useReactiveVar,
+  useMutation,
+} from "@apollo/client";
 import apolloClient from "@/apollo/apollo-client";
 import { setUserEmail } from "@/apollo/reactive-store";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
+import { SignupFormDemo } from "@/components/ui/signup-form";
+import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 
 const QUERY = gql`
   query GetUserByEmail($email: String!) {
     usersCollection(filter: { email: { eq: $email } }) {
       edges {
         node {
+          user_id
           first_name
           last_name
           username
           avatar
+          designation
+          company
+          position
         }
       }
     }
   }
 `;
 
-export default function Wallet() {
-  const router = useRouter();
+const MUTATION = gql`
+  mutation UpdateUser(
+    $user_id: UUID
+    $first_name: String!
+    $last_name: String!
+    $designation: String!
+  ) {
+    updateusersCollection(
+      filter: { user_id: { eq: $user_id } }
+      set: {
+        first_name: $first_name
+        last_name: $last_name
+        designation: $designation
+      }
+    ) {
+      records {
+        id
+        first_name
+        last_name
+        username
+        avatar
+        user_id
+      }
+    }
+  }
+`;
+type updateUserDataType = {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  designation: string;
+};
 
-  const { address, balance, loggedIn, logout, getAccounts, getBalance } =
-    useWeb3Auth();
+export default function Wallet() {
+  const { address, balance, logout, getAccounts, getBalance } = useWeb3Auth();
   const email = useReactiveVar(setUserEmail);
-  console.log(email, "email");
+
   const [copyStatus, setCopyStatus] = useState(false);
-  const { loading, error, data } = useQuery(QUERY, {
+
+  const { loading, error, data, refetch } = useQuery(QUERY, {
     client: apolloClient,
+    fetchPolicy: "network-only",
     variables: { email: email },
   });
 
@@ -49,26 +94,59 @@ export default function Wallet() {
     setTimeout(() => setCopyStatus(false), 2000);
   };
 
-  const loggedInView = (
-    <>
-      <div>
-        <Button onClick={logout} color="primary" variant="faded">
-          Log Out
-        </Button>
-      </div>
-    </>
-  );
   const userNode = data?.usersCollection?.edges[0]?.node;
+  console.log(userNode, "userNode");
+  const [
+    mutateUser,
+    { data: mutateData, loading: mutateLoading, error: mutateError },
+  ] = useMutation(MUTATION, { client: apolloClient });
 
+  console.log(mutateError, "mutateError");
+  console.log(mutateData, "mutateData");
+
+  const handleFormData = (data: updateUserDataType) => {
+    console.log(data);
+    if (data.first_name) {
+      const variables = {
+        user_id: userNode.user_id,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        designation: data.designation,
+      };
+      console.log(variables, "variables");
+      mutateUser({
+        variables,
+        onCompleted: () => {
+          refetch();
+        },
+      });
+    }
+  };
   return (
     <Layout>
-      <main className="flex flex-col items-center justify-between p-24">
+      <main className="flex flex-col items-center justify-between p-14">
         {!loading && userNode && (
-          <User
-            name={`${userNode.first_name} ${userNode.last_name}`}
-            description={userNode.username}
-            avatarProps={{ src: userNode.avatar }}
-          />
+          <>
+            <AnimatedTooltip
+              items={[
+                {
+                  id: 1,
+                  name: `${userNode.first_name} ${userNode.last_name}`,
+                  designation: userNode.username,
+                  image: userNode.avatar,
+                },
+              ]}
+            />
+            <SignupFormDemo
+              first_name={userNode.first_name}
+              last_name={userNode.last_name}
+              position={userNode.position}
+              company={userNode.company}
+              designation={userNode.designation}
+              logout={logout}
+              onSubmit={handleFormData}
+            />
+          </>
         )}
 
         <div style={{ padding: "20px" }} />
@@ -81,6 +159,7 @@ export default function Wallet() {
                 </CopyToClipboard>
               </CardBody>
             </Card>
+            <div style={{ padding: "5px" }} />
             {copyStatus && <p>Text copied to clipboard!</p>}
           </>
         )}
@@ -95,7 +174,6 @@ export default function Wallet() {
         )}
 
         <div style={{ padding: "20px" }} />
-        <div className="grid">{loggedIn && loggedInView}</div>
       </main>
     </Layout>
   );

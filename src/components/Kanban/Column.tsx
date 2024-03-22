@@ -2,20 +2,10 @@ import React, { FC, useState } from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import Card from "./Card";
-import { BoardData, CardInfo } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { BoardData } from "@/types";
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import { useSupabase } from "@/hooks/useSupabase";
 import { Button } from "@/components/ui/button";
 import {
