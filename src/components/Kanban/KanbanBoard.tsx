@@ -151,7 +151,7 @@ function KanbanBoard() {
   const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY, {
     client: apolloClient,
   });
-  console.log(openModalId);
+
   // const { data: taskById, error: taskByIdError } = useQuery(TASK_BY_ID_QUERY, {
   //   variables: { id: openModalId },
   //   client: apolloClient,
@@ -421,7 +421,7 @@ function KanbanBoard() {
   const openModal = async (cardId: string) => {
     setOpenModalId(cardId);
     const card = await getTaskById(cardId);
-
+    console.log(isEditing, "isEditing");
     setCard(card);
     setValue("title", card?.title);
     setValue("description", card?.description);
@@ -453,7 +453,7 @@ function KanbanBoard() {
 
   const onUpdate = () => {
     const formData = getValues();
-    console.log("formData", formData);
+
     const variables = {
       id: openModalId,
       title: formData.title,
@@ -469,17 +469,17 @@ function KanbanBoard() {
     });
   };
 
+  const onCreateNewTask = () => {
+    setValue("title", "");
+    setValue("description", "");
+    onOpen();
+    setIsEditing(false);
+  };
+
   return (
     <div style={{ paddingLeft: 40, paddingTop: 40 }}>
       <div style={{ position: "fixed", top: 100, right: 30 }}>
-        <Button
-          onClick={() => {
-            onOpen();
-            setIsEditing(false);
-          }}
-        >
-          Create task
-        </Button>
+        <Button onClick={onCreateNewTask}>Create task</Button>
       </div>
       {isOpen && (
         <TaskModal
