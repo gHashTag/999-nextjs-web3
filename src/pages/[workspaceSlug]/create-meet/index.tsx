@@ -17,6 +17,8 @@ const ROOMS_ASSETS_COLLECTION_QUERY = gql`
           id
           title
           summary_short
+          recording_id
+          transcription
         }
       }
     }
