@@ -8,6 +8,7 @@ import { useSupabase } from "@/hooks/useSupabase";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { useReactiveVar } from "@apollo/client";
 import { setUserId } from "@/apollo/reactive-store";
+import { HoverEffect } from "@/components/ui/card-hover-effect";
 
 const CreateMeet = () => {
   const router = useRouter();
@@ -31,10 +32,6 @@ const CreateMeet = () => {
   if (!managementToken) {
     throw new Error("NEXT_PUBLIC_MANAGEMENT_TOKEN is not set");
   }
-
-  const goToRecording = (recordings_id: string, asset: RecordingAsset) => {
-    router.push(`/${workspaceSlug}/create-meet/${recordings_id}`);
-  };
 
   return (
     <>
@@ -68,22 +65,15 @@ const CreateMeet = () => {
         </div>
         <div
           style={{
-            marginTop: "30px",
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "center",
             alignItems: "center",
+            paddingLeft: 10,
+            paddingRight: 10,
           }}
         >
-          {assets?.map((asset, index) => (
-            <MeteorsCard
-              key={index}
-              asset={asset}
-              onClick={() => goToRecording(asset.recording_id, asset)}
-            />
-          ))}
-
-          {/* <HoverEffect items={assets || []} /> */}
+          <HoverEffect items={assets} router={router} />
         </div>
       </Layout>
     </>
@@ -91,6 +81,7 @@ const CreateMeet = () => {
 };
 
 export default CreateMeet;
+
 // const getRecordings = async () => {
 //   try {
 //     const response = await fetch("https://api.100ms.live/v2/recordings", {

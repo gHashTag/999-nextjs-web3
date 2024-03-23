@@ -13,8 +13,11 @@ export function MeteorsCard({
   return (
     <div
       onClick={onClick}
+      className="cursor-pointer transition duration-300 ease-in-out"
       style={{
-        maxWidth: "calc(100% / 4)",
+        maxWidth: "calc(100% / 6)",
+        height: "100px",
+        maxHeight: "100px",
         paddingLeft: 20,
         paddingRight: 20,
         marginBottom: 50,

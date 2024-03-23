@@ -6,6 +6,7 @@ import {
   TasksArray,
   Board,
   ExtendedOpenloginUserInfo,
+  RecordingAsset,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { web3auth } from "@/utils/web3Auth";
@@ -23,7 +24,7 @@ export function useSupabase() {
   const user_id = useReactiveVar(setUserId);
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
-  const [assets, setAssets] = useState<any[] | null>();
+  const [assets, setAssets] = useState<RecordingAsset[]>([]);
   const [error, setError] = useState<string | null>(null);
   const userInfo = useReactiveVar(setUserInfo);
 
@@ -124,7 +125,7 @@ export function useSupabase() {
       let { data, error } = await supabase.from("room_assets").select("*");
       if (error) console.error("Error fetching assets:", error);
 
-      setAssets(data);
+      data && setAssets(data);
     } catch (error) {
       // console.log("error", error);
     }
