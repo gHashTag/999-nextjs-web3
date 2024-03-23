@@ -250,7 +250,7 @@ export function useSupabase() {
         .from("room_assets")
         .select("*")
         .eq("recording_id", recording_id);
-      console.log(data, "data");
+
       if (error) console.error("Error fetching assets:", error);
       return data;
     } catch (error) {
@@ -266,7 +266,6 @@ export function useSupabase() {
         .eq("id", id)
         .single();
 
-      console.log(data, "data");
       if (error) console.error("Error fetching assets:", error);
       return data;
     } catch (error) {

@@ -20,6 +20,8 @@ import {
   subscribeToEvents,
 } from "@/utils/auth";
 import { useReactiveVar } from "@apollo/client";
+import { useRouter } from "next/router";
+import { useToast } from "@/components/ui/use-toast";
 
 // const huddleClient = new HuddleClient({
 //   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
@@ -31,8 +33,10 @@ import { useReactiveVar } from "@apollo/client";
 // });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const { toast } = useToast();
   useEffect(() => {
-    initWeb3Auth();
+    initWeb3Auth(router, toast);
     const unsubscribe = subscribeToEvents(async () => {
       await authenticateUser();
       setLoggedIn(true);

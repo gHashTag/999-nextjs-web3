@@ -156,8 +156,8 @@ function KanbanBoard() {
     variables: { id: openModalId },
     client: apolloClient,
   });
-  console.log(taskById, "taskById");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
     useMutation(MUTATION_TASK_UPDATE, {
@@ -228,16 +228,6 @@ function KanbanBoard() {
         ),
       });
     } else {
-      toast({
-        title: "You task has been created:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(formData.title, null, 2)}
-            </code>
-          </pre>
-        ),
-      });
       reset({
         title: "",
         description: "",
@@ -384,7 +374,7 @@ function KanbanBoard() {
     }
 
     const newStatus = getColumnStatus(overColumn.id.toString());
-    console.log(newStatus, "newStatus");
+
     mutateUpdateTaskStatus({
       variables: {
         id: activeId,
@@ -432,7 +422,6 @@ function KanbanBoard() {
   const openModal = async (cardId: string) => {
     setOpenModalId(cardId);
     const card = await getTaskById(cardId);
-    console.log(card, "card");
 
     setCard(card);
     onOpen();
@@ -441,46 +430,41 @@ function KanbanBoard() {
 
   const closeModal = () => {
     setOpenModalId(null);
+    onClose();
   };
 
   const onDelete = () => {
-    const formData = getValues();
-    console.log(openModalId);
     openModalId &&
-      deleteTask({ variables: { filter: { id: Number(openModalId) } } });
-    toast({
-      title: "You task has been deleted",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(openModalId, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
+      deleteTask({
+        variables: {
+          filter: {
+            id: {
+              eq: Number(openModalId),
+            },
+          },
+        },
+        onCompleted: () => {
+          refetch();
+        },
+      });
     closeModal();
   };
 
   const onUpdate = () => {
     const formData = getValues();
-    console.log(formData, "formData");
-
+    console.log("formData", formData);
     const variables = {
       id: openModalId,
       title: formData.title,
       description: formData.description,
       updated_at: new Date().toISOString(),
     };
-    console.log(variables);
+
     mutateUpdateTaskStatus({
       variables,
       onCompleted: () => {
         refetch();
       },
-    });
-
-    toast({
-      title: "You task has been updated",
     });
   };
 

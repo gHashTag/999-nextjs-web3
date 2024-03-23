@@ -46,8 +46,6 @@ function TaskModal({
   isEditing,
   card,
 }: Modal) {
-  console.log(card?.title, "card.title");
-  console.log(isEditing, "isEditing");
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <Button onClick={onOpen}>
