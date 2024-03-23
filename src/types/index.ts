@@ -97,6 +97,7 @@ export type Board = {
 
 export type RecordingAsset = {
   account_id: string;
+  title: string;
   app_id: string;
   duration: number;
   email: string | null;

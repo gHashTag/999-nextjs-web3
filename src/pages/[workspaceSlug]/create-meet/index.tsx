@@ -3,17 +3,32 @@ import SubCard from "@/components/revamp/LandingCards/SubCard";
 import Layout from "@/components/layout";
 import { useRouter } from "next/navigation";
 import { MeteorsCard } from "@/components/ui/meteor-card";
-import { RecordingAsset } from "@/types";
-import { useSupabase } from "@/hooks/useSupabase";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
-import { useReactiveVar } from "@apollo/client";
 import { setUserId } from "@/apollo/reactive-store";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { gql, useQuery, useReactiveVar } from "@apollo/client";
+
+import apolloClient from "@/apollo/apollo-client";
+
+const ROOMS_ASSETS_COLLECTION_QUERY = gql`
+  query RoomAssetsCollection {
+    room_assetsCollection {
+      edges {
+        node {
+          id
+          title
+          summary_short
+        }
+      }
+    }
+  }
+`;
 
 const CreateMeet = () => {
   const router = useRouter();
   const workspaceSlug = useReactiveVar(setUserId);
-  const { assets } = useSupabase();
+  const { data } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
+    client: apolloClient,
+  });
 
   const getRoom = async () => {
     router.push(`/workspaceSlug/create-meet/meets`);
@@ -33,6 +48,8 @@ const CreateMeet = () => {
     throw new Error("NEXT_PUBLIC_MANAGEMENT_TOKEN is not set");
   }
 
+  const items = data?.room_assetsCollection?.edges;
+
   return (
     <>
       <Layout>
@@ -41,7 +58,6 @@ const CreateMeet = () => {
           style={{
             paddingRight: 20,
             paddingLeft: 20,
-            paddingBottom: 70,
           }}
         >
           <div className="grid lg:grid-cols-3 gap-4 grid-cols-1 mt-6">
@@ -73,7 +89,7 @@ const CreateMeet = () => {
             paddingRight: 10,
           }}
         >
-          <HoverEffect items={assets} router={router} />
+          <HoverEffect items={items} />
         </div>
       </Layout>
     </>

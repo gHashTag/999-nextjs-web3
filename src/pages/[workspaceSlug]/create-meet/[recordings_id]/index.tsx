@@ -42,6 +42,7 @@ const RecordingPage = () => {
           <TracingBeam className="px-6">
             <div className="max-w-2xl mx-auto antialiased pt-4 relative">
               <div className="mb-10">
+                <p className={twMerge("text-4xl mb-4")}>{asset?.[0]?.title}</p>
                 <p className={twMerge("text-xl mb-4")}>
                   {asset?.[0]?.summary_short}
                 </p>

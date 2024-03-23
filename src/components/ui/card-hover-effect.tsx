@@ -5,12 +5,13 @@ import Link from "next/link";
 import { useState } from "react";
 
 type HoverEffectProps = {
-  items: RecordingAsset[];
+  items: {
+    node: RecordingAsset;
+  }[];
   className?: string;
-  router: any;
 };
 
-export const HoverEffect = ({ items, className, router }: HoverEffectProps) => {
+export const HoverEffect = ({ items, className }: HoverEffectProps) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
@@ -23,8 +24,8 @@ export const HoverEffect = ({ items, className, router }: HoverEffectProps) => {
       {items &&
         items.map((item, idx) => (
           <Link
-            href={`/workspaceSlug/create-meet/${item.recording_id}`}
-            key={item.recording_id}
+            href={`/workspaceSlug/create-meet/${item.node.recording_id}`}
+            key={item.node.recording_id}
             className="relative group  block p-2 h-full w-full"
             onMouseEnter={() => setHoveredIndex(idx)}
             onMouseLeave={() => setHoveredIndex(null)}
@@ -47,8 +48,8 @@ export const HoverEffect = ({ items, className, router }: HoverEffectProps) => {
               )}
             </AnimatePresence>
             <Card>
-              <CardTitle>Soon</CardTitle>
-              <CardDescription>{item.summary_short}</CardDescription>
+              <CardTitle>{item.node.title}</CardTitle>
+              <CardDescription>{item.node.summary_short}</CardDescription>
             </Card>
           </Link>
         ))}
@@ -82,7 +83,7 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
+    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-0", className)}>
       {children}
     </h4>
   );
@@ -97,7 +98,7 @@ export const CardDescription = ({
   return (
     <p
       className={cn(
-        "mt-8 text-zinc-400 tracking-wide leading-relaxed text-sm",
+        "mt-3 text-zinc-400 tracking-wide leading-relaxed text-sm h-full",
         className
       )}
       style={{
