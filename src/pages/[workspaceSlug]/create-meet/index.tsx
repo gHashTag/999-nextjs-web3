@@ -15,15 +15,15 @@ const CreateMeet = () => {
   const { assets } = useSupabase();
 
   const getRoom = async () => {
-    router.push(`/${workspaceSlug}/create-meet/meets`);
+    router.push(`/workspaceSlug/create-meet/meets`);
   };
 
   const getSpace = async () => {
-    router.push(`/${workspaceSlug}/create-meet/audio-spaces`);
+    router.push(`/workspaceSlug/create-meet/audio-spaces`);
   };
 
   const getTokenGated = async () => {
-    router.push(`/${workspaceSlug}/create-meet/token-gated`);
+    router.push(`/workspaceSlug/create-meet/token-gated`);
   };
 
   const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
@@ -62,6 +62,7 @@ const CreateMeet = () => {
               title="Token-gated Room"
               img="Token-gated Room.png"
               onClick={getTokenGated}
+              isDisabled={true}
             />
           </div>
         </div>

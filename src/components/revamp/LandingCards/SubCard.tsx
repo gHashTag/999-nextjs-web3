@@ -8,11 +8,24 @@ type SubCardProps = {
   title: string;
   img: string;
   onClick: () => void;
+  isDisabled?: boolean;
 };
 
-const SubCard: React.FC<SubCardProps> = ({ title, img, onClick }) => {
+const SubCard: React.FC<SubCardProps> = ({
+  title,
+  img,
+  onClick,
+  isDisabled,
+}) => {
   return (
-    <a onClick={onClick}>
+    <a
+      onClick={isDisabled ? () => {} : onClick}
+      className={`${
+        isDisabled
+          ? "cursor-not-allowed"
+          : "cursor-pointer transition duration-300 ease-in-out"
+      }`}
+    >
       <BackgroundGradient>
         {/* <div className="border rounded-lg border-custom-1 p-4 flex flex-col cursor-pointer hover:bg-[#fff]/50 transition duration-300 ease-in-out"> */}
         <div
