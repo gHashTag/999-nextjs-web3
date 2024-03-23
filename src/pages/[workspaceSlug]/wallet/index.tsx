@@ -151,16 +151,6 @@ export default function Wallet() {
             />
           </>
         )}
-        <Button
-          onClick={logout}
-          variant="bordered"
-          size="sm"
-          color="secondary"
-          className="w-full"
-        >
-          Logout
-        </Button>
-
         <div style={{ padding: "20px" }} />
         {address && (
           <>

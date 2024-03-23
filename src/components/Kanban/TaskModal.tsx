@@ -46,6 +46,8 @@ function TaskModal({
   isEditing,
   card,
 }: Modal) {
+  // console.log(isOpen, "isOpen");
+  // console.log(card?.title, "card?.title");
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <Button onClick={onOpen}>
@@ -64,7 +66,6 @@ function TaskModal({
                 <Controller
                   name="title"
                   control={control}
-                  defaultValue={isEditing ? card?.title : ""}
                   render={({ field }) => (
                     <Input
                       placeholder="Enter your title"
@@ -83,7 +84,6 @@ function TaskModal({
                 <Controller
                   name="description"
                   control={control}
-                  defaultValue={isEditing ? card?.description : ""}
                   render={({ field }) => (
                     <Input
                       placeholder="Enter your description"

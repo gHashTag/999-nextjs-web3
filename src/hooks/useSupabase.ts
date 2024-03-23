@@ -53,18 +53,18 @@ export function useSupabase() {
         .eq("email", email)
         .single();
 
-      // if (response.error && response.error.code === "PGRST116") {
-      //   console.error("Пользователь не найден");
-      //   return null;
-      // }
+      if (response.error && response.error.code === "PGRST116") {
+        console.error("Пользователь не найден");
+        return null;
+      }
 
-      // if (response.error) {
-      //   console.error(
-      //     "Ошибка при получении информации о пользователе:",
-      //     response.error
-      //   );
-      //   return null;
-      // }
+      if (response.error) {
+        console.error(
+          "Ошибка при получении информации о пользователе:",
+          response.error
+        );
+        return null;
+      }
 
       return response.data;
     } catch (error) {

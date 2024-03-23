@@ -12,7 +12,7 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Column from "./Column";
 import { Board, BoardData, StatusMap, Task, TasksArray } from "@/types";
 import { Button } from "@/components/ui/moving-border";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import TaskModal from "./TaskModal";
 import {
   gql,
@@ -193,12 +193,8 @@ function KanbanBoard() {
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [card, setCard] = useState<Task>();
-  const { control, handleSubmit, getValues, setValue, reset } = useForm({
-    defaultValues: {
-      title: "",
-      description: "",
-    },
-  });
+
+  const { control, handleSubmit, getValues, setValue, reset } = useForm();
 
   const statusToColumnName: Record<number, string> = {
     1: "To Do",
@@ -427,6 +423,8 @@ function KanbanBoard() {
     const card = await getTaskById(cardId);
 
     setCard(card);
+    setValue("title", card?.title);
+    setValue("description", card?.description);
     onOpen();
     setIsEditing(true);
   };
@@ -483,21 +481,22 @@ function KanbanBoard() {
           Create task
         </Button>
       </div>
-
-      <TaskModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-        onCreate={onCreate}
-        onDelete={onDelete}
-        onUpdate={onUpdate}
-        control={control}
-        handleSubmit={handleSubmit}
-        getValues={getValues}
-        setValue={setValue}
-        isEditing={isEditing}
-        card={card}
-      />
+      {isOpen && (
+        <TaskModal
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onOpenChange={onOpenChange}
+          onCreate={onCreate}
+          onDelete={onDelete}
+          onUpdate={onUpdate}
+          control={control}
+          handleSubmit={handleSubmit}
+          getValues={getValues}
+          setValue={setValue}
+          isEditing={isEditing}
+          card={card}
+        />
+      )}
 
       <DndContext
         sensors={sensors}
