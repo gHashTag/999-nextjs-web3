@@ -56,7 +56,7 @@ const APISection = () => {
           })
           .catch((err) => {
             setIsLoading(false);
-            console.error(err);
+            // console.error(err);
           });
       }
     },

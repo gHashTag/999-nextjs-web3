@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/utils/cn";
@@ -38,7 +38,7 @@ export function SignupFormDemo({
 
   const [isEdit, setIsEdit] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const subscription = watch((value, { name, type }) =>
       console.log(value, name, type)
     );

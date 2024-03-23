@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Job, Sponsor, Stage, Speaker } from '@lib/types';
+import { Job, Sponsor, Stage, Speaker } from "@lib/types";
 
 const API_URL = `${process.env.STRAPI_API_URL}/graphql`;
 const IMAGE_API_URL = process.env.STRAPI_API_URL;
@@ -24,23 +24,26 @@ interface Image {
   url?: string;
 }
 
-async function fetchCmsAPI(query: string, { variables }: { variables?: Record<string, any> } = {}) {
+async function fetchCmsAPI(
+  query: string,
+  { variables }: { variables?: Record<string, any> } = {}
+) {
   const res = await fetch(API_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       query,
-      variables
-    })
+      variables,
+    }),
   });
 
   const json = await res.json();
   if (json.errors) {
     // eslint-disable-next-line no-console
-    console.error(json.errors);
-    throw new Error('Failed to fetch API');
+    // console.error(json.errors);
+    throw new Error("Failed to fetch API");
   }
 
   return json.data;
@@ -54,14 +57,14 @@ async function fetchCmsAPI(query: string, { variables }: { variables?: Record<st
  */
 function serializeImage(image: Image) {
   if (!image?.url) return null;
-  const imageUrl: string = image.url.startsWith('http')
+  const imageUrl: string = image.url.startsWith("http")
     ? image.url
     : `${IMAGE_API_URL}${image.url}`;
 
   return {
     ...image,
-    sizes: '',
-    url: imageUrl
+    sizes: "",
+    url: imageUrl,
   };
 }
 
@@ -74,8 +77,8 @@ function serializeSpeaker(speaker: Speaker) {
     ...speaker,
     image: {
       ...speaker.image,
-      ...serializeImage(speaker.image)
-    }
+      ...serializeImage(speaker.image),
+    },
   };
 }
 
@@ -154,10 +157,10 @@ export async function getAllStages(): Promise<Stage[]> {
 
   return data.stages.map((stage: Stage) => ({
     ...stage,
-    schedule: stage.schedule.map(talk => ({
+    schedule: stage.schedule.map((talk) => ({
       ...talk,
-      speaker: talk.speaker.map(serializeSpeaker)
-    }))
+      speaker: talk.speaker.map(serializeSpeaker),
+    })),
   }));
 }
 
@@ -202,12 +205,12 @@ export async function getAllSponsors(): Promise<Sponsor[]> {
     ...sponsor,
     cardImage: {
       ...sponsor.cardImage,
-      ...serializeImage(sponsor.cardImage)
+      ...serializeImage(sponsor.cardImage),
     },
     logo: {
       ...sponsor.cardImage,
-      ...serializeImage(sponsor.cardImage)
-    }
+      ...serializeImage(sponsor.cardImage),
+    },
   }));
 }
 

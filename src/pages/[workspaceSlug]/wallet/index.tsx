@@ -77,14 +77,13 @@ export default function Wallet() {
   const email = useReactiveVar(setUserEmail);
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
-
+  const [mutateUser] = useMutation(MUTATION, { client: apolloClient });
   const { loading, error, data, refetch } = useQuery(QUERY, {
     client: apolloClient,
-    fetchPolicy: "network-only",
     variables: { email },
   });
 
-  // if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
 
   const onCopyText = () => {
@@ -93,8 +92,6 @@ export default function Wallet() {
   };
 
   const userNode = data?.usersCollection?.edges[0]?.node;
-
-  const [mutateUser] = useMutation(MUTATION, { client: apolloClient });
 
   const handleFormData = (data: FieldValues) => {
     try {
@@ -107,16 +104,18 @@ export default function Wallet() {
           company: data.company,
           position: data.position,
         };
-        mutateUser({
-          variables,
-          onCompleted: () => {
-            refetch();
-          },
-        });
-        toast({
-          title: "Success",
-          description: "User data updated successfully",
-        });
+        if (variables.first_name && variables.last_name) {
+          mutateUser({
+            variables,
+            onCompleted: () => {
+              refetch();
+            },
+          });
+          toast({
+            title: "Success",
+            description: "User data updated successfully",
+          });
+        }
       }
     } catch (error) {
       toast({
@@ -152,6 +151,15 @@ export default function Wallet() {
             />
           </>
         )}
+        <Button
+          onClick={logout}
+          variant="bordered"
+          size="sm"
+          color="secondary"
+          className="w-full"
+        >
+          Logout
+        </Button>
 
         <div style={{ padding: "20px" }} />
         {address && (

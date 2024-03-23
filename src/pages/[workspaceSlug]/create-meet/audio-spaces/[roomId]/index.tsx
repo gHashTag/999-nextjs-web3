@@ -30,7 +30,7 @@ const Rooms = () => {
           throw new Error("roomCode is not a string");
         }
       } catch (error) {
-        console.error("Ошибка при получении токена: ", error);
+        // console.error("Ошибка при получении токена: ", error);
       }
     };
 
@@ -43,7 +43,7 @@ const Rooms = () => {
         try {
           await hmsActions.leave();
         } catch (error) {
-          console.error("Ошибка при попытке покинуть комнату: ", error);
+          // console.error("Ошибка при попытке покинуть комнату: ", error);
         }
       }
     };

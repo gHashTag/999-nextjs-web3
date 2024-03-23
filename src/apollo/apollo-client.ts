@@ -22,7 +22,7 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        todosCollection: relayStylePagination(), // example of paginating a collection
+        // todosCollection: relayStylePagination(), // example of paginating a collection
         node: {
           read(_, { args, toReference }) {
             const ref = toReference({
@@ -66,6 +66,8 @@ declare global {
   }
 }
 
-window.__APOLLO_CLIENT__ = apolloClient;
+if (typeof window !== "undefined") {
+  window.__APOLLO_CLIENT__ = apolloClient;
+}
 
 export default apolloClient;

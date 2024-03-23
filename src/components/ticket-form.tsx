@@ -169,7 +169,7 @@ export default function Form({
           })
           .catch((err) => {
             // eslint-disable-next-line no-console
-            console.error(err);
+            // console.error(err);
             setFormState("error");
             setErrorMsg("Error! Please try again.");
             setTicketGenerationState("default");

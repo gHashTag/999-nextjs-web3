@@ -52,29 +52,29 @@ const TASKS_COLLECTION_QUERY = gql`
   }
 `;
 
-const TASK_BY_ID_QUERY = gql`
-  query GetTaskById($id: BigInt!) {
-    tasksCollection(filter: { id: { eq: $id } }) {
-      edges {
-        node {
-          id
-          user_id
-          created_at
-          title
-          description
-          updated_at
-          due_date
-          priority
-          assigned_to
-          labels
-          completed_at
-          is_archived
-          status
-        }
-      }
-    }
-  }
-`;
+// const TASK_BY_ID_QUERY = gql`
+//   query GetTaskById($id: BigInt!) {
+//     tasksCollection(filter: { id: { eq: $id } }) {
+//       edges {
+//         node {
+//           id
+//           user_id
+//           created_at
+//           title
+//           description
+//           updated_at
+//           due_date
+//           priority
+//           assigned_to
+//           labels
+//           completed_at
+//           is_archived
+//           status
+//         }
+//       }
+//     }
+//   }
+// `;
 
 const CREATE_TASK_MUTATION = gql`
   mutation CreateTasks($objects: [tasksInsertInput!]!) {
@@ -151,12 +151,15 @@ function KanbanBoard() {
   const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY, {
     client: apolloClient,
   });
-
-  const { data: taskById } = useQuery(TASK_BY_ID_QUERY, {
-    variables: { id: openModalId },
-    client: apolloClient,
-  });
-
+  console.log(openModalId);
+  // const { data: taskById, error: taskByIdError } = useQuery(TASK_BY_ID_QUERY, {
+  //   variables: { id: openModalId },
+  //   client: apolloClient,
+  // });
+  // if (taskByIdError instanceof ApolloError) {
+  //   // Обработка ошибки ApolloError
+  //   console.log(taskByIdError.message);
+  // }
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
@@ -164,10 +167,10 @@ function KanbanBoard() {
       client: apolloClient,
     });
 
-  if (mutateUpdateTaskStatusError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(mutateUpdateTaskStatusError.message);
-  }
+  // if (mutateUpdateTaskStatusError instanceof ApolloError) {
+  //   // Обработка ошибки ApolloError
+  //   console.log(mutateUpdateTaskStatusError.message);
+  // }
 
   const [mutateCreateTask, { error: mutateCreateTaskError }] = useMutation(
     CREATE_TASK_MUTATION,
@@ -182,10 +185,10 @@ function KanbanBoard() {
       client: apolloClient,
     }
   );
-  if (deleteTaskError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(deleteTaskError.message);
-  }
+  // if (deleteTaskError instanceof ApolloError) {
+  //   // Обработка ошибки ApolloError
+  //   console.log(deleteTaskError.message);
+  // }
   const { getTaskById } = useSupabase();
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [isEditing, setIsEditing] = useState(false);

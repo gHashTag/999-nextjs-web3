@@ -20,7 +20,7 @@ const RecordingPage = () => {
       if (id) {
         const asset = await getAssetById(id);
         setAsset(asset);
-        console.log(asset, "asset");
+        // console.log(asset, "asset");
       }
     };
 

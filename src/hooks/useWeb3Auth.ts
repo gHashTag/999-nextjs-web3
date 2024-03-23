@@ -21,6 +21,7 @@ import {
   visibleSignInVar,
   setUserEmail,
 } from "@/apollo/reactive-store";
+import apolloClient from "@/apollo/apollo-client";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 
 const useWeb3Auth = () => {
@@ -35,14 +36,14 @@ const useWeb3Auth = () => {
 
   useEffect(() => {
     const email = localStorage.getItem("email");
-    console.log(email, "email");
+    // console.log(email, "email");
     if (email) {
       setUserEmail(email);
     }
   }, []);
 
   const login = async () => {
-    console.log(login, "login");
+    // console.log(login, "login");
     try {
       const web3authProvider = await web3auth.connect();
       setProvider(web3authProvider);
@@ -58,7 +59,7 @@ const useWeb3Auth = () => {
             localStorage.setItem("email", userInfo.email);
           }
 
-          console.log(userInfo, "userInfo");
+          // console.log(userInfo, "userInfo");
           visibleHeaderVar(true);
         }
         visibleHeaderVar(true);
@@ -69,37 +70,43 @@ const useWeb3Auth = () => {
     } catch (error) {
       if (error instanceof Error && error.message === "User closed the modal") {
         // Обработка ситуации, когда всплывающее окно было закрыто пользователем
-        console.log("Вход отменен пользователем");
+        // console.log("Вход отменен пользователем");
         router.push("/");
       } else {
         // Обработка других видов ошибок
-        console.error("Ошибка входа:", error);
+        // console.error("Ошибка входа:", error);
       }
       return false;
     }
   };
 
   const logout = async () => {
-    // IMP START - Logout
-    visibleSignInVar(false);
-    visibleHeaderVar(false);
-    // IMP END - Logout
-    setLoggedIn(false);
-    setProvider(null);
-    setAddress("");
-    setUserInfo(null);
-    setBalance(null);
-    setInviteCode("");
-    localStorage.removeItem("email");
-    router.push("/");
-    console.log("logged out");
+    try {
+      // IMP START - Logout
+      visibleSignInVar(false);
+      visibleHeaderVar(false);
+      // IMP END - Logout
+      setLoggedIn(false);
+      setProvider(null);
+      setAddress("");
+      setUserInfo(null);
+      setBalance(null);
+      setInviteCode("");
 
-    await web3auth.logout();
+      await web3auth.logout();
+      localStorage.removeItem("email");
+      apolloClient.clearStore().then(() => {
+        apolloClient.resetStore();
+        router.push("/");
+      });
+    } catch (error) {
+      // console.error("Ошибка при разлогинивании:", error);
+    }
   };
 
   const getAccounts = async () => {
     if (!provider) {
-      console.log("provider not initialized yet");
+      // console.log("provider not initialized yet");
       return;
     }
     const web3 = new Web3(provider as any);
@@ -111,7 +118,7 @@ const useWeb3Auth = () => {
 
   const getBalance = async () => {
     if (!provider) {
-      console.log("provider not initialized yet");
+      // console.log("provider not initialized yet");
       return;
     }
     const web3 = new Web3(provider as any);
@@ -130,7 +137,7 @@ const useWeb3Auth = () => {
 
   const signMessage = async () => {
     if (!provider) {
-      console.log("provider not initialized yet");
+      // console.log("provider not initialized yet");
       return;
     }
     const web3 = new Web3(provider as any);

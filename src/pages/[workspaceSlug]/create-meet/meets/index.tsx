@@ -14,7 +14,7 @@ const Meets = ({ roomId = "wlj-dqpm-bcr" }) => {
           query: { workspaceSlug: "workspaceSlug", roomId },
         });
       } catch (error) {
-        console.error("Error", error);
+        // console.error("Error", error);
       }
     };
     // const setRoute = async () => {

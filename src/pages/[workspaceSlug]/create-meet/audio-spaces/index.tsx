@@ -33,7 +33,7 @@ const Meets = ({ roomId = "gcy-elue-bot" }) => {
           query: { workspaceSlug: "workspaceSlug", roomId },
         });
       } catch (error) {
-        console.error("Error", error);
+        // console.error("Error", error);
       }
     };
 
