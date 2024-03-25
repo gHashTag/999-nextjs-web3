@@ -24,15 +24,17 @@ const getUserFromSupabase = async () => {
   }
 };
 
-async function createRoom(name: string, type: string) {
-  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/create-room?secret=${process.env.NEXT_PUBLIC_SUPABASE_FUNCTION_SECRET}`;
+async function createRoom(name: string, type: string, room_id: string) {
+  const url =
+    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/create-room?secret=${process.env.NEXT_PUBLIC_SUPABASE_FUNCTION_SECRET}`;
   const email = localStorage.getItem("email");
   const newData = {
     name,
     type,
     email,
+    room_id,
   };
-  console.log(newData, "newData");
+
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -41,10 +43,9 @@ async function createRoom(name: string, type: string) {
       },
       body: JSON.stringify(newData),
     });
-    console.log(response, "response");
 
     const data = await response.json();
-    console.log(data, "data");
+
     return data;
   } catch (error) {
     console.error("Error creating room:", error);

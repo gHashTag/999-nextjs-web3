@@ -1,9 +1,9 @@
 import { myHeaders } from "./my-headers.ts";
 
-export async function createCodes(id: string) {
+export async function createCodes(room_id: string) {
   try {
     const response = await fetch(
-      `https://api.100ms.live/v2/room-codes/room/${id}`,
+      `https://api.100ms.live/v2/room-codes/room/${room_id}`,
       {
         headers: myHeaders,
         method: "POST",

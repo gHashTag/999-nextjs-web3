@@ -1,6 +1,5 @@
 import { createCodes } from "../utils/100ms/create-codes.ts";
 import { headers } from "../utils/100ms/headers.ts";
-
 import { client } from "../utils/client.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 import { myHeaders } from "../utils/100ms/my-headers.ts";
@@ -63,7 +62,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { name, type, email } = await req.json();
+    const { name, type, email, room_id } = await req.json();
 
     const { data } = await supabaseClient
       .from("users")
@@ -76,50 +75,59 @@ Deno.serve(async (req) => {
 
     const user_id = data[0].user_id;
 
-    const roomData = {
-      name,
-      description: user_id,
-      template_id: "65efdfab48b3dd31b94ff0dc",
-      enabled: true,
-    };
-    console.log("roomData", roomData);
+    const { data: roomDataSupabase } = await supabaseClient
+      .from("rooms")
+      .select("*")
+      .eq("room_id", room_id)
+      .single();
+    // проверить есть ли комната с таким room_id
 
-    const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
-      method: "POST",
-      body: JSON.stringify(roomData),
-      headers: { ...myHeaders },
-    });
-    console.log("roomResponse", roomResponse);
+    const createOrFetchRoom = async () => {
+      const roomData = {
+        name,
+        description: user_id,
+        template_id: "65efdfab48b3dd31b94ff0dc",
+        enabled: true,
+      };
+      let room, roomId, codesResponse;
+      if (roomDataSupabase && roomDataSupabase.room_id) {
+        codesResponse = await createCodes(roomDataSupabase.room_id);
+      } else {
+        const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
+          method: "POST",
+          body: JSON.stringify({ ...roomData }),
+          headers: { ...myHeaders },
+        });
+        if (!roomResponse.ok) {
+          throw new Error(`Failed to create room: ${roomResponse.statusText}`);
+        }
+        roomId = await roomResponse.json();
+        codesResponse = await createCodes(roomId.id);
+      }
 
-    if (!roomResponse.ok) {
-      throw new Error(`Failed to create room: ${roomResponse.statusText}`);
-    }
-    const room = await roomResponse.json();
-    console.log(room, "room");
+      if (!codesResponse?.ok) {
+        throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
+      }
+      const codes = await codesResponse.json();
 
-    const codesResponse = await createCodes(room.id);
-    console.log(codesResponse, "codesResponse");
-    if (!codesResponse?.ok) {
-      throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
-    }
-    const codes = await codesResponse?.json();
-    console.log(codesResponse, "codesResponse");
-
-    let rooms;
-    if (user_id) {
-      rooms = {
-        ...room,
+      const rooms = {
+        ...(room || {}),
         codes,
         type,
+        name,
+        updated_at: new Date(),
         user_id,
-        room_id: room.id,
+        room_id: roomId.id ? roomId.id : room_id,
       };
-    }
 
-    delete rooms.id;
+      return rooms;
+    };
 
-    console.log(rooms, "rooms");
-    const { error } = await supabaseClient.from("rooms").insert(rooms);
+    const rooms = await createOrFetchRoom();
+    const { error } = await supabaseClient.from("rooms").insert({
+      ...rooms,
+      id: undefined,
+    });
     if (error) {
       throw new Error(`Error saving to Supabase: ${error.message}`);
     }

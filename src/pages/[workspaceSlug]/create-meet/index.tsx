@@ -1,11 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubCard from "@/components/revamp/LandingCards/SubCard";
 import Layout from "@/components/layout";
 
-import { setUserId } from "@/apollo/reactive-store";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
-import { gql, useMutation, useQuery, useReactiveVar } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
 import apolloClient from "@/apollo/apollo-client";
 import { useDisclosure } from "@nextui-org/react";
@@ -15,6 +14,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";
 import { SidebarNav } from "@/components/ui/sidebar-nav";
 import { Combobox } from "./Combobox";
+import { supabase } from "@/utils/supabase";
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollection {
@@ -61,11 +61,8 @@ const CreateMeet = () => {
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string>("");
   const [selectedRoomName, setSelectedRoomName] = useState<string>("");
-
-  console.log(openModalId, "openModalId");
-
-  const user_id = useReactiveVar(setUserId);
-  const { data: roomsData } = useQuery(ROOMS_COLLECTION_QUERY, {
+  console.log(selectedRoomName, "selectedRoomName");
+  const { data: roomsData, refetch } = useQuery(ROOMS_COLLECTION_QUERY, {
     client: apolloClient,
   });
   const [selectedRoomId, setSelectedRoomId] = useState<string>("");
@@ -78,11 +75,30 @@ const CreateMeet = () => {
     client: apolloClient,
   });
 
-  const onSelectRoomId = (id: string, name: string) => {
+  useEffect(() => {
+    const channels = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "rooms" },
+        (payload) => {
+          refetch();
+          setSelectedRoomName(selectedRoomName);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channels.unsubscribe();
+    };
+  }, []);
+
+  const onSelectRoom = (id: string, name: string) => {
+    console.log(name, "name");
     setSelectedRoomId(id);
     setSelectedRoomName(name);
   };
-  console.log(selectedRoomId, "selectedRoomId");
+
   const setOpenModalType = async (type: string) => {
     onOpen();
     setOpenModalId(type);
@@ -98,10 +114,21 @@ const CreateMeet = () => {
 
   const onCreateMeet = async () => {
     const formData = getValues();
-    console.log(formData, "formData");
     try {
-      const response = await createRoom(formData.name, openModalId);
-      console.log(response, "response");
+      const response = await createRoom(
+        formData.name,
+        openModalId,
+        selectedRoomId
+      );
+      setSelectedRoomName(response.name);
+      setSelectedRoomId(response.id);
+      // response &&
+      //   setTimeout(() => {
+      //     console.log("refetch");
+      //     setSelectedRoomName(response.name);
+      //     setSelectedRoomId(response.id);
+      //     refetch();
+      //   }, 5000);
     } catch (error) {
       if (error) {
         toast({
@@ -126,6 +153,7 @@ const CreateMeet = () => {
   const onCreateRoom = () => {
     onOpen();
     setOpenModalId("meets");
+    setSelectedRoomName(name);
   };
 
   return (
@@ -147,9 +175,13 @@ const CreateMeet = () => {
           <Button onClick={onCreateRoom}>Create room</Button>
         </div>
         <div className="flex justify-center items-center">
-          {/* {selectedRoomId && <p>Выбранный ID: {selectedRoomId}</p>} */}
           {roomsData && (
-            <Combobox data={roomsData} onSelectRoomId={onSelectRoomId} />
+            <Combobox
+              data={roomsData}
+              onSelectRoom={onSelectRoom}
+              selectedRoomName={selectedRoomName}
+              selectedRoomId={selectedRoomId}
+            />
           )}
         </div>
 

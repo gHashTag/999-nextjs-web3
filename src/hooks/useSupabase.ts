@@ -1,20 +1,20 @@
 // hooks/useSupabase.ts
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Task,
-  BoardData,
-  TasksArray,
   Board,
+  BoardData,
   ExtendedOpenloginUserInfo,
   RecordingAsset,
+  Task,
+  TasksArray,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { web3auth } from "@/utils/web3Auth";
 import {
   setInviterUserId,
+  setUserId,
   setUserInfo,
   setUserSupabase,
-  setUserId,
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
 
@@ -62,7 +62,7 @@ export function useSupabase() {
       if (response.error) {
         console.error(
           "Ошибка при получении информации о пользователе:",
-          response.error
+          response.error,
         );
         return null;
       }
