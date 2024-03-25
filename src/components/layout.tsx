@@ -28,8 +28,6 @@ import DemoButton from "./hms/demo-cta";
 import RoomCta from "./hms/demo-cta/room-cta";
 import { hmsConfig } from "./hms/config";
 import ViewSource from "./view-source";
-import { Button } from "@/components/ui/button";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import {
   NavigationMenu,
@@ -38,14 +36,8 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
-import { useSupabase } from "@/hooks/useSupabase";
 import { useReactiveVar } from "@apollo/client";
-import {
-  setUserId,
-  visibleHeaderVar,
-  visibleSignInVar,
-} from "@/apollo/reactive-store";
+import { visibleHeaderVar } from "@/apollo/reactive-store";
 import { usePathname } from "next/navigation";
 
 type Props = {
@@ -64,10 +56,9 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
-  // const workspaceSlug = useReactiveVar(setUserId);
-  // console.log(workspaceSlug, "workspaceSlug");
+
   const visibleHeader = useReactiveVar(visibleHeaderVar);
-  const { toast } = useToast();
+
   const activeRoute = router.asPath;
   const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];
   return (

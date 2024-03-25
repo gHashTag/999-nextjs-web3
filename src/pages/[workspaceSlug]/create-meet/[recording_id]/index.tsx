@@ -33,7 +33,17 @@ const RecordingPage = () => {
   });
 
   const asset = data?.room_assetsCollection?.edges[0]?.node;
+  function HighlightName({ text }: { text: string }) {
+    const [name, ...message] = text.split(":");
+    const restOfMessage = message.join(":");
 
+    return (
+      <span>
+        <strong className="text-yellow-500">{name}</strong>
+        {restOfMessage}
+      </span>
+    );
+  }
   return (
     <>
       <Layout>
@@ -54,8 +64,15 @@ const RecordingPage = () => {
                     {asset?.summary_short}
                   </p>
 
-                  <div className="text-sm  prose prose-sm dark:prose-invert">
-                    {asset?.transcription}
+                  <div className="text-sm prose prose-sm dark:prose-invert">
+                    {asset?.transcription
+                      .split("\n")
+                      .map((line: string, index: number) => (
+                        <React.Fragment key={index}>
+                          <HighlightName text={line} />
+                          <br />
+                        </React.Fragment>
+                      ))}
                   </div>
                 </div>
               </div>

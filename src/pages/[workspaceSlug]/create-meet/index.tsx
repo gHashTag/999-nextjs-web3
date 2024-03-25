@@ -1,17 +1,47 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import SubCard from "@/components/revamp/LandingCards/SubCard";
 import Layout from "@/components/layout";
-import { useRouter } from "next/navigation";
-import { MeteorsCard } from "@/components/ui/meteor-card";
+
 import { setUserId } from "@/apollo/reactive-store";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
-import { gql, useQuery, useReactiveVar } from "@apollo/client";
-
+import { gql, useMutation, useQuery, useReactiveVar } from "@apollo/client";
+import { Button } from "@/components/ui/moving-border";
 import apolloClient from "@/apollo/apollo-client";
+import { useDisclosure } from "@nextui-org/react";
+import MeetModal from "./MeetModal";
+import { useForm } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
+import { createRoom } from "@/utils/edge-functions";
+import { SidebarNav } from "@/components/ui/sidebar-nav";
+import { Combobox } from "./Combobox";
 
+const ROOMS_COLLECTION_QUERY = gql`
+  query RoomsCollection {
+    roomsCollection {
+      edges {
+        node {
+          id
+          user_id
+          name
+          description
+          updated_at
+          created_at
+          type
+          enabled
+          description
+          codes
+          room_id
+        }
+      }
+    }
+  }
+`;
 const ROOMS_ASSETS_COLLECTION_QUERY = gql`
-  query RoomAssetsCollection {
-    room_assetsCollection {
+  query RoomAssetsCollection($room_id: String!, $name: String!) {
+    room_assetsCollection(
+      filter: { room_id: { eq: $room_id }, room_name: { eq: $name } }
+    ) {
       edges {
         node {
           id
@@ -26,22 +56,36 @@ const ROOMS_ASSETS_COLLECTION_QUERY = gql`
 `;
 
 const CreateMeet = () => {
-  const router = useRouter();
-  const workspaceSlug = useReactiveVar(setUserId);
+  const { toast } = useToast();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { control, handleSubmit, getValues, setValue, reset } = useForm();
+  const [openModalId, setOpenModalId] = useState<string>("");
+  const [selectedRoomName, setSelectedRoomName] = useState<string>("");
+
+  console.log(openModalId, "openModalId");
+
+  const user_id = useReactiveVar(setUserId);
+  const { data: roomsData } = useQuery(ROOMS_COLLECTION_QUERY, {
+    client: apolloClient,
+  });
+  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
+
   const { data } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
+    variables: {
+      room_id: selectedRoomId,
+      name: selectedRoomName,
+    },
     client: apolloClient,
   });
 
-  const getRoom = async () => {
-    router.push(`/workspaceSlug/create-meet/meets`);
+  const onSelectRoomId = (id: string, name: string) => {
+    setSelectedRoomId(id);
+    setSelectedRoomName(name);
   };
-
-  const getSpace = async () => {
-    router.push(`/workspaceSlug/create-meet/audio-spaces`);
-  };
-
-  const getTokenGated = async () => {
-    router.push(`/workspaceSlug/create-meet/token-gated`);
+  console.log(selectedRoomId, "selectedRoomId");
+  const setOpenModalType = async (type: string) => {
+    onOpen();
+    setOpenModalId(type);
   };
 
   const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
@@ -52,11 +96,65 @@ const CreateMeet = () => {
 
   const items = data?.room_assetsCollection?.edges;
 
+  const onCreateMeet = async () => {
+    const formData = getValues();
+    console.log(formData, "formData");
+    try {
+      const response = await createRoom(formData.name, openModalId);
+      console.log(response, "response");
+    } catch (error) {
+      if (error) {
+        toast({
+          title: "Error creating room",
+          variant: "destructive",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(error, null, 2)}
+              </code>
+            </pre>
+          ),
+        });
+      } else {
+        reset({
+          title: "",
+        });
+      }
+    }
+  };
+
+  const onCreateRoom = () => {
+    onOpen();
+    setOpenModalId("meets");
+  };
+
   return (
     <>
       <Layout>
+        {isOpen && (
+          <MeetModal
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onOpenChange={onOpenChange}
+            onCreate={onCreateMeet}
+            control={control}
+            handleSubmit={handleSubmit}
+            getValues={getValues}
+            setValue={setValue}
+          />
+        )}
+        <div style={{ position: "fixed", top: 75, right: 20 }}>
+          <Button onClick={onCreateRoom}>Create room</Button>
+        </div>
+        <div className="flex justify-center items-center">
+          {/* {selectedRoomId && <p>Выбранный ID: {selectedRoomId}</p>} */}
+          {roomsData && (
+            <Combobox data={roomsData} onSelectRoomId={onSelectRoomId} />
+          )}
+        </div>
+
         <div
-          className="flex-col mt-10"
+          className="flex-col"
           style={{
             paddingRight: 20,
             paddingLeft: 20,
@@ -66,21 +164,22 @@ const CreateMeet = () => {
             <SubCard
               title="Video Meeting"
               img="Video Meeting.png"
-              onClick={getRoom}
+              onClick={() => setOpenModalType("meets")}
             />
             <SubCard
               title="Audio Spaces"
               img="Audio Spaces.png"
-              onClick={getSpace}
+              onClick={() => setOpenModalType("audio-spaces")}
             />
             <SubCard
               title="Token-gated Room"
               img="Token-gated Room.png"
-              onClick={getTokenGated}
+              onClick={() => setOpenModalType("token-gated")}
               isDisabled={true}
             />
           </div>
         </div>
+
         <div
           style={{
             display: "flex",

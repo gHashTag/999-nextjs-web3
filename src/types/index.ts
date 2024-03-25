@@ -125,10 +125,57 @@ export type RecordingAsset = {
   transcription_id: string;
 };
 
-export type ExtendedOpenloginUserInfo = Omit<
-  OpenloginUserInfo,
-  "profileImage"
-> & {
-  avatar?: string;
+export type ExtendedOpenloginUserInfo =
+  & Omit<
+    OpenloginUserInfo,
+    "profileImage"
+  >
+  & {
+    avatar?: string;
+    user_id: string;
+  };
+
+// Rooms Data
+interface Code {
+  id: string;
+  code: string;
+  room_id: string;
+  role: string;
+  enabled: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CodesData {
+  data: Code[];
+}
+
+interface RoomNode {
+  __typename: "rooms";
+  id: string;
   user_id: string;
-};
+  name: string;
+  description: string;
+  updated_at: string;
+  created_at: string;
+  type: string;
+  enabled: boolean;
+  room_id: string;
+  codes: CodesData;
+}
+
+interface RoomEdge {
+  __typename: "roomsEdge";
+  node: RoomNode;
+}
+
+interface RoomsCollection {
+  __typename: "roomsConnection";
+  edges: RoomEdge[];
+}
+
+export interface RoomsData {
+  data: {
+    roomsCollection: RoomsCollection;
+  };
+}

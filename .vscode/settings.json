@@ -1,6 +1,9 @@
 {
-  "console-ninja.toolsToEnableSupportAutomaticallyFor": {
-    "vite": false,
-    "angular": false
+  "deno.enablePaths": ["supabase/functions"],
+  "deno.lint": true,
+  "deno.unstable": true,
+  "deno.enable": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
   }
 }
