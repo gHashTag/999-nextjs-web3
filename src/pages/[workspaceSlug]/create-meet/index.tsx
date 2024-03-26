@@ -96,7 +96,7 @@ const CreateMeet = () => {
   const assetInfo = useReactiveVar(setAssetInfo);
   const selectedRoomName = useReactiveVar(setSelectedRoomName);
   const roomId = useReactiveVar(setRoomId);
-  console.log(selectedRoomName, "selectedRoomName");
+
   const {
     data: roomsData,
     loading: roomsLoading,
@@ -308,24 +308,3 @@ const CreateMeet = () => {
 };
 
 export default CreateMeet;
-
-// const getRecordings = async () => {
-//   try {
-//     const response = await fetch("https://api.100ms.live/v2/recordings", {
-//       method: "GET",
-//       headers: {
-//         Authorization: `Bearer ${managementToken}`,
-//       },
-//     });
-
-//     if (!response.ok) {
-//       throw new Error("Ошибка при получении сессий");
-//     }
-
-//     const data = await response.json();
-//     console.log(data, "data");
-//     return data;
-//   } catch (error) {
-//     console.error("Error", error);
-//   }
-// };

@@ -13,6 +13,7 @@ import { setUserEmail } from "@/apollo/reactive-store";
 import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+import { Spinner } from "@/components/ui/spinner";
 
 const QUERY = gql`
   query GetUserByEmail($email: String!) {
@@ -73,7 +74,8 @@ export type updateUserDataType = {
 };
 
 export default function Wallet() {
-  const { address, balance, logout, getAccounts, getBalance } = useWeb3Auth();
+  const { address, balance, login, logout, getAccounts, getBalance } =
+    useWeb3Auth();
   const email = useReactiveVar(setUserEmail);
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
@@ -83,7 +85,12 @@ export default function Wallet() {
     variables: { email },
   });
 
-  if (loading) return <p>Loading...</p>;
+  useEffect(() => {
+    login();
+    getAccounts();
+    getBalance();
+  }, []);
+
   if (error) return <p>Error : {error.message}</p>;
 
   const onCopyText = () => {
@@ -128,6 +135,25 @@ export default function Wallet() {
   return (
     <Layout>
       <main className="flex flex-col items-center justify-between p-14">
+        {balance && <p>Balance: {balance}</p>}
+        <div style={{ padding: "10px" }} />
+        {address && (
+          <>
+            <Card>
+              <CardBody>
+                <CopyToClipboard text={address} onCopy={onCopyText}>
+                  <span>{address}</span>
+                </CopyToClipboard>
+              </CardBody>
+            </Card>
+            <div style={{ padding: "5px" }} />
+            {copyStatus && <p>Text copied to clipboard!</p>}
+          </>
+        )}
+
+        {loading && <Spinner />}
+        <div style={{ padding: "20px" }} />
+
         {!loading && userNode && (
           <>
             <AnimatedTooltip
@@ -151,30 +177,6 @@ export default function Wallet() {
             />
           </>
         )}
-        <div style={{ padding: "20px" }} />
-        {address && (
-          <>
-            <Card>
-              <CardBody>
-                <CopyToClipboard text={address} onCopy={onCopyText}>
-                  <span>{address}</span>
-                </CopyToClipboard>
-              </CardBody>
-            </Card>
-            <div style={{ padding: "5px" }} />
-            {copyStatus && <p>Text copied to clipboard!</p>}
-          </>
-        )}
-
-        <div style={{ padding: "20px" }} />
-        {balance && (
-          <Card>
-            <CardBody>
-              <p>{balance}</p>
-            </CardBody>
-          </Card>
-        )}
-
         <div style={{ padding: "20px" }} />
       </main>
     </Layout>

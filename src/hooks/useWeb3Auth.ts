@@ -16,10 +16,10 @@ import {
   setBalance,
   setInviteCode,
   setLoggedIn,
+  setUserEmail,
   setUserInfo,
   visibleHeaderVar,
   visibleSignInVar,
-  setUserEmail,
 } from "@/apollo/reactive-store";
 import apolloClient from "@/apollo/apollo-client";
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
@@ -43,14 +43,16 @@ const useWeb3Auth = () => {
   }, []);
 
   const login = async () => {
-    // console.log(login, "login");
+    console.log("login");
     try {
       const web3authProvider = await web3auth.connect();
+      console.log(web3authProvider, "web3authProvider");
       setProvider(web3authProvider);
+      console.log(web3auth.connected, "web3auth.connected");
       if (web3auth.connected) {
         setLoggedIn(true);
         const userInfo = await web3auth.getUserInfo();
-
+        console.log(userInfo, "userInfo");
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
           const user = await createSupabaseUser();
@@ -81,6 +83,7 @@ const useWeb3Auth = () => {
   };
 
   const logout = async () => {
+    console.log("logout");
     try {
       // IMP START - Logout
       visibleSignInVar(false);
@@ -105,6 +108,8 @@ const useWeb3Auth = () => {
   };
 
   const getAccounts = async () => {
+    const web3authProvider = await web3auth.connect();
+    setProvider(web3authProvider);
     if (!provider) {
       // console.log("provider not initialized yet");
       return;
@@ -118,7 +123,7 @@ const useWeb3Auth = () => {
 
   const getBalance = async () => {
     if (!provider) {
-      // console.log("provider not initialized yet");
+      console.log("provider not initialized yet");
       return;
     }
     const web3 = new Web3(provider as any);
@@ -129,7 +134,7 @@ const useWeb3Auth = () => {
     // Get user's balance in ether
     const bal = web3.utils.fromWei(
       await web3.eth.getBalance(address), // Balance is in wei
-      "ether"
+      "ether",
     );
 
     setBalance(bal);
@@ -151,7 +156,7 @@ const useWeb3Auth = () => {
     const signedMessage = await web3.eth.personal.sign(
       originalMessage,
       fromAddress,
-      "test password!" // configure your own password here.
+      "test password!", // configure your own password here.
     );
   };
 
