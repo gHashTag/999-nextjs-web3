@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, CSSProperties } from "react";
+import React from "react";
 import { RoomsData } from "@/types";
 import AsyncSelect from "react-select/async";
 import { StylesConfig, ActionMeta, SingleValue } from "react-select";
 import { ColourOption, colourOptions } from "./data";
+import { setRoomId, setSelectedRoomName } from "@/apollo/reactive-store";
 
 type ComboboxProps = RoomsData & {
   selectedRoomName: string;
@@ -84,14 +85,18 @@ export function Combobox({ roomsData, selectedRoomName }: ComboboxProps) {
     newValue: SingleValue<OptionType>,
     actionMeta: ActionMeta<OptionType>
   ) => {
-    console.log(newValue, actionMeta);
-    // Здесь ваша логика обработки выбора
+    console.log(newValue, "newValue");
+    if (newValue) {
+      setSelectedRoomName(newValue.label);
+      setRoomId(newValue.value);
+    }
   };
 
   return (
     <AsyncSelect
       cacheOptions
       defaultOptions={options}
+      options={options}
       styles={customStyles}
       onChange={handleChange}
       //isMulti
