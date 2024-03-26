@@ -18,7 +18,10 @@ import {
   ApolloProvider,
   InMemoryCache,
   NormalizedCacheObject,
+  ReactiveVar,
   createHttpLink,
+  defaultDataIdFromObject,
+  makeVar,
   useQuery,
 } from "@apollo/client";
 
@@ -47,6 +50,48 @@ import { setContext } from "@apollo/client/link/context";
 //         ? `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
 //         : "",
 
+export type VisibilityFilter = {
+  id: string;
+  displayName: string;
+};
+
+export const VisibilityFilters: { [filter: string]: VisibilityFilter } = {
+  SHOW_ALL: {
+    id: "show_all",
+    displayName: "All",
+  },
+  SHOW_COMPLETED: {
+    id: "show_completed",
+    displayName: "Completed",
+  },
+  SHOW_ACTIVE: {
+    id: "show_active",
+    displayName: "Active",
+  },
+};
+
+export interface Todo {
+  text: string;
+  completed: boolean;
+  id: number;
+}
+
+export type Todos = Todo[];
+
+const todosInitialValue: Todos = [
+  {
+    id: 0,
+    completed: false,
+    text: "Use Apollo Client 3",
+  },
+];
+
+export const todosVar: ReactiveVar<Todos> = makeVar<Todos>(todosInitialValue);
+
+export const visibilityFilterVar = makeVar<VisibilityFilter>(
+  VisibilityFilters.SHOW_ALL
+);
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { toast } = useToast();
@@ -66,7 +111,41 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     async function init() {
-      const cache = new InMemoryCache();
+      const cache = new InMemoryCache({
+        dataIdFromObject(responseObject) {
+          if ("nodeId" in responseObject) {
+            return `${responseObject.nodeId}`;
+          }
+
+          return defaultDataIdFromObject(responseObject);
+        },
+        typePolicies: {
+          Query: {
+            fields: {
+              todos: {
+                read() {
+                  return todosVar();
+                },
+              },
+              visibilityFilter: {
+                read() {
+                  return visibilityFilterVar();
+                },
+              },
+              // todosCollection: relayStylePagination(), // example of paginating a collection
+              node: {
+                read(_, { args, toReference }) {
+                  const ref = toReference({
+                    nodeId: args?.nodeId,
+                  });
+
+                  return ref;
+                },
+              },
+            },
+          },
+        },
+      });
       let newPersistor = new CachePersistor({
         cache,
         storage: new LocalStorageWrapper(window.localStorage),

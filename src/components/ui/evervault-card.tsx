@@ -43,7 +43,6 @@ export const EvervaultCard = ({
   }
 
   const handleCopy = (text: string) => {
-    console.log(text, "text");
     copy(text)
       .then(() => {
         console.log("Copied!", { text });
@@ -63,20 +62,24 @@ export const EvervaultCard = ({
   };
 
   const handleClick = () => {
-    if (type === "host") {
-      router.push(
-        {
-          pathname: "/workspaceSlug/create-meet/meets/[code]",
-          query: { code: inviteCode },
-        },
-        `/workspaceSlug/create-meet/meets/${inviteCode}`
-      );
-    } else {
-      // Логика для не-хоста, например, вызов handleCopy
-      handleCopy(
-        `${window.location.origin}/workspaceSlug/create-meet/${inviteCode}`
-      );
+    const targetPath = `/workspaceSlug/create-meet/meets/${inviteCode}`;
+
+    // Проверяем, не совпадает ли текущий путь с целевым путем
+    if (router.asPath !== targetPath) {
+      if (type === "host") {
+        router.push(
+          {
+            pathname: "/workspaceSlug/create-meet/meets/[code]",
+            query: { code: inviteCode },
+          },
+          targetPath
+        );
+      } else {
+        // Логика для не-хоста, например, вызов handleCopy
+        handleCopy(`${window.location.origin}${targetPath}`);
+      }
     }
+
     inviteToMeet(type);
   };
 

@@ -25,7 +25,7 @@ import { EvervaultCard } from "@/components/ui/evervault-card";
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollection {
-    roomsCollection(orderBy: { updated_at: DescNullsLast }) {
+    roomsCollection {
       edges {
         node {
           id
@@ -38,6 +38,7 @@ const ROOMS_COLLECTION_QUERY = gql`
           enabled
           description
           codes
+          room_id
         }
       }
     }
@@ -60,6 +61,7 @@ const ROOM_NAME_COLLECTION_QUERY = gql`
           enabled
           description
           codes
+          room_id
         }
       }
     }
@@ -78,6 +80,7 @@ const ROOMS_ASSETS_COLLECTION_QUERY = gql`
           summary_short
           recording_id
           transcription
+          room_id
         }
       }
     }
@@ -95,23 +98,27 @@ const CreateMeet = () => {
   const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
   const selectedRoomName = useReactiveVar(setSelectedRoomName);
-  console.log("selectedRoomName", selectedRoomName);
+
   const roomId = useReactiveVar(setRoomId);
-  console.log(roomId, "roomId");
+
   const {
     data: roomsData,
     loading: roomsLoading,
     refetch,
   } = useQuery(ROOMS_COLLECTION_QUERY);
 
+  // const room_name = localStorage.getItem("name");
+  // console.log(room_name, "room_name");
+  // const room_id = localStorage.getItem("room_id");
+  // console.log(room_id, "room_id");
   const {
     data,
     loading: assetsLoading,
     error: assetsError,
   } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
     variables: {
-      room_id: roomId,
-      name: selectedRoomName,
+      room_id: "660135aee4bed726368e1d44",
+      name: "Common",
     },
   });
   if (assetsError instanceof ApolloError) {
@@ -125,8 +132,8 @@ const CreateMeet = () => {
     error: roomNameError,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     variables: {
-      room_id: roomId,
-      name: selectedRoomName,
+      room_id: "660135aee4bed726368e1d44",
+      name: "Common",
     },
   });
 
@@ -138,7 +145,7 @@ const CreateMeet = () => {
     const firstRoom = roomsData?.roomsCollection?.edges[0]?.node;
     if (firstRoom) {
       setAssetInfo({
-        value: firstRoom?.id,
+        value: firstRoom?.room_id,
         label: firstRoom?.name,
       });
     }
@@ -206,24 +213,38 @@ const CreateMeet = () => {
 
   const inviteToMeet = async (type: string) => {
     // Убедитесь, что codesData действительно указывает на массив
-    const codesData = roomNameData?.roomsCollection?.edges[0]?.node?.codes;
-    const parsedCodesData = JSON.parse(codesData);
-
-    if (parsedCodesData) {
-      // Проверка, что codesData действительно массив
-      const codeObj = parsedCodesData.data.find(
-        (codeObj: { role: string; code: string }) => codeObj.role === type
-      );
-      if (codeObj) {
-        console.log("code", codeObj.code);
-        setInviteCode(codeObj.code);
+    console.log(roomNameData, "roomNameData");
+    const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
+      ?.codes;
+    console.log(codesData, "codesData");
+    if (typeof codesData === "string") {
+      const parsedCodesData = JSON.parse(codesData);
+      if (parsedCodesData) {
+        // Проверка, что codesData действительно массив
+        const codeObj = parsedCodesData.data.find(
+          (codeObj: { role: string; code: string }) => codeObj.role === type
+        );
+        console.log(codeObj, "codeObj");
+        if (codeObj) {
+          console.log("code", codeObj.code);
+          setInviteCode(codeObj.code);
+        } else {
+          console.log("No code found for type:", type);
+        }
       } else {
-        console.log("No code found for type:", type);
+        console.error("codesData is not an array");
       }
     } else {
-      console.error("codesData is not an array");
+      console.error("codesData is undefined or not a string");
     }
   };
+
+  useEffect(() => {
+    console.log(inviteCode, "inviteCode");
+    if (!roomsLoading) {
+      inviteToMeet("host");
+    }
+  }, [inviteCode]);
 
   const arrayInvite = [
     {

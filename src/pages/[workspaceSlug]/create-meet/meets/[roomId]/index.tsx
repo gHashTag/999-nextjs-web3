@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import Layout from "@/components/layout";
 import {
@@ -5,8 +6,19 @@ import {
   useHMSActions,
   useHMSStore,
 } from "@100mslive/react-sdk";
-import { HMSPrebuilt } from "@100mslive/roomkit-react";
+
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+
+const HMSPrebuilt = dynamic(
+  () =>
+    import("@100mslive/roomkit-react").then((mod) => ({
+      default: mod.HMSPrebuilt,
+    })),
+  {
+    ssr: false,
+  }
+);
 import {
   setAddress,
   setBalance,
@@ -18,68 +30,68 @@ import {
   visibleSignInVar,
 } from "@/apollo/reactive-store";
 import { useSupabase } from "@/hooks/useSupabase";
-// import { useReactiveVar } from "@apollo/client";
+import { useReactiveVar } from "@apollo/client";
 
 const Rooms = () => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
-  // const userInfo = useReactiveVar(setUserInfo);
-  // const [token, setToken] = useState<string | undefined>(undefined);
-  // const isConnected = useHMSStore(selectIsConnectedToRoom);
-  // const hmsActions = useHMSActions();
-  // console.log(roomId, "roomId");
-  // console.log(typeof roomId, "typeof roomId");
+  const userInfo = useReactiveVar(setUserInfo);
+  const [token, setToken] = useState<string | undefined>(undefined);
+  const isConnected = useHMSStore(selectIsConnectedToRoom);
 
-  // useEffect(() => {
-  //   const fetchToken = async () => {
-  //     try {
-  //       if (typeof roomId === "string") {
-  //         const authToken = await hmsActions.getAuthTokenByRoomCode({
-  //           roomCode: roomId,
-  //         });
-  //         setToken(authToken);
-  //       } else {
-  //         throw new Error("roomCode is not a string");
-  //       }
-  //     } catch (error) {
-  //       console.error("Ошибка при получении токена: ", error);
-  //     }
-  //   };
+  const hmsActions = useHMSActions();
+  console.log(roomId, "roomId");
+  console.log(typeof roomId, "typeof roomId");
 
-  //   fetchToken();
-  // }, [hmsActions, roomId]);
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        if (typeof roomId === "string") {
+          const authToken = await hmsActions.getAuthTokenByRoomCode({
+            roomCode: roomId,
+          });
+          setToken(authToken);
+        } else {
+          throw new Error("roomCode is not a string");
+        }
+      } catch (error) {
+        console.error("Ошибка при получении токена: ", error);
+      }
+    };
 
-  // useEffect(() => {
-  //   const handleUnload = async () => {
-  //     if (isConnected) {
-  //       try {
-  //         await hmsActions.leave();
-  //       } catch (error) {
-  //         console.error("Ошибка при попытке покинуть комнату: ", error);
-  //       }
-  //     }
-  //   };
+    fetchToken();
+  }, [hmsActions, roomId]);
 
-  //   window.addEventListener("beforeunload", handleUnload);
+  useEffect(() => {
+    const handleUnload = async () => {
+      if (isConnected) {
+        try {
+          await hmsActions.leave();
+        } catch (error) {
+          console.error("Ошибка при попытке покинуть комнату: ", error);
+        }
+      }
+    };
 
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleUnload);
-  //   };
-  // }, [hmsActions, isConnected]);
-  // console.log(userInfo, "userInfo");
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, [hmsActions, isConnected]);
+  console.log(userInfo, "userInfo");
   return (
     <Layout>
-      <div>Meet</div>
-      {/* {token && ( */}
-      {/* <HMSPrebuilt
-        // authToken={token}
-        roomCode={roomId}
-        // options={{
-        //   userName:
-        //     `${userInfo?.first_name} ${userInfo?.last_name || ""}` || "",
-        // }}
-      /> */}
-      {/* )} */}
+      {token && (
+        <HMSPrebuilt
+          authToken={token}
+          roomCode={roomId}
+          options={{
+            userName:
+              `${userInfo?.first_name} ${userInfo?.last_name || ""}` || "",
+          }}
+        />
+      )}
     </Layout>
   );
 };
