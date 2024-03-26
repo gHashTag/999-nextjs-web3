@@ -61,26 +61,14 @@ export const EvervaultCard = ({
       });
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     const targetPath = `/workspaceSlug/create-meet/meets/${inviteCode}`;
-
-    // Проверяем, не совпадает ли текущий путь с целевым путем
-    if (router.asPath !== targetPath) {
-      if (type === "host") {
-        router.push(
-          {
-            pathname: "/workspaceSlug/create-meet/meets/[code]",
-            query: { code: inviteCode },
-          },
-          targetPath
-        );
-      } else {
-        // Логика для не-хоста, например, вызов handleCopy
+    if (router.pathname !== "/workspaceSlug/create-meet/meets/[code]") {
+      if (type !== "host") {
         handleCopy(`${window.location.origin}${targetPath}`);
+        inviteToMeet(type);
       }
     }
-
-    inviteToMeet(type);
   };
 
   const href =
