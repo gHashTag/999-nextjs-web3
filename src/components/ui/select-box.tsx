@@ -3,7 +3,10 @@ import React from "react";
 import { OptionType, RoomNode, RoomsData } from "@/types";
 import AsyncSelect from "react-select/async";
 import { StylesConfig, ActionMeta, SingleValue } from "react-select";
-import { ColourOption, colourOptions } from "./data";
+import {
+  ColourOption,
+  colourOptions,
+} from "../../pages/[workspaceSlug]/create-meet/data";
 import {
   setAssetInfo,
   setRoomId,
@@ -67,7 +70,7 @@ interface ComboboxProps {
   roomsData: RoomsData;
   assetInfo: OptionType | null;
 }
-export function Combobox({ roomsData, assetInfo }: ComboboxProps) {
+export function SelectBox({ roomsData, assetInfo }: ComboboxProps) {
   const options: OptionType[] = roomsData.roomsCollection.edges.map(
     ({ node }: { node: RoomNode }) => ({
       value: node.room_id,

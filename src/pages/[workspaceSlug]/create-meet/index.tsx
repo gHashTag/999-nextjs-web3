@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
 
@@ -7,12 +7,12 @@ import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
 import apolloClient from "@/apollo/apollo-client";
 import { useDisclosure } from "@nextui-org/react";
-import MeetModal from "./MeetModal";
+import MeetModal from "@/components/ui/meet-modal";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";
 
-import { Combobox } from "./Combobox";
+import { SelectBox } from "@/components/ui/select-box";
 
 import {
   setAssetInfo,
@@ -21,10 +21,34 @@ import {
 } from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
 import { SelectRoom } from "@/components/ui/select-room";
+import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { EvervaultCard } from "@/components/ui/evervault-card";
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollection {
     roomsCollection(orderBy: { updated_at: DescNullsLast }) {
+      edges {
+        node {
+          id
+          user_id
+          name
+          description
+          updated_at
+          created_at
+          type
+          enabled
+          description
+          codes
+        }
+      }
+    }
+  }
+`;
+const ROOM_NAME_COLLECTION_QUERY = gql`
+  query RoomsCollectionByName($room_id: String!, $name: String) {
+    roomsCollection(
+      filter: { room_id: { eq: $room_id }, name: { eq: $name } }
+    ) {
       edges {
         node {
           id
@@ -65,12 +89,14 @@ const CreateMeet = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isRoomCreated, setIsRoomCreated] = useState(false);
+
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
   const selectedRoomName = useReactiveVar(setSelectedRoomName);
   const roomId = useReactiveVar(setRoomId);
-
+  console.log(selectedRoomName, "selectedRoomName");
   const {
     data: roomsData,
     loading: roomsLoading,
@@ -81,6 +107,17 @@ const CreateMeet = () => {
 
   const { data, loading: assetsLoading } = useQuery(
     ROOMS_ASSETS_COLLECTION_QUERY,
+    {
+      variables: {
+        room_id: roomId,
+        name: selectedRoomName,
+      },
+      client: apolloClient,
+    }
+  );
+
+  const { data: roomNameData, loading: roomNameLoading } = useQuery(
+    ROOM_NAME_COLLECTION_QUERY,
     {
       variables: {
         room_id: roomId,
@@ -132,6 +169,7 @@ const CreateMeet = () => {
           description: `${response.name} created`,
         });
         setLoading(false);
+        setIsRoomCreated(false);
       }
     } catch (error) {
       if (error) {
@@ -155,10 +193,44 @@ const CreateMeet = () => {
   };
 
   const onCreateRoom = () => {
-    onOpen();
     setOpenModalId("meets");
-    // setSelectedRoomName(name);
+    setIsRoomCreated(true);
   };
+
+  const inviteToMeet = async (type: string) => {
+    // Убедитесь, что codesData действительно указывает на массив
+    const codesData = roomNameData?.roomsCollection?.edges[0]?.node?.codes;
+    const parsedCodesData = JSON.parse(codesData);
+
+    if (parsedCodesData) {
+      // Проверка, что codesData действительно массив
+      const codeObj = parsedCodesData.data.find(
+        (codeObj: { role: string; code: string }) => codeObj.role === type
+      );
+      if (codeObj) {
+        console.log("code", codeObj.code);
+      } else {
+        console.log("No code found for type:", type);
+      }
+    } else {
+      console.error("codesData is not an array");
+    }
+  };
+
+  const arrayInvite = [
+    {
+      text: "Start Meet",
+      type: "host",
+    },
+    {
+      text: "Invite Member",
+      type: "viewer-near-realtime",
+    },
+    {
+      text: "Invite Guest",
+      type: "guest",
+    },
+  ];
 
   return (
     <>
@@ -176,17 +248,53 @@ const CreateMeet = () => {
           />
         )}
         <div style={{ position: "absolute", top: 75, right: 20 }}>
-          <Button onClick={onCreateRoom}>Create room</Button>
-        </div>
-        <div className="flex justify-center items-center">
-          {roomsData && (
-            <Combobox roomsData={roomsData} assetInfo={assetInfo} />
+          {!isRoomCreated && (
+            <Button onClick={onCreateRoom}>Create room</Button>
           )}
         </div>
-        {loading || assetsLoading || roomsLoading ? (
+        <div className="flex justify-center items-center">
+          {roomsData && !isRoomCreated && (
+            <SelectBox roomsData={roomsData} assetInfo={assetInfo} />
+          )}
+        </div>
+        {loading || assetsLoading || roomsLoading || roomNameLoading ? (
           <Spinner />
         ) : (
-          <SelectRoom items={items} setOpenModalType={setOpenModalType} />
+          <>
+            {isRoomCreated ? (
+              <>
+                <SelectRoom setOpenModalType={setOpenModalType} />
+              </>
+            ) : (
+              <>
+                <div
+                  style={{ display: "flex", flexWrap: "wrap", marginTop: 60 }}
+                >
+                  {arrayInvite.map((item) => (
+                    <EvervaultCard
+                      key={item.type}
+                      text={item.text}
+                      type={item.type}
+                      inviteToMeet={inviteToMeet}
+                    />
+                  ))}
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                  }}
+                >
+                  <HoverEffect items={items} />
+                </div>
+              </>
+            )}
+          </>
         )}
       </Layout>
     </>
