@@ -6,10 +6,6 @@ import { StylesConfig, ActionMeta, SingleValue } from "react-select";
 import { ColourOption, colourOptions } from "./data";
 import { setRoomId, setSelectedRoomName } from "@/apollo/reactive-store";
 
-type ComboboxProps = RoomsData & {
-  selectedRoomName: string;
-};
-
 const filterColors = (inputValue: string) => {
   return colourOptions.filter((i) =>
     i.label.toLowerCase().includes(inputValue.toLowerCase())
@@ -69,10 +65,7 @@ const customStyles: StylesConfig<OptionType, false> = {
   }),
 };
 
-export function Combobox({ roomsData, selectedRoomName }: ComboboxProps) {
-  console.log(roomsData, "roomsData");
-  console.log(selectedRoomName, "Combobox selectedRoomName");
-
+export function Combobox({ roomsData }: RoomsData) {
   const options: OptionType[] = roomsData.roomsCollection.edges.map(
     ({ node }) => ({
       value: node.room_id,

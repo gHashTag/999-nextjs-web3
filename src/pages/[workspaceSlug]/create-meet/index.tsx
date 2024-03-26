@@ -70,7 +70,7 @@ const CreateMeet = () => {
     client: apolloClient,
   });
   // const [selectedRoomId, setSelectedRoomId] = useState<string>("");
-  const selectedId = useReactiveVar(setSelectedId);
+
   const selectedRoomName = useReactiveVar(setSelectedRoomName);
   const roomId = useReactiveVar(setRoomId);
   console.log(selectedRoomName, "selectedRoomName");
@@ -119,19 +119,17 @@ const CreateMeet = () => {
   const onCreateMeet = async () => {
     const formData = getValues();
     try {
-      if (roomId) {
-        const response = await createRoom(formData.name, openModalId, roomId);
+      const response = await createRoom(
+        formData.name,
+        openModalId,
+        roomId || ""
+      );
+      console.log("🚀 ~ onCreateMeet ~ response:", response);
+      if (response) {
         setSelectedRoomName(response.name);
-        setSelectedId(response.id);
+        setRoomId(response.room_id);
+        refetch();
       }
-
-      // response &&
-      //   setTimeout(() => {
-      //     console.log("refetch");
-      //     setSelectedRoomName(response.name);
-      //     setSelectedRoomId(response.id);
-      //     refetch();
-      //   }, 5000);
     } catch (error) {
       if (error) {
         toast({
@@ -174,17 +172,11 @@ const CreateMeet = () => {
             setValue={setValue}
           />
         )}
-        <div style={{ position: "fixed", top: 75, right: 20 }}>
+        <div style={{ position: "absolute", top: 75, right: 20 }}>
           <Button onClick={onCreateRoom}>Create room</Button>
         </div>
         <div className="flex justify-center items-center">
-          {roomsData && (
-            <Combobox
-              roomsData={roomsData}
-              selectedRoomName={selectedRoomName}
-              selectedId={selectedId}
-            />
-          )}
+          {roomsData && <Combobox roomsData={roomsData} />}
         </div>
 
         <div

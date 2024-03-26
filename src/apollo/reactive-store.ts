@@ -29,6 +29,4 @@ export const setBalance = makeVar<string | null>(null);
 
 export const setRoomId = makeVar<string | null>(null);
 
-export const setSelectedId = makeVar<string>("");
-
 export const setSelectedRoomName = makeVar<string>("");
