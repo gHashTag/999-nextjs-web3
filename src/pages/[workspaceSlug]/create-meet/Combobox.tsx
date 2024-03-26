@@ -1,55 +1,101 @@
 "use client";
-import React, { useEffect } from "react";
-import { Select, SelectItem } from "@nextui-org/react";
+import React, { useState, CSSProperties } from "react";
 import { RoomsData } from "@/types";
+import AsyncSelect from "react-select/async";
+import { StylesConfig, ActionMeta, SingleValue } from "react-select";
+import { ColourOption, colourOptions } from "./data";
 
 type ComboboxProps = RoomsData & {
-  onSelectRoom: (id: string, name: string) => void;
   selectedRoomName: string;
-  selectedRoomId: string;
 };
 
-export function Combobox({
-  data,
-  onSelectRoom,
-  selectedRoomName,
-  selectedRoomId,
-}: ComboboxProps) {
-  const [value, setValues] = React.useState(new Set([]));
-  console.log(value, "value");
+const filterColors = (inputValue: string) => {
+  return colourOptions.filter((i) =>
+    i.label.toLowerCase().includes(inputValue.toLowerCase())
+  );
+};
+
+const promiseOptions = (inputValue: string) =>
+  new Promise<ColourOption[]>((resolve) => {
+    console.log(inputValue, "inputValue");
+    setTimeout(() => {
+      resolve(filterColors(inputValue));
+    }, 1000);
+  });
+
+interface OptionType {
+  value: string;
+  label: string;
+  color: string;
+}
+
+const customStyles: StylesConfig<OptionType, false> = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isFocused ? "#f6ff00" : "rgba(12, 10, 9, 0.8)",
+    color: state.isFocused ? "black" : provided.color,
+    ":hover": {
+      ...provided[":hover"],
+      backgroundColor: "#f6ff00",
+      color: "black",
+    },
+  }),
+  menu: (provided) => ({
+    ...provided,
+    backgroundColor: "rgba(12, 10, 9, 0.8)",
+
+    zIndex: 1000,
+  }),
+  menuPortal: (base) => ({
+    ...base,
+    zIndex: 9999,
+
+    borderColor: "gray",
+    backgroundColor: "rgba(12, 10, 9, 0.8)",
+  }),
+  control: (baseStyles) => ({
+    ...baseStyles,
+    marginTop: 11,
+    minWidth: 300,
+    borderColor: "gray",
+    boxShadow: "#f6ff00",
+    "&:hover": { borderColor: "#f6ff00" },
+    backgroundColor: "rgba(12, 10, 9, 0.8)",
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: "#f6ff00", // Цвет текста главного элемента
+  }),
+};
+
+export function Combobox({ roomsData, selectedRoomName }: ComboboxProps) {
+  console.log(roomsData, "roomsData");
   console.log(selectedRoomName, "Combobox selectedRoomName");
 
-  //   useEffect(() => {
-  //     setValue(selectedRoomName);
-  //   }, [selectedRoomName]);
-  const handleSelectionChange = (e) => {
-    console.log(e, "e");
-    setValues(new Set(e.target.value.split(",")));
+  const options: OptionType[] = roomsData.roomsCollection.edges.map(
+    ({ node }) => ({
+      value: node.room_id,
+      label: node.name,
+      color: "black",
+    })
+  );
+
+  const handleChange = (
+    newValue: SingleValue<OptionType>,
+    actionMeta: ActionMeta<OptionType>
+  ) => {
+    console.log(newValue, actionMeta);
+    // Здесь ваша логика обработки выбора
   };
+
   return (
-    <div className="flex w-56 items-center space-x-4">
-      <div className="flex w-full max-w-xs flex-col gap-2">
-        <Select
-          label="Room"
-          variant="bordered"
-          placeholder={selectedRoomName}
-          selectedKeys={value}
-          className="max-w-xs"
-          //@ts-ignore
-          onChange={handleSelectionChange}
-        >
-          {data.roomsCollection.edges.map((node) => (
-            <SelectItem
-              key={node.node.id}
-              value={selectedRoomName}
-              onClick={() => onSelectRoom(node.node.room_id, node.node.name)}
-            >
-              {node.node.name}
-              {/* {console.log(node.node, "node.node")} */}
-            </SelectItem>
-          ))}
-        </Select>
-      </div>
-    </div>
+    <AsyncSelect
+      cacheOptions
+      defaultOptions={options}
+      styles={customStyles}
+      onChange={handleChange}
+      //isMulti
+      loadOptions={promiseOptions}
+    />
   );
 }

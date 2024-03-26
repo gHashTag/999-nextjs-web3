@@ -4,7 +4,7 @@ import SubCard from "@/components/revamp/LandingCards/SubCard";
 import Layout from "@/components/layout";
 
 import { HoverEffect } from "@/components/ui/card-hover-effect";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
 import apolloClient from "@/apollo/apollo-client";
 import { useDisclosure } from "@nextui-org/react";
@@ -15,6 +15,11 @@ import { createRoom } from "@/utils/edge-functions";
 import { SidebarNav } from "@/components/ui/sidebar-nav";
 import { Combobox } from "./Combobox";
 import { supabase } from "@/utils/supabase";
+import {
+  setRoomId,
+  setSelectedId,
+  setSelectedRoomName,
+} from "@/apollo/reactive-store";
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollection {
@@ -60,44 +65,43 @@ const CreateMeet = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string>("");
-  const [selectedRoomName, setSelectedRoomName] = useState<string>("");
-  console.log(selectedRoomName, "selectedRoomName");
+
   const { data: roomsData, refetch } = useQuery(ROOMS_COLLECTION_QUERY, {
     client: apolloClient,
   });
-  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
-
+  // const [selectedRoomId, setSelectedRoomId] = useState<string>("");
+  const selectedId = useReactiveVar(setSelectedId);
+  const selectedRoomName = useReactiveVar(setSelectedRoomName);
+  const roomId = useReactiveVar(setRoomId);
+  console.log(selectedRoomName, "selectedRoomName");
+  // console.log(selectedId, "selectedId");
+  console.log(roomId, "roomId");
   const { data } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
     variables: {
-      room_id: selectedRoomId,
+      room_id: roomId,
       name: selectedRoomName,
     },
     client: apolloClient,
   });
 
-  useEffect(() => {
-    const channels = supabase
-      .channel("custom-all-channel")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "rooms" },
-        (payload) => {
-          refetch();
-          setSelectedRoomName(selectedRoomName);
-        }
-      )
-      .subscribe();
+  // useEffect(() => {
+  //   const channels = supabase
+  //     .channel("custom-all-channel")
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "*", schema: "public", table: "rooms" },
+  //       (payload) => {
+  //         refetch();
+  //         setSelectedRoomName(selectedRoomName);
+  //         setRoomId(selectedRoomId);
+  //       }
+  //     )
+  //     .subscribe();
 
-    return () => {
-      channels.unsubscribe();
-    };
-  }, []);
-
-  const onSelectRoom = (id: string, name: string) => {
-    console.log(name, "name");
-    setSelectedRoomId(id);
-    setSelectedRoomName(name);
-  };
+  //   return () => {
+  //     channels.unsubscribe();
+  //   };
+  // }, []);
 
   const setOpenModalType = async (type: string) => {
     onOpen();
@@ -115,13 +119,12 @@ const CreateMeet = () => {
   const onCreateMeet = async () => {
     const formData = getValues();
     try {
-      const response = await createRoom(
-        formData.name,
-        openModalId,
-        selectedRoomId
-      );
-      setSelectedRoomName(response.name);
-      setSelectedRoomId(response.id);
+      if (roomId) {
+        const response = await createRoom(formData.name, openModalId, roomId);
+        setSelectedRoomName(response.name);
+        setSelectedId(response.id);
+      }
+
       // response &&
       //   setTimeout(() => {
       //     console.log("refetch");
@@ -153,7 +156,7 @@ const CreateMeet = () => {
   const onCreateRoom = () => {
     onOpen();
     setOpenModalId("meets");
-    setSelectedRoomName(name);
+    // setSelectedRoomName(name);
   };
 
   return (
@@ -177,10 +180,9 @@ const CreateMeet = () => {
         <div className="flex justify-center items-center">
           {roomsData && (
             <Combobox
-              data={roomsData}
-              onSelectRoom={onSelectRoom}
+              roomsData={roomsData}
               selectedRoomName={selectedRoomName}
-              selectedRoomId={selectedRoomId}
+              selectedId={selectedId}
             />
           )}
         </div>
@@ -188,6 +190,7 @@ const CreateMeet = () => {
         <div
           className="flex-col"
           style={{
+            paddingTop: 100,
             paddingRight: 20,
             paddingLeft: 20,
           }}

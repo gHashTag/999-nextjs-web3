@@ -26,3 +26,9 @@ export const setInviteCode = makeVar<string>("dao999nft");
 export const setInviterUserId = makeVar<string>("");
 
 export const setBalance = makeVar<string | null>(null);
+
+export const setRoomId = makeVar<string | null>(null);
+
+export const setSelectedId = makeVar<string>("");
+
+export const setSelectedRoomName = makeVar<string>("");

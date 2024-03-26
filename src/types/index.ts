@@ -175,7 +175,7 @@ interface RoomsCollection {
 }
 
 export interface RoomsData {
-  data: {
+  roomsData: {
     roomsCollection: RoomsCollection;
   };
 }
