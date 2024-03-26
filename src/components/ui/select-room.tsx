@@ -22,27 +22,6 @@ const cardsCreateRoom = [
   },
 ];
 
-const startMeet = [
-  {
-    title: "Start Meet",
-    img: "Start Meet.png",
-    onClickType: "start-meet",
-    isDisabled: false,
-  },
-  {
-    title: "Invite Members",
-    img: "Invite Members.png",
-    onClickType: "invite-members",
-    isDisabled: false,
-  },
-  {
-    title: "Invite Guest",
-    img: "Invite Guest.png",
-    onClickType: "invite-guest",
-    isDisabled: false,
-  },
-];
-
 const SelectRoom = ({
   setOpenModalType,
 }: {

@@ -1,24 +1,32 @@
-"use client";
 import { useMotionValue } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { useMotionTemplate, motion } from "framer-motion";
 import { cn } from "@/utils/cn";
+import { useCopyToClipboard } from "usehooks-ts";
+import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const EvervaultCard = ({
   text,
   type,
   className,
   inviteToMeet,
+  inviteCode,
 }: {
   text: string;
   type: string;
   className?: string;
   inviteToMeet: (type: string) => void;
+  inviteCode: string;
 }) => {
+  const router = useRouter();
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
-
+  console.log(type, "type");
+  const [copiedText, copy] = useCopyToClipboard();
   const [randomString, setRandomString] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     let str = generateRandomString(1500);
@@ -34,43 +42,89 @@ export const EvervaultCard = ({
     setRandomString(str);
   }
 
+  const handleCopy = (text: string) => {
+    console.log(text, "text");
+    copy(text)
+      .then(() => {
+        console.log("Copied!", { text });
+        toast({
+          title: "Copied!",
+          description: `${text} copied`,
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to copy!", error);
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: `${error}`,
+        });
+      });
+  };
+
+  const handleClick = () => {
+    if (type === "host") {
+      router.push(
+        {
+          pathname: "/workspaceSlug/create-meet/meets/[code]",
+          query: { code: inviteCode },
+        },
+        `/workspaceSlug/create-meet/meets/${inviteCode}`
+      );
+    } else {
+      // Логика для не-хоста, например, вызов handleCopy
+      handleCopy(
+        `${window.location.origin}/workspaceSlug/create-meet/${inviteCode}`
+      );
+    }
+    inviteToMeet(type);
+  };
+
+  const href =
+    type === "host"
+      ? `/workspaceSlug/create-meet/meets/${inviteCode}`
+      : router.asPath;
+
   return (
-    <div
-      onClick={() => inviteToMeet(type)}
-      className="cursor-pointer border border-black/[0.2] dark:border-yellow-500/[0.2] flex flex-col items-start max-w-md container mx-auto px-4 md:px-6 lg:px-8 p-4 relative h-[13rem]"
-    >
-      <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-yellow-500 text-black" />
-      <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-yellow-500 text-black" />
-      <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-yellow-500 text-black" />
-      <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-yellow-500 text-black" />
-      <div
-        style={{ width: 380, height: 200 }}
-        className={cn(
-          "p-0.5  bg-transparent aspect-square  flex items-center justify-center w-full h-full relative",
-          className
-        )}
+    <>
+      <Link
+        href={href}
+        onClick={handleClick}
+        className="cursor-pointer border border-black/[0.2] dark:border-yellow-500/[0.2] flex flex-col items-start max-w-md container mx-auto px-4 md:px-6 lg:px-8 p-4 relative h-[13rem]"
       >
+        <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-yellow-500 text-black" />
+        <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-yellow-500 text-black" />
+        <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-yellow-500 text-black" />
+        <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-yellow-500 text-black" />
         <div
-          onMouseMove={onMouseMove}
-          className="group/card rounded-3xl w-full relative overflow-hidden bg-transparent flex items-center justify-center h-full"
+          style={{ width: 380, height: 200 }}
+          className={cn(
+            "p-0.5  bg-transparent aspect-square  flex items-center justify-center w-full h-full relative",
+            className
+          )}
         >
-          <CardPattern
-            mouseX={mouseX}
-            mouseY={mouseY}
-            randomString={randomString}
-            onClick={() => inviteToMeet(type)}
-          />
-          <div className="relative z-10 flex items-center justify-center">
-            <div className="relative h-44 w-44  rounded-full flex items-center justify-center text-white font-bold text-4xl">
-              <div className="absolute w-full h-full bg-white/[0.8] dark:bg-black/[0.8] blur-sm rounded-full" />
-              <span className="dark:text-white text-black z-20 text-center">
-                {text}
-              </span>
+          <div
+            onMouseMove={onMouseMove}
+            className="group/card rounded-3xl w-full relative overflow-hidden bg-transparent flex items-center justify-center h-full"
+          >
+            <CardPattern
+              mouseX={mouseX}
+              mouseY={mouseY}
+              randomString={randomString}
+              onClick={() => inviteToMeet(type)}
+            />
+            <div className="relative z-10 flex items-center justify-center">
+              <div className="relative h-44 w-44  rounded-full flex items-center justify-center text-white font-bold text-4xl">
+                <div className="absolute w-full h-full bg-white/[0.8] dark:bg-black/[0.8] blur-sm rounded-full" />
+                <span className="dark:text-white text-black z-20 text-center">
+                  {text}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </Link>
+    </>
   );
 };
 

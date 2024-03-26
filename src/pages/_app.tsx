@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { NextUIProvider } from "@nextui-org/react";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
-import { HuddleClient, HuddleProvider } from "@huddle01/react";
+// import { HuddleClient, HuddleProvider } from "@huddle01/react";
 import NProgress from "@components/nprogress";
 import ResizeHandler from "@components/resize-handler";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
@@ -19,7 +19,7 @@ import {
   initWeb3Auth,
   subscribeToEvents,
 } from "@/utils/auth";
-import { useReactiveVar } from "@apollo/client";
+
 import { useRouter } from "next/router";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -48,25 +48,27 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className="dark text-foreground bg-background">
       <div>
         {/* <HuddleProvider client={huddleClient}> */}
-        <HMSRoomProvider>
-          <NextUIProvider>
-            <NextThemesProvider attribute="class" defaultTheme="dark">
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-              >
+
+        <NextUIProvider>
+          <NextThemesProvider attribute="class" defaultTheme="dark">
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <HMSRoomProvider>
                 {/* <BackgroundBeams /> */}
                 <Component {...pageProps} />
                 <ResizeHandler />
                 <NProgress />
                 <Toaster />
-                {/* <BackgroundBeamsTwo /> */}
-              </ThemeProvider>
-            </NextThemesProvider>
-          </NextUIProvider>
-        </HMSRoomProvider>
+              </HMSRoomProvider>
+              {/* <BackgroundBeamsTwo /> */}
+            </ThemeProvider>
+          </NextThemesProvider>
+        </NextUIProvider>
+
         {/* </HuddleProvider> */}
       </div>
     </main>

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { IProvider } from "@web3auth/base";
 import { web3auth } from "@/utils/web3Auth";
 import Web3 from "web3";
-import { useLocalStorage } from "./useLocalStorage";
 
 // Corrected the import path for useRouter
 import { useRouter } from "next/router";
@@ -46,37 +45,32 @@ const useWeb3Auth = () => {
     console.log("login");
     try {
       const web3authProvider = await web3auth.connect();
-      console.log(web3authProvider, "web3authProvider");
       setProvider(web3authProvider);
-      console.log(web3auth.connected, "web3auth.connected");
+
       if (web3auth.connected) {
         setLoggedIn(true);
         const userInfo = await web3auth.getUserInfo();
-        console.log(userInfo, "userInfo");
+
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
-          const user = await createSupabaseUser();
+          await createSupabaseUser();
 
           if (userInfo.email) {
             localStorage.setItem("email", userInfo.email);
           }
-
-          // console.log(userInfo, "userInfo");
-          visibleHeaderVar(true);
         }
         visibleHeaderVar(true);
-        // router.push(`/workspaceSlug/wallet`);
 
         return true;
       }
     } catch (error) {
       if (error instanceof Error && error.message === "User closed the modal") {
         // Обработка ситуации, когда всплывающее окно было закрыто пользователем
-        // console.log("Вход отменен пользователем");
+        console.log("Вход отменен пользователем");
         router.push("/");
       } else {
         // Обработка других видов ошибок
-        // console.error("Ошибка входа:", error);
+        console.error("Ошибка входа:", error);
       }
       return false;
     }

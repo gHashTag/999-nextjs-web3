@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
-
+import { useCopyToClipboard } from "usehooks-ts";
 import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
 import apolloClient from "@/apollo/apollo-client";
@@ -90,6 +90,7 @@ const CreateMeet = () => {
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isRoomCreated, setIsRoomCreated] = useState(false);
+  const [inviteCode, setInviteCode] = useState("");
 
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string>("");
@@ -209,6 +210,7 @@ const CreateMeet = () => {
       );
       if (codeObj) {
         console.log("code", codeObj.code);
+        setInviteCode(codeObj.code);
       } else {
         console.log("No code found for type:", type);
       }
@@ -281,6 +283,7 @@ const CreateMeet = () => {
                       key={item.type}
                       text={item.text}
                       type={item.type}
+                      inviteCode={inviteCode}
                       inviteToMeet={inviteToMeet}
                     />
                   ))}
