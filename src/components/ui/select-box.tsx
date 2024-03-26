@@ -78,7 +78,6 @@ export function SelectBox({ roomsData, assetInfo }: ComboboxProps) {
       color: "black",
     })
   );
-  console.log(options, "options");
 
   const handleChange = (
     newValue: SingleValue<OptionType>,
@@ -86,9 +85,9 @@ export function SelectBox({ roomsData, assetInfo }: ComboboxProps) {
   ) => {
     if (newValue) {
       setSelectedRoomName(newValue.label);
-      localStorage.setItem("name", newValue.label);
+      // localStorage.setItem("name", newValue.label);
       setRoomId(newValue.value);
-      localStorage.setItem("room_id", newValue.value);
+      // localStorage.setItem("room_id", newValue.value);
       setAssetInfo({
         value: newValue.value,
         label: newValue.label,

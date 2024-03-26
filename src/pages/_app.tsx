@@ -106,8 +106,8 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
-  const [persistor, setPersistor] =
-    useState<CachePersistor<NormalizedCacheObject>>();
+  // const [persistor, setPersistor] =
+  //   useState<CachePersistor<NormalizedCacheObject>>();
 
   useEffect(() => {
     async function init() {
@@ -146,14 +146,14 @@ export default function App({ Component, pageProps }: AppProps) {
           },
         },
       });
-      let newPersistor = new CachePersistor({
-        cache,
-        storage: new LocalStorageWrapper(window.localStorage),
-        debug: true,
-        trigger: "write",
-      });
-      await newPersistor.restore();
-      setPersistor(newPersistor);
+      // let newPersistor = new CachePersistor({
+      //   cache,
+      //   storage: new LocalStorageWrapper(window.localStorage),
+      //   debug: true,
+      //   trigger: "write",
+      // });
+      // await newPersistor.restore();
+      // setPersistor(newPersistor);
       const httpLink = createHttpLink({
         uri: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/graphql/v1`,
       });
@@ -181,12 +181,12 @@ export default function App({ Component, pageProps }: AppProps) {
     init().catch(console.error);
   }, []);
 
-  const clearCache = useCallback(() => {
-    if (!persistor) {
-      return;
-    }
-    persistor.purge();
-  }, [persistor]);
+  // const clearCache = useCallback(() => {
+  //   if (!persistor) {
+  //     return;
+  //   }
+  //   persistor.purge();
+  // }, [persistor]);
 
   const reload = useCallback(() => {
     window.location.reload();
@@ -210,7 +210,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 disableTransitionOnChange
               >
                 <HMSRoomProvider>
-                  {/* <BackgroundBeams /> */}
+                  <BackgroundBeams />
                   <Component {...pageProps} />
                   <ResizeHandler />
                   <NProgress />

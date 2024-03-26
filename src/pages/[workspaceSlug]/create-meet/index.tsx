@@ -117,8 +117,8 @@ const CreateMeet = () => {
     error: assetsError,
   } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
     variables: {
-      room_id: "660135aee4bed726368e1d44",
-      name: "Common",
+      room_id: roomId || "660135aee4bed726368e1d44",
+      name: selectedRoomName || "Common",
     },
   });
   if (assetsError instanceof ApolloError) {
@@ -132,8 +132,8 @@ const CreateMeet = () => {
     error: roomNameError,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     variables: {
-      room_id: "660135aee4bed726368e1d44",
-      name: "Common",
+      room_id: roomId || "660135aee4bed726368e1d44",
+      name: selectedRoomName || "Common",
     },
   });
 
@@ -322,8 +322,8 @@ const CreateMeet = () => {
                     flexWrap: "wrap",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    paddingLeft: 20,
-                    paddingRight: 20,
+                    paddingLeft: 10,
+                    paddingRight: 10,
                   }}
                 >
                   <HoverEffect items={items} />

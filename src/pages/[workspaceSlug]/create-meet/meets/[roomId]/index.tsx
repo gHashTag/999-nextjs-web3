@@ -40,8 +40,6 @@ const Rooms = () => {
   const isConnected = useHMSStore(selectIsConnectedToRoom);
 
   const hmsActions = useHMSActions();
-  console.log(roomId, "roomId");
-  console.log(typeof roomId, "typeof roomId");
 
   useEffect(() => {
     const fetchToken = async () => {

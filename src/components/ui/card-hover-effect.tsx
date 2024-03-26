@@ -17,7 +17,7 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-3  lg:grid-cols-6  py-10",
+        "grid grid-cols-1 md:grid-cols-3  lg:grid-cols-6  py-10 w-full",
         className
       )}
     >
@@ -66,11 +66,10 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-41 w-48 p-4 overflow-hidden  border border-transparent dark:border-yellow-500/[0.2] group-hover:border-black relative z-20"
+        "rounded-2xl h-42 w-45 p-4 overflow-hidden  border border-transparent dark:border-yellow-500/[0.2] group-hover:border-black relative z-20"
       )}
       style={{
         backgroundColor: "var(--main-background)",
-        margin: 10,
       }}
     >
       <div className="relative z-50">
@@ -87,7 +86,16 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-0", className)}>
+    <h4
+      className={cn("text-zinc-100 font-bold tracking-wide mt-0", className)}
+      style={{
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      }}
+    >
       {children}
     </h4>
   );

@@ -50,7 +50,7 @@ const useWeb3Auth = () => {
       if (web3auth.connected) {
         setLoggedIn(true);
         const userInfo = await web3auth.getUserInfo();
-
+        console.log("userInfo", userInfo);
         if (userInfo) {
           setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
           await createSupabaseUser();
@@ -89,7 +89,7 @@ const useWeb3Auth = () => {
       setUserInfo(null);
       setBalance(null);
       setInviteCode("");
-
+      router.push("/");
       await web3auth.logout();
       localStorage.removeItem("email");
       // apolloClient.clearStore().then(() => {
