@@ -37,14 +37,14 @@ export const EvervaultCard = ({
   return (
     <div
       onClick={() => inviteToMeet(type)}
-      className="cursor-pointer border border-black/[0.2] dark:border-yellow-500/[0.2] flex flex-col items-start max-w-sm mx-auto p-4 relative h-[20rem]"
+      className="cursor-pointer border border-black/[0.2] dark:border-yellow-500/[0.2] flex flex-col items-start max-w-md container mx-auto px-4 md:px-6 lg:px-8 p-4 relative h-[13rem]"
     >
       <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-yellow-500 text-black" />
       <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-yellow-500 text-black" />
       <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-yellow-500 text-black" />
       <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-yellow-500 text-black" />
       <div
-        style={{ width: 300, height: 300 }}
+        style={{ width: 380, height: 200 }}
         className={cn(
           "p-0.5  bg-transparent aspect-square  flex items-center justify-center w-full h-full relative",
           className

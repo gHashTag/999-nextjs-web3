@@ -33,7 +33,7 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
             <AnimatePresence>
               {hoveredIndex === idx && (
                 <motion.span
-                  className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-yellow-600/[0.8] block  rounded-3xl"
+                  className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-yellow-600/[0.8] block rounded-3xl"
                   layoutId="hoverBackground"
                   initial={{ opacity: 0 }}
                   animate={{
@@ -66,9 +66,12 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-50 w-full p-4 overflow-hidden  border border-transparent dark:border-yellow-500/[0.2] group-hover:border-black relative z-20"
+        "rounded-2xl h-41 w-48 p-4 overflow-hidden  border border-transparent dark:border-yellow-500/[0.2] group-hover:border-black relative z-20"
       )}
-      style={{ backgroundColor: "var(--main-background)" }}
+      style={{
+        backgroundColor: "var(--main-background)",
+        margin: 10,
+      }}
     >
       <div className="relative z-50">
         <div className="p-4">{children}</div>

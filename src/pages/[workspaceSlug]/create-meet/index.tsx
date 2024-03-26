@@ -268,7 +268,13 @@ const CreateMeet = () => {
             ) : (
               <>
                 <div
-                  style={{ display: "flex", flexWrap: "wrap", marginTop: 60 }}
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    marginTop: 60,
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                  }}
                 >
                   {arrayInvite.map((item) => (
                     <EvervaultCard
@@ -284,10 +290,10 @@ const CreateMeet = () => {
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    paddingLeft: 10,
-                    paddingRight: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
                   }}
                 >
                   <HoverEffect items={items} />
