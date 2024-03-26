@@ -150,7 +150,7 @@ interface CodesData {
   data: Code[];
 }
 
-interface RoomNode {
+export interface RoomNode {
   __typename: "rooms";
   id: string;
   user_id: string;
@@ -169,13 +169,17 @@ interface RoomEdge {
   node: RoomNode;
 }
 
-interface RoomsCollection {
+export interface RoomsCollection {
   __typename: "roomsConnection";
   edges: RoomEdge[];
 }
 
 export interface RoomsData {
-  roomsData: {
-    roomsCollection: RoomsCollection;
-  };
+  roomsCollection: RoomsCollection;
+}
+
+export interface OptionType {
+  value: string;
+  label: string;
+  color?: string;
 }

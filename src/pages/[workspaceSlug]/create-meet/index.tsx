@@ -1,9 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import SubCard from "@/components/revamp/LandingCards/SubCard";
+import React, { useEffect, useState, Suspense } from "react";
+
 import Layout from "@/components/layout";
 
-import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
 import apolloClient from "@/apollo/apollo-client";
@@ -12,18 +11,20 @@ import MeetModal from "./MeetModal";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";
-import { SidebarNav } from "@/components/ui/sidebar-nav";
+
 import { Combobox } from "./Combobox";
-import { supabase } from "@/utils/supabase";
+
 import {
+  setAssetInfo,
   setRoomId,
-  setSelectedId,
   setSelectedRoomName,
 } from "@/apollo/reactive-store";
+import { Spinner } from "@/components/ui/spinner";
+import { SelectRoom } from "@/components/ui/select-room";
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollection {
-    roomsCollection {
+    roomsCollection(orderBy: { updated_at: DescNullsLast }) {
       edges {
         node {
           id
@@ -36,12 +37,12 @@ const ROOMS_COLLECTION_QUERY = gql`
           enabled
           description
           codes
-          room_id
         }
       }
     }
   }
 `;
+
 const ROOMS_ASSETS_COLLECTION_QUERY = gql`
   query RoomAssetsCollection($room_id: String!, $name: String!) {
     room_assetsCollection(
@@ -62,46 +63,42 @@ const ROOMS_ASSETS_COLLECTION_QUERY = gql`
 
 const CreateMeet = () => {
   const { toast } = useToast();
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [loading, setLoading] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string>("");
-
-  const { data: roomsData, refetch } = useQuery(ROOMS_COLLECTION_QUERY, {
-    client: apolloClient,
-  });
-  // const [selectedRoomId, setSelectedRoomId] = useState<string>("");
-
+  const assetInfo = useReactiveVar(setAssetInfo);
   const selectedRoomName = useReactiveVar(setSelectedRoomName);
   const roomId = useReactiveVar(setRoomId);
-  console.log(selectedRoomName, "selectedRoomName");
-  // console.log(selectedId, "selectedId");
-  console.log(roomId, "roomId");
-  const { data } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
-    variables: {
-      room_id: roomId,
-      name: selectedRoomName,
-    },
+
+  const {
+    data: roomsData,
+    loading: roomsLoading,
+    refetch,
+  } = useQuery(ROOMS_COLLECTION_QUERY, {
     client: apolloClient,
   });
 
-  // useEffect(() => {
-  //   const channels = supabase
-  //     .channel("custom-all-channel")
-  //     .on(
-  //       "postgres_changes",
-  //       { event: "*", schema: "public", table: "rooms" },
-  //       (payload) => {
-  //         refetch();
-  //         setSelectedRoomName(selectedRoomName);
-  //         setRoomId(selectedRoomId);
-  //       }
-  //     )
-  //     .subscribe();
+  const { data, loading: assetsLoading } = useQuery(
+    ROOMS_ASSETS_COLLECTION_QUERY,
+    {
+      variables: {
+        room_id: roomId,
+        name: selectedRoomName,
+      },
+      client: apolloClient,
+    }
+  );
 
-  //   return () => {
-  //     channels.unsubscribe();
-  //   };
-  // }, []);
+  useEffect(() => {
+    const firstRoom = roomsData?.roomsCollection?.edges[0]?.node;
+    if (firstRoom) {
+      setAssetInfo({
+        value: firstRoom?.id,
+        label: firstRoom?.name,
+      });
+    }
+  }, [roomsData]);
 
   const setOpenModalType = async (type: string) => {
     onOpen();
@@ -117,6 +114,7 @@ const CreateMeet = () => {
   const items = data?.room_assetsCollection?.edges;
 
   const onCreateMeet = async () => {
+    setLoading(true);
     const formData = getValues();
     try {
       const response = await createRoom(
@@ -129,6 +127,11 @@ const CreateMeet = () => {
         setSelectedRoomName(response.name);
         setRoomId(response.room_id);
         refetch();
+        toast({
+          title: "Success",
+          description: `${response.name} created`,
+        });
+        setLoading(false);
       }
     } catch (error) {
       if (error) {
@@ -176,49 +179,15 @@ const CreateMeet = () => {
           <Button onClick={onCreateRoom}>Create room</Button>
         </div>
         <div className="flex justify-center items-center">
-          {roomsData && <Combobox roomsData={roomsData} />}
+          {roomsData && (
+            <Combobox roomsData={roomsData} assetInfo={assetInfo} />
+          )}
         </div>
-
-        <div
-          className="flex-col"
-          style={{
-            paddingTop: 100,
-            paddingRight: 20,
-            paddingLeft: 20,
-          }}
-        >
-          <div className="grid lg:grid-cols-3 gap-4 grid-cols-1 mt-6">
-            <SubCard
-              title="Video Meeting"
-              img="Video Meeting.png"
-              onClick={() => setOpenModalType("meets")}
-            />
-            <SubCard
-              title="Audio Spaces"
-              img="Audio Spaces.png"
-              onClick={() => setOpenModalType("audio-spaces")}
-            />
-            <SubCard
-              title="Token-gated Room"
-              img="Token-gated Room.png"
-              onClick={() => setOpenModalType("token-gated")}
-              isDisabled={true}
-            />
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingLeft: 10,
-            paddingRight: 10,
-          }}
-        >
-          <HoverEffect items={items} />
-        </div>
+        {loading || assetsLoading || roomsLoading ? (
+          <Spinner />
+        ) : (
+          <SelectRoom items={items} setOpenModalType={setOpenModalType} />
+        )}
       </Layout>
     </>
   );

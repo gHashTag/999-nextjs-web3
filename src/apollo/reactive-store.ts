@@ -1,4 +1,4 @@
-import { ExtendedOpenloginUserInfo, SupabaseUser } from "@/types";
+import { ExtendedOpenloginUserInfo, OptionType, SupabaseUser } from "@/types";
 import { makeVar } from "@apollo/client";
 
 export const setUserEmail = makeVar<string>("");
@@ -30,3 +30,5 @@ export const setBalance = makeVar<string | null>(null);
 export const setRoomId = makeVar<string | null>(null);
 
 export const setSelectedRoomName = makeVar<string>("");
+
+export const setAssetInfo = makeVar<OptionType | null>(null);

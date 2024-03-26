@@ -1,10 +1,14 @@
 "use client";
 import React from "react";
-import { RoomsData } from "@/types";
+import { OptionType, RoomNode, RoomsData } from "@/types";
 import AsyncSelect from "react-select/async";
 import { StylesConfig, ActionMeta, SingleValue } from "react-select";
 import { ColourOption, colourOptions } from "./data";
-import { setRoomId, setSelectedRoomName } from "@/apollo/reactive-store";
+import {
+  setAssetInfo,
+  setRoomId,
+  setSelectedRoomName,
+} from "@/apollo/reactive-store";
 
 const filterColors = (inputValue: string) => {
   return colourOptions.filter((i) =>
@@ -19,12 +23,6 @@ const promiseOptions = (inputValue: string) =>
       resolve(filterColors(inputValue));
     }, 1000);
   });
-
-interface OptionType {
-  value: string;
-  label: string;
-  color: string;
-}
 
 const customStyles: StylesConfig<OptionType, false> = {
   option: (provided, state) => ({
@@ -65,9 +63,13 @@ const customStyles: StylesConfig<OptionType, false> = {
   }),
 };
 
-export function Combobox({ roomsData }: RoomsData) {
+interface ComboboxProps {
+  roomsData: RoomsData;
+  assetInfo: OptionType | null;
+}
+export function Combobox({ roomsData, assetInfo }: ComboboxProps) {
   const options: OptionType[] = roomsData.roomsCollection.edges.map(
-    ({ node }) => ({
+    ({ node }: { node: RoomNode }) => ({
       value: node.room_id,
       label: node.name,
       color: "black",
@@ -78,16 +80,21 @@ export function Combobox({ roomsData }: RoomsData) {
     newValue: SingleValue<OptionType>,
     actionMeta: ActionMeta<OptionType>
   ) => {
-    console.log(newValue, "newValue");
     if (newValue) {
       setSelectedRoomName(newValue.label);
       setRoomId(newValue.value);
+      setAssetInfo({
+        value: newValue.value,
+        label: newValue.label,
+      });
     }
   };
 
   return (
     <AsyncSelect
+      defaultValue={options[0]}
       cacheOptions
+      value={assetInfo}
       defaultOptions={options}
       options={options}
       styles={customStyles}
