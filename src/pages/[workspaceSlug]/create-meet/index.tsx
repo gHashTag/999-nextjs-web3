@@ -3,9 +3,8 @@ import React, { useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
 import { useCopyToClipboard } from "usehooks-ts";
-import { gql, useQuery, useReactiveVar } from "@apollo/client";
+import { ApolloError, gql, useQuery, useReactiveVar } from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
-import apolloClient from "@/apollo/apollo-client";
 import { useDisclosure } from "@nextui-org/react";
 import MeetModal from "@/components/ui/meet-modal";
 import { useForm } from "react-hook-form";
@@ -96,38 +95,45 @@ const CreateMeet = () => {
   const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
   const selectedRoomName = useReactiveVar(setSelectedRoomName);
+  console.log("selectedRoomName", selectedRoomName);
   const roomId = useReactiveVar(setRoomId);
-
+  console.log(roomId, "roomId");
   const {
     data: roomsData,
     loading: roomsLoading,
     refetch,
-  } = useQuery(ROOMS_COLLECTION_QUERY, {
-    client: apolloClient,
+  } = useQuery(ROOMS_COLLECTION_QUERY);
+
+  const {
+    data,
+    loading: assetsLoading,
+    error: assetsError,
+  } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
+    variables: {
+      room_id: roomId,
+      name: selectedRoomName,
+    },
+  });
+  if (assetsError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(assetsError, "assetsError");
+  }
+
+  const {
+    data: roomNameData,
+    loading: roomNameLoading,
+    error: roomNameError,
+  } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
+    variables: {
+      room_id: roomId,
+      name: selectedRoomName,
+    },
   });
 
-  const { data, loading: assetsLoading } = useQuery(
-    ROOMS_ASSETS_COLLECTION_QUERY,
-    {
-      variables: {
-        room_id: roomId,
-        name: selectedRoomName,
-      },
-      client: apolloClient,
-    }
-  );
-
-  const { data: roomNameData, loading: roomNameLoading } = useQuery(
-    ROOM_NAME_COLLECTION_QUERY,
-    {
-      variables: {
-        room_id: roomId,
-        name: selectedRoomName,
-      },
-      client: apolloClient,
-    }
-  );
-
+  if (roomNameError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(roomNameError.message);
+  }
   useEffect(() => {
     const firstRoom = roomsData?.roomsCollection?.edges[0]?.node;
     if (firstRoom) {

@@ -20,7 +20,7 @@ import {
   visibleHeaderVar,
   visibleSignInVar,
 } from "@/apollo/reactive-store";
-import apolloClient from "@/apollo/apollo-client";
+
 // import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 
 const useWeb3Auth = () => {
@@ -92,10 +92,10 @@ const useWeb3Auth = () => {
 
       await web3auth.logout();
       localStorage.removeItem("email");
-      apolloClient.clearStore().then(() => {
-        apolloClient.resetStore();
-        router.push("/");
-      });
+      // apolloClient.clearStore().then(() => {
+      //   apolloClient.resetStore();
+      //   router.push("/");
+      // });
     } catch (error) {
       // console.error("Ошибка при разлогинивании:", error);
     }

@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FieldValues } from "react-hook-form";
 import { gql, useQuery, useReactiveVar, useMutation } from "@apollo/client";
-import apolloClient from "@/apollo/apollo-client";
 import { setUserEmail } from "@/apollo/reactive-store";
 import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
@@ -79,9 +78,8 @@ export default function Wallet() {
   const email = useReactiveVar(setUserEmail);
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
-  const [mutateUser] = useMutation(MUTATION, { client: apolloClient });
+  const [mutateUser] = useMutation(MUTATION);
   const { loading, error, data, refetch } = useQuery(QUERY, {
-    client: apolloClient,
     variables: { email },
   });
 

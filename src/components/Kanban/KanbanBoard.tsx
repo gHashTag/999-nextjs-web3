@@ -21,7 +21,7 @@ import {
   useMutation,
   ApolloError,
 } from "@apollo/client";
-import apolloClient from "@/apollo/apollo-client";
+
 import { useDisclosure } from "@nextui-org/react";
 import { setUserId } from "@/apollo/reactive-store";
 import { useToast } from "@/components/ui/use-toast";
@@ -148,9 +148,7 @@ const DELETE_TASK_MUTATION = gql`
 function KanbanBoard() {
   const { toast } = useToast();
   const [openModalId, setOpenModalId] = useState<string | null>(null);
-  const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY, {
-    client: apolloClient,
-  });
+  const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY);
 
   // const { data: taskById, error: taskByIdError } = useQuery(TASK_BY_ID_QUERY, {
   //   variables: { id: openModalId },
@@ -163,28 +161,18 @@ function KanbanBoard() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
-    useMutation(MUTATION_TASK_UPDATE, {
-      client: apolloClient,
-    });
+    useMutation(MUTATION_TASK_UPDATE);
 
   // if (mutateUpdateTaskStatusError instanceof ApolloError) {
   //   // Обработка ошибки ApolloError
   //   console.log(mutateUpdateTaskStatusError.message);
   // }
 
-  const [mutateCreateTask, { error: mutateCreateTaskError }] = useMutation(
-    CREATE_TASK_MUTATION,
-    {
-      client: apolloClient,
-    }
-  );
+  const [mutateCreateTask, { error: mutateCreateTaskError }] =
+    useMutation(CREATE_TASK_MUTATION);
 
-  const [deleteTask, { error: deleteTaskError }] = useMutation(
-    DELETE_TASK_MUTATION,
-    {
-      client: apolloClient,
-    }
-  );
+  const [deleteTask, { error: deleteTaskError }] =
+    useMutation(DELETE_TASK_MUTATION);
   // if (deleteTaskError instanceof ApolloError) {
   //   // Обработка ошибки ApolloError
   //   console.log(deleteTaskError.message);

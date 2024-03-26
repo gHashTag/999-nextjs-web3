@@ -5,7 +5,6 @@ import { TracingBeam } from "@/components/ui/tracing-beam";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/router";
 import { useQuery, gql } from "@apollo/client";
-import apolloClient from "@/apollo/apollo-client";
 
 const GET_ROOM_ASSETS = gql`
   query RoomAssetsCollection($recording_id: String!) {
@@ -29,8 +28,6 @@ const RecordingPage = () => {
 
   const { loading, error, data } = useQuery(GET_ROOM_ASSETS, {
     variables: { recording_id },
-
-    client: apolloClient,
   });
 
   const asset = data?.room_assetsCollection?.edges[0]?.node;

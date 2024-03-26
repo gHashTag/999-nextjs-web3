@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 // import "@/styles/styles.css";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import { NextUIProvider } from "@nextui-org/react";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
@@ -13,6 +13,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { setLoggedIn } from "@/apollo/reactive-store";
 import { ThemeProvider } from "@/components/theme-provider";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  NormalizedCacheObject,
+  createHttpLink,
+  useQuery,
+} from "@apollo/client";
 
 import {
   authenticateUser,
@@ -22,6 +30,9 @@ import {
 
 import { useRouter } from "next/router";
 import { useToast } from "@/components/ui/use-toast";
+// import apolloClient from "@/apollo/apollo-client";
+import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
+import { setContext } from "@apollo/client/link/context";
 
 // const huddleClient = new HuddleClient({
 //   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
@@ -32,9 +43,14 @@ import { useToast } from "@/components/ui/use-toast";
 //   },
 // });
 
+// Authorization: token
+//         ? `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
+//         : "",
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { toast } = useToast();
+
   useEffect(() => {
     initWeb3Auth(router, toast);
     const unsubscribe = subscribeToEvents(async () => {
@@ -44,31 +60,88 @@ export default function App({ Component, pageProps }: AppProps) {
     return unsubscribe;
   }, []);
 
+  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
+  const [persistor, setPersistor] =
+    useState<CachePersistor<NormalizedCacheObject>>();
+
+  useEffect(() => {
+    async function init() {
+      const cache = new InMemoryCache();
+      let newPersistor = new CachePersistor({
+        cache,
+        storage: new LocalStorageWrapper(window.localStorage),
+        debug: true,
+        trigger: "write",
+      });
+      await newPersistor.restore();
+      setPersistor(newPersistor);
+      const httpLink = createHttpLink({
+        uri: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/graphql/v1`,
+      });
+
+      const authLink = setContext(async (_, { headers }) => {
+        //const token = (await supabase.auth.getSession()).data.session?.access_token;
+
+        return {
+          headers: {
+            ...headers,
+            apiKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          },
+        };
+      });
+
+      setClient(
+        new ApolloClient({
+          link: authLink.concat(httpLink),
+          cache,
+          connectToDevTools: true,
+        })
+      );
+    }
+
+    init().catch(console.error);
+  }, []);
+
+  const clearCache = useCallback(() => {
+    if (!persistor) {
+      return;
+    }
+    persistor.purge();
+  }, [persistor]);
+
+  const reload = useCallback(() => {
+    window.location.reload();
+  }, []);
+
+  if (!client) {
+    return <h2>Initializing app...</h2>;
+  }
+
   return (
     <main className="dark text-foreground bg-background">
       <div>
         {/* <HuddleProvider client={huddleClient}> */}
-
-        <NextUIProvider>
-          <NextThemesProvider attribute="class" defaultTheme="dark">
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <HMSRoomProvider>
-                {/* <BackgroundBeams /> */}
-                <Component {...pageProps} />
-                <ResizeHandler />
-                <NProgress />
-                <Toaster />
-              </HMSRoomProvider>
-              {/* <BackgroundBeamsTwo /> */}
-            </ThemeProvider>
-          </NextThemesProvider>
-        </NextUIProvider>
-
+        <ApolloProvider client={client}>
+          <NextUIProvider>
+            <NextThemesProvider attribute="class" defaultTheme="dark">
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <HMSRoomProvider>
+                  {/* <BackgroundBeams /> */}
+                  <Component {...pageProps} />
+                  <ResizeHandler />
+                  <NProgress />
+                  <Toaster />
+                </HMSRoomProvider>
+                {/* <BackgroundBeamsTwo /> */}
+              </ThemeProvider>
+            </NextThemesProvider>
+          </NextUIProvider>
+        </ApolloProvider>
         {/* </HuddleProvider> */}
       </div>
     </main>

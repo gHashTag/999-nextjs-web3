@@ -23,7 +23,7 @@ export const EvervaultCard = ({
   const router = useRouter();
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
-  console.log(type, "type");
+
   const [copiedText, copy] = useCopyToClipboard();
   const [randomString, setRandomString] = useState("");
   const { toast } = useToast();
