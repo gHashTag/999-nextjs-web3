@@ -23,7 +23,7 @@ const Pagination: React.FC<Props> = ({ list, page, setPage }) => {
       <button className="arrow-btn" onClick={prevPage} disabled={disableLeft}>
         <ChevronLeft />
       </button>
-      {list.map((_, i: number) => (
+      {/* {list.map((_, i: number) => (
         <div
           key={i}
           className={`w-[6px] h-[6px] rounded-full cursor-pointer ${
@@ -31,7 +31,7 @@ const Pagination: React.FC<Props> = ({ list, page, setPage }) => {
           }`}
           onClick={() => setPage(i)}
         />
-      ))}
+      ))} */}
       <button className="arrow-btn" onClick={nextPage} disabled={disableRight}>
         <ChevronRight />
       </button>
