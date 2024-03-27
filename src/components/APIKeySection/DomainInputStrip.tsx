@@ -69,7 +69,7 @@ const DomainInputStrip: React.FC<props> = ({
     } else {
       try {
         await addApiKey({
-          address,
+          address: address || "",
           chain: "ETHEREUM",
         });
       } catch (err) {
