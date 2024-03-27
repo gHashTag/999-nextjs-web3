@@ -45,29 +45,29 @@ const APISection = () => {
     },
   });
 
-  const { isConnected } = useAccount({
-    onConnect({ address }) {
-      if (address) {
-        fetchApiKey({
-          address,
-        })
-          .then(() => {
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            setIsLoading(false);
-            // console.error(err);
-          });
-      }
-    },
-    onDisconnect() {
-      setProjectName(null);
-    },
-  });
+  // const { isConnected } = useAccount({
+  //   onConnect({ address }) {
+  //     if (address) {
+  //       fetchApiKey({
+  //         address,
+  //       })
+  //         .then(() => {
+  //           setIsLoading(false);
+  //         })
+  //         .catch((err) => {
+  //           setIsLoading(false);
+  //           // console.error(err);
+  //         });
+  //     }
+  //   },
+  //   onDisconnect() {
+  //     setProjectName(null);
+  //   },
+  // });
 
   return (
     <div className="flex flex-col gap-6 mt-10 justify-center items-center w-full">
-      <ConnectButton />
+      {/* <ConnectButton />
       {isConnected && !isLoading && (
         <span className="font-bold text-lg text-center w-1/2">
           {projectName?.length > 0 && emailName?.length > 0
@@ -93,7 +93,7 @@ const APISection = () => {
             />
           )}
         </div>
-      )}
+      )} */}
     </div>
   );
 };
