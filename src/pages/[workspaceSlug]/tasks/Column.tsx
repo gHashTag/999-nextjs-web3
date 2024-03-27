@@ -13,15 +13,11 @@ interface ColumnProps {
 
 const Column: FC<ColumnProps> = ({ id, title, cards, openModal }) => {
   const { setNodeRef } = useDroppable({ id: id });
-  console.log(cards, "cards");
+  // console.log(cards, "cards");
   return (
     // ソートを行うためのContextです。
     // strategyは4つほど存在しますが、今回は縦・横移動可能なリストを作るためrectSortingStrategyを採用
-    <SortableContext
-      id={id}
-      items={cards && cards.map((card) => ({ id: card.id }))}
-      strategy={rectSortingStrategy}
-    >
+    <SortableContext id={id} items={cards} strategy={rectSortingStrategy}>
       <div
         ref={setNodeRef}
         style={{

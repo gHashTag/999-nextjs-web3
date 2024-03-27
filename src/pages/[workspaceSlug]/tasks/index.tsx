@@ -46,20 +46,43 @@ export default function Tasks() {
   const [columns, setColumns] = useState<BoardData[]>(data);
 
   const findColumn = (unique: string | null) => {
+    // console.log("findColumn called with unique:", unique); // Логируем входной параметр
+
     if (!unique) {
+      // console.log("findColumn: unique is null or undefined");
       return null;
     }
-    // overの対象がcolumnの場合があるためそのままidを返す
+
     if (columns.some((c) => c.id === unique)) {
-      return columns.find((c) => c.id === unique) ?? null;
+      const foundColumn = columns.find((c) => c.id === unique) ?? null;
+      // console.log(
+      //   `findColumn: Found column directly with id ${unique}:`,
+      //   foundColumn
+      // );
+      return foundColumn;
     }
+
     const id = String(unique);
+    // console.log("findColumn: Converted unique to string:", id);
+
     const itemWithColumnId = columns.flatMap((c) => {
       const columnId = c.id;
-      return c.cards.map((i) => ({ itemId: i.id, columnId: columnId }));
+      // Обновление для новой структуры данных
+      return c.cards.map((i) => ({ itemId: i.node.id, columnId: columnId }));
     });
+
+    // console.log("findColumn: itemWithColumnId mapping:", itemWithColumnId);
+
     const columnId = itemWithColumnId.find((i) => i.itemId === id)?.columnId;
-    return columns.find((c) => c.id === columnId) ?? null;
+    // console.log("findColumn: Found columnId from itemWithColumnId:", columnId);
+
+    const foundColumn = columns.find((c) => c.id === columnId) ?? null;
+    // console.log(
+    //   `findColumn: Found column by columnId ${columnId}:`,
+    //   foundColumn
+    // );
+
+    return foundColumn;
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -69,29 +92,33 @@ export default function Tasks() {
     const activeColumn = findColumn(activeId);
     const overColumn = findColumn(overId);
     if (!activeColumn || !overColumn || activeColumn === overColumn) {
-      return null;
+      return;
     }
     setColumns((prevState) => {
-      const activeItems = activeColumn.cards;
-      const overItems = overColumn.cards;
+      const activeItems = activeColumn.cards.map((card) => card.node); // Обновлено для новой структуры
+      const overItems = overColumn.cards.map((card) => card.node); // Обновлено для новой структуры
       const activeIndex = activeItems.findIndex((i) => i.id === activeId);
       const overIndex = overItems.findIndex((i) => i.id === overId);
       const newIndex = () => {
         const putOnBelowLastItem =
           overIndex === overItems.length - 1 && delta.y > 0;
         const modifier = putOnBelowLastItem ? 1 : 0;
-        return overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+        return overIndex >= 0 ? overIndex + modifier : overItems.length;
       };
       return prevState.map((c) => {
         if (c.id === activeColumn.id) {
-          c.cards = activeItems.filter((i) => i.id !== activeId);
+          c.cards = c.cards.filter((i) => i.node.id !== activeId); // Обновлено для новой структуры
           return c;
         } else if (c.id === overColumn.id) {
-          c.cards = [
+          const newCards = [
             ...overItems.slice(0, newIndex()),
             activeItems[activeIndex],
-            ...overItems.slice(newIndex(), overItems.length),
+            ...overItems.slice(newIndex()),
           ];
+          c.cards = newCards.map((item, index) => ({
+            __typename: "tasksEdge",
+            node: item,
+          })); // Обновлено для новой структуры
           return c;
         } else {
           return c;
@@ -102,26 +129,51 @@ export default function Tasks() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    const activeId = String(active.id);
-    const overId = over ? String(over.id) : null;
-    const activeColumn = findColumn(activeId);
-    const overColumn = findColumn(overId);
-    if (!activeColumn || !overColumn || activeColumn !== overColumn) {
-      return null;
-    }
-    const activeIndex = activeColumn.cards.findIndex((i) => i.id === activeId);
-    const overIndex = overColumn.cards.findIndex((i) => i.id === overId);
-    if (activeIndex !== overIndex) {
-      setColumns((prevState) => {
-        return prevState.map((column) => {
-          if (column.id === activeColumn.id) {
-            column.cards = arrayMove(overColumn.cards, activeIndex, overIndex);
-            return column;
-          } else {
-            return column;
+    console.log("Drag End Event:", event);
+    console.log(`Active ID: ${active.id}, Over ID: ${over ? over.id : "null"}`);
+
+    if (over) {
+      const activeId = active.id;
+      const overId = over.id;
+      let newColumns = [...columns];
+      let sourceColumnIndex,
+        destinationColumnIndex,
+        sourceItemIndex,
+        destinationItemIndex;
+
+      newColumns.forEach((column, columnIndex) => {
+        column.cards.forEach((card, itemIndex) => {
+          if (card.node.id === activeId) {
+            sourceColumnIndex = columnIndex;
+            sourceItemIndex = itemIndex;
+          }
+          if (card.node.id === overId) {
+            destinationColumnIndex = columnIndex;
+            destinationItemIndex = itemIndex;
           }
         });
       });
+
+      if (
+        sourceColumnIndex !== undefined &&
+        destinationColumnIndex !== undefined &&
+        sourceItemIndex !== undefined
+      ) {
+        const itemToMove = newColumns[sourceColumnIndex].cards[sourceItemIndex];
+        newColumns[sourceColumnIndex].cards.splice(sourceItemIndex, 1);
+        if (destinationItemIndex !== undefined) {
+          newColumns[destinationColumnIndex].cards.splice(
+            destinationItemIndex,
+            0,
+            itemToMove
+          );
+        } else {
+          // Если overId не совпадает ни с одной задачей, возможно, мы перетаскиваем в пустую колонку.
+          // В этом случае, мы просто добавляем элемент в конец колонки.
+          newColumns[destinationColumnIndex].cards.push(itemToMove);
+        }
+        setColumns(newColumns);
+      }
     }
   };
 
@@ -157,7 +209,8 @@ export default function Tasks() {
                     key={value.id}
                     id={value.id}
                     title={value.title}
-                    cards={value.cards}
+                    // Преобразование структуры данных карточек перед передачей
+                    cards={value.cards.map((card) => card.node)}
                     openModal={openModal}
                   />
                 );
