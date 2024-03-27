@@ -186,6 +186,7 @@ export function useSupabase() {
   }, []);
 
   return {
+    getSupabaseUser,
     getAssetById,
     assets,
     tasks,

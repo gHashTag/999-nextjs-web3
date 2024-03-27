@@ -12,7 +12,7 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Column from "./Column";
 import { Board, BoardData, StatusMap, Task, TasksArray } from "@/types";
 import { Button } from "@/components/ui/moving-border";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import TaskModal from "./TaskModal";
 import {
   gql,
@@ -29,8 +29,8 @@ import { useForm } from "react-hook-form";
 import { useSupabase } from "@/hooks/useSupabase";
 
 const TASKS_COLLECTION_QUERY = gql`
-  query TasksCollection {
-    tasksCollection {
+  query GetTasks($user_id: UUID!) {
+    tasksCollection(filter: { and: [{ user_id: { eq: $user_id } }] }) {
       edges {
         node {
           id
@@ -41,11 +41,10 @@ const TASKS_COLLECTION_QUERY = gql`
           updated_at
           due_date
           priority
-          assigned_to
-          labels
           completed_at
           is_archived
           status
+          order
         }
       }
     }
@@ -93,6 +92,7 @@ const CREATE_TASK_MUTATION = gql`
         completed_at
         is_archived
         status
+        order
       }
     }
   }
@@ -105,6 +105,7 @@ const MUTATION_TASK_UPDATE = gql`
     $title: String!
     $description: String!
     $updated_at: Datetime!
+    $order: BigInt!
   ) {
     updatetasksCollection(
       filter: { id: { eq: $id } }
@@ -113,6 +114,7 @@ const MUTATION_TASK_UPDATE = gql`
         updated_at: $updated_at
         title: $title
         description: $description
+        order: $order
       }
     ) {
       records {
@@ -129,6 +131,7 @@ const MUTATION_TASK_UPDATE = gql`
         created_at
         labels
         priority
+        order
       }
     }
   }
@@ -147,8 +150,13 @@ const DELETE_TASK_MUTATION = gql`
 
 function KanbanBoard() {
   const { toast } = useToast();
+  const user_id = localStorage.getItem("user_id");
   const [openModalId, setOpenModalId] = useState<string | null>(null);
-  const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY);
+  const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY, {
+    variables: {
+      user_id,
+    },
+  });
 
   // const { data: taskById, error: taskByIdError } = useQuery(TASK_BY_ID_QUERY, {
   //   variables: { id: openModalId },
@@ -161,24 +169,39 @@ function KanbanBoard() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
-    useMutation(MUTATION_TASK_UPDATE);
+    useMutation(MUTATION_TASK_UPDATE, {
+      variables: {
+        user_id,
+      },
+    });
 
-  // if (mutateUpdateTaskStatusError instanceof ApolloError) {
-  //   // Обработка ошибки ApolloError
-  //   console.log(mutateUpdateTaskStatusError.message);
-  // }
+  if (mutateUpdateTaskStatusError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(mutateUpdateTaskStatusError.message);
+  }
 
   const [mutateCreateTask, { error: mutateCreateTaskError }] =
     useMutation(CREATE_TASK_MUTATION);
+  if (mutateCreateTaskError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(mutateCreateTaskError.message);
+  }
 
-  const [deleteTask, { error: deleteTaskError }] =
-    useMutation(DELETE_TASK_MUTATION);
+  const [deleteTask, { error: deleteTaskError }] = useMutation(
+    DELETE_TASK_MUTATION,
+    {
+      variables: {
+        user_id,
+      },
+    }
+  );
   // if (deleteTaskError instanceof ApolloError) {
   //   // Обработка ошибки ApolloError
   //   console.log(deleteTaskError.message);
   // }
   const { getTaskById } = useSupabase();
   const [boardData, setBoardData] = useState<BoardData[]>([]);
+  // console.log(boardData, "boardData");
   const [isEditing, setIsEditing] = useState(false);
   const [card, setCard] = useState<Task>();
 
@@ -191,18 +214,27 @@ function KanbanBoard() {
     4: "Done",
   };
 
-  const onCreate = () => {
-    const formData = getValues();
-    mutateCreateTask({
-      variables: {
-        objects: [formData],
-      },
-      onCompleted: () => {
-        refetch();
-      },
-    });
+  const onCreate = async () => {
+    try {
+      const formData = getValues();
+      const formDataWithUserId = {
+        ...formData,
+        user_id,
+      };
 
-    if (mutateCreateTaskError) {
+      const mutateCreateTaskResult = await mutateCreateTask({
+        variables: {
+          objects: [formDataWithUserId],
+        },
+        onCompleted: () => {
+          refetch();
+          reset({
+            title: "",
+            description: "",
+          });
+        },
+      });
+    } catch (error) {
       toast({
         title: "Error creating task:",
         variant: "destructive",
@@ -213,11 +245,6 @@ function KanbanBoard() {
             </code>
           </pre>
         ),
-      });
-    } else {
-      reset({
-        title: "",
-        description: "",
       });
     }
   };
@@ -243,6 +270,11 @@ function KanbanBoard() {
         }
       });
 
+      // Добавляем сортировку для каждого столбца
+      Object.keys(board).forEach((columnName) => {
+        board[columnName].sort((a, b) => a.node.order - b.node.order);
+      });
+
       const newData = Object.entries(board).map(([title, cards]) => ({
         id: title,
         title,
@@ -253,9 +285,7 @@ function KanbanBoard() {
     },
     []
   );
-  // if (loading) return <p>Loading...</p>;
-  ///  if (error) return <p>Error : {error.message}</p>;
-  //
+
   useEffect(() => {
     if (data) {
       const newData = transformTasksToBoardData(data.tasksCollection.edges);
@@ -360,15 +390,33 @@ function KanbanBoard() {
       return statusMap[columnId] || 1;
     }
 
-    const newStatus = getColumnStatus(overColumn.id.toString());
+    let newStatus: number;
 
-    mutateUpdateTaskStatus({
-      variables: {
-        id: activeId,
-        status: newStatus,
-        updated_at: new Date().toISOString(),
-      },
-    });
+    if (activeColumn.id !== overColumn.id) {
+      newStatus = getColumnStatus(overColumn.id.toString());
+    }
+
+    const updateTasksOrder = async (
+      updatedTasks: { id: string; order: number }[]
+    ) => {
+      try {
+        const updatePromises = updatedTasks.map((task) =>
+          mutateUpdateTaskStatus({
+            variables: {
+              id: task.id,
+              status: newStatus,
+              updated_at: new Date().toISOString(),
+              order: task.order,
+            },
+          })
+        );
+
+        await Promise.all(updatePromises);
+        console.log("Все задачи успешно обновлены");
+      } catch (error) {
+        console.error("Ошибка при обновлении задач:", error);
+      }
+    };
 
     const activeIndex = activeColumn.cards
       ? activeColumn.cards.findIndex((i) => String(i.node.id) === activeId)
@@ -384,11 +432,28 @@ function KanbanBoard() {
         return prevState.map((column) => {
           if (column.id === activeColumn.id) {
             if (overColumn.cards) {
+              // Сохраняем состояние до перемещения
+              const beforeMove = overColumn.cards.map((card) => card.node.id);
+              console.log("До перемещения:", beforeMove);
+
+              // Выполняем перемещение
               column.cards = arrayMove(
                 overColumn.cards,
                 activeIndex,
                 overIndex
               );
+
+              // Сохраняем состояние после перемещения
+              const afterMove = column.cards.map((card) => card.node.id);
+              console.log("После перемещения:", afterMove);
+
+              const updatedTasks = afterMove.map((id, index) => ({
+                id,
+                order: index,
+              }));
+              setTimeout(() => {
+                updateTasksOrder(updatedTasks); // updatedData - это новые данные, которые вы хотите установить
+              }, 30000);
             }
             return column;
           } else {
@@ -409,7 +474,6 @@ function KanbanBoard() {
   const openModal = async (cardId: string) => {
     setOpenModalId(cardId);
     const card = await getTaskById(cardId);
-    console.log(isEditing, "isEditing");
     setCard(card);
     setValue("title", card?.title);
     setValue("description", card?.description);

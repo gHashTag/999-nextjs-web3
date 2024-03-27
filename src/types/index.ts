@@ -27,6 +27,7 @@ export interface Task {
     completed_at?: string;
     is_archived?: boolean;
     status: TaskStatus;
+    order: number;
   };
 }
 

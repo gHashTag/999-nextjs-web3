@@ -31,7 +31,7 @@ const useWeb3Auth = () => {
 
   const [provider, setProvider] = useState<IProvider | null>(null);
 
-  const { createSupabaseUser } = useSupabase();
+  const { createSupabaseUser, getSupabaseUser } = useSupabase();
 
   useEffect(() => {
     const email = localStorage.getItem("email");
@@ -57,6 +57,8 @@ const useWeb3Auth = () => {
 
           if (userInfo.email) {
             localStorage.setItem("email", userInfo.email);
+            const supabaseUser = await getSupabaseUser(userInfo.email);
+            localStorage.setItem("user_id", supabaseUser.user_id);
           }
         }
         visibleHeaderVar(true);
