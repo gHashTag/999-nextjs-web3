@@ -179,6 +179,7 @@ const AllSpeakers: React.FC<{ allPeers: HMSPeer[] }> = ({ allPeers }) => {
         pagesWithTiles.length > 0 &&
         pagesWithTiles[page < pagesWithTiles.length ? page : 0].map((p, _) => (
           <VideoTile
+            key={p.peer.id}
             width={p.width}
             height={p.height}
             trackId={p.peer.videoTrack || ""}

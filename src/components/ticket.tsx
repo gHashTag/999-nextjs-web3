@@ -88,7 +88,7 @@ export default function Ticket({
               )
             ) : (
               <>
-                You're in. <br /> Make it unique.
+                You in. <br /> Make it unique.
               </>
             )}
           </h2>

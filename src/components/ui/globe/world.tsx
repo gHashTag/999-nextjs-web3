@@ -424,7 +424,7 @@ export default function WorldPage() {
         <p className="text-center text-base md:text-lg font-normal text-neutral-700 dark:text-neutral-200 max-w-md mt-2 mx-auto">
           <span className="text-yellow-500">
             {" "}
-            Let's make this world bright and exciting together
+            Lets make this world bright and exciting together
           </span>
         </p>
       </div>
