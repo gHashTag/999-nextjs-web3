@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { GetStaticProps, GetStaticPaths } from 'next';
+import { GetStaticProps, GetStaticPaths } from "next";
 
-import Page from '@components/page';
-import SponsorSection from '@components/sponsor-section';
-import Layout from '@components/layout';
+import Page from "@components/page";
+import SponsorSection from "@components/sponsor-section";
+import Layout from "@components/layout";
 
-import { getAllSponsors } from '@lib/cms-api';
-import { Sponsor } from '@lib/types';
-import { META_DESCRIPTION } from '@lib/constants';
+import { getAllSponsors } from "@lib/cms-api";
+import { Sponsor } from "@lib/types";
+import { META_DESCRIPTION } from "@lib/constants";
 
 type Props = {
   sponsor: Sponsor;
@@ -30,8 +30,8 @@ type Props = {
 
 export default function SponsorPage({ sponsor }: Props) {
   const meta = {
-    title: 'Demo - Virtual Event Starter Kit',
-    description: META_DESCRIPTION
+    title: "Bank of Digital Avatars - 999",
+    description: META_DESCRIPTION,
   };
 
   return (
@@ -50,15 +50,15 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 
   if (!sponsor) {
     return {
-      notFound: true
+      notFound: true,
     };
   }
 
   return {
     props: {
-      sponsor
+      sponsor,
     },
-    revalidate: 60
+    revalidate: 60,
   };
 };
 
@@ -68,6 +68,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: slugs,
-    fallback: 'blocking'
+    fallback: "blocking",
   };
 };

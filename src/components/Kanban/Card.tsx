@@ -1,60 +1,58 @@
-import { FC } from "react";
+import { forwardRef } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 import { Task } from "@/types";
 import { BackgroundGradient } from "../ui/background-gradient";
-import { card } from "@nextui-org/theme";
+
 import { Spacer } from "@nextui-org/react";
 
-interface CardProps extends Task {
+interface CardProps {
+  node: {
+    id: string;
+    title: string;
+    description: string;
+  };
   onClick?: () => void;
-  openModal: (id: string) => void; // Добавление функции openModal в пропсы
 }
 
-const Card: FC<CardProps> = ({
-  id,
-  title,
-  description,
-  onClick,
-  openModal,
-}) => {
+const Card = forwardRef<HTMLDivElement, CardProps>(({ node, onClick }, ref) => {
   const { attributes, listeners, setNodeRef, transform } = useSortable({
-    id: id,
+    id: node.id,
   });
 
-  const handleClick = () => {
-    console.log(handleClick, "handleClick");
-    if (onClick) {
-      onClick(); // Вызов существующего onClick
-    }
-    openModal(id); // Вызов функции openModal с id карточки
+  const style = {
+    opacity: 1,
+    transform: CSS.Transform.toString(transform),
   };
 
   return (
-    <a onClick={handleClick}>
-      <BackgroundGradient className="rounded-[22px] sm:p-1 dark:bg-zinc-300">
-        <div ref={setNodeRef} {...attributes} {...listeners}>
+    <div ref={ref} onClick={onClick}>
+      <BackgroundGradient className="rounded-[22px] sm:p-1">
+        <div className="bg-stone-950 rounded-[17px]">
           <div
             className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
-            style={{ paddingTop: 10, paddingLeft: 5, paddingRight: 5 }}
+            style={{ paddingTop: 10, paddingLeft: 10 }}
           >
-            {title}
+            {node?.title}
           </div>
-
-          <div
-            className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-            style={{ padding: 10, color: "gray" }}
-          >
-            {description}
+          <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+            <div
+              className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
+              style={{
+                padding: 10,
+                paddingBottom: 10,
+                color: "rgb(87 83 78)",
+              }}
+            >
+              {node?.description}
+            </div>
           </div>
         </div>
       </BackgroundGradient>
       <Spacer x={40} />
-      <div id={id.toString()}>
-        <span>edit</span>
-      </div>
-    </a>
+      <div id={node?.id.toString()} />
+    </div>
   );
-};
+});
 
 export default Card;

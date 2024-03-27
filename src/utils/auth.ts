@@ -1,16 +1,25 @@
 import { web3auth } from "@/utils/web3Auth";
 import { ADAPTER_EVENTS, IProvider } from "@web3auth/base";
 
-export const initWeb3Auth = async () => {
-  console.log("web3auth.connected", web3auth.connected);
+export const initWeb3Auth = async (router: any, toast: any) => {
   if (!web3auth.connected) {
-    await web3auth.initModal();
+    try {
+      await web3auth.initModal();
+    } catch (error) {
+      router.push("/");
+      toast({
+        variant: "destructive",
+        title: "Authorization failed ",
+        description:
+          "Your login attempt was unsuccessful. Please log in again.",
+      });
+    }
   }
 };
 
 export const authenticateUser = async () => {
   const info = await web3auth.getUserInfo();
-  console.log("info", info);
+
   const app_scoped_key = await web3auth.provider?.request({
     method: "eth_private_key", // use "private_key" for other non-evm chains
   });

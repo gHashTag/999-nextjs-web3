@@ -41,11 +41,11 @@
 }
 
 .header {
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--sidebar);
-  border-bottom: 1px solid var(--accents-7);
+  background: var(--background);
   height: var(--header-height);
   z-index: 2;
 }
@@ -115,4 +115,14 @@
 .logo {
   display: flex;
   width: 40px;
+}
+
+.menu {
+  margin-right: 80px;
+}
+
+@media screen and (max-width: 600px) {
+  .menu {
+    display: none; /* Скрыть элементы на экранах с шириной до 768px */
+  }
 }

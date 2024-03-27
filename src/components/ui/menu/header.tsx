@@ -17,7 +17,7 @@ import useDeviceDetect from "@/hooks/useDeviceDetect";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { web3auth } from "@/utils/web3Auth";
 import { ADAPTER_EVENTS } from "@web3auth/base";
-import { login } from "@/utils/auth";
+
 // import { getPublicCompressed } from '@toruslabs/eccrypto'
 
 export default function Header() {
@@ -79,7 +79,7 @@ export default function Header() {
           </Link>
         </NavbarItem>
       </NavbarContent>
-      <NavbarContent justify="end">
+      {/* <NavbarContent justify="end">
         {!loggedIn && (
           <>
             <NavbarItem className="hidden lg:flex">
@@ -92,7 +92,7 @@ export default function Header() {
             </NavbarItem>
           </>
         )}
-      </NavbarContent>
+      </NavbarContent> */}
     </Navbar>
   );
 }

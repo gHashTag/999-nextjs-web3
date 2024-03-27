@@ -38,7 +38,8 @@ const NavigationMenuDemo = () => {
       <NavigationMenu.List className="NavigationMenuList">
         <NavigationMenu.Item>
           <NavigationMenu.Trigger className="NavigationMenuTrigger">
-            Create meet <CaretDownIcon className="CaretDown" aria-hidden />
+            Create meet
+            <CaretDownIcon className="CaretDown" aria-hidden />
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className="NavigationMenuContent">
             <ul className="List two">

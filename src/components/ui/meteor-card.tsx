@@ -1,17 +1,23 @@
 import React from "react";
 import { Meteors } from "./meteors";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { RecordingAsset } from "@/types";
 
-interface MeteorsCardProps {
-  title: string;
-}
-
-export function MeteorsCard({ title }: MeteorsCardProps) {
+export function MeteorsCard({
+  asset,
+  onClick,
+}: {
+  asset: RecordingAsset;
+  onClick: () => void;
+}) {
   return (
     <div
-      className=""
+      onClick={onClick}
+      className="cursor-pointer transition duration-300 ease-in-out"
       style={{
-        maxWidth: "calc(100% / 4)",
+        maxWidth: "calc(100% / 6)",
+        height: "100px",
+        maxHeight: "100px",
         paddingLeft: 20,
         paddingRight: 20,
         marginBottom: 50,
@@ -20,9 +26,12 @@ export function MeteorsCard({ title }: MeteorsCardProps) {
       <BackgroundGradient>
         <div>
           {/* <div className="absolute inset-0 h-full w-full transform scale-[0.80] rounded-full blur-2xl" /> */}
-          <div className="relative px-5 py-5 h-full rounded-2xl flex">
+          <div
+            className="relative px-5 py-5 h-full rounded-2xl flex rounded-[22px]"
+            style={{ backgroundColor: "#0c0a09" }}
+          >
             <h1
-              className="font-bold text-4xl text-white mb-4 relative z-50"
+              className="font-bold text-3xl text-white mb-4 relative z-50"
               style={{
                 display: "-webkit-box",
                 WebkitLineClamp: 6,
@@ -31,9 +40,9 @@ export function MeteorsCard({ title }: MeteorsCardProps) {
                 textOverflow: "ellipsis",
               }}
             >
-              {title}
+              {asset.summary_short}
             </h1>
-            <Meteors number={10} />
+            {/* <Meteors number={10} /> */}
           </div>
         </div>
       </BackgroundGradient>

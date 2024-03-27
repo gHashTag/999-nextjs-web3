@@ -13,61 +13,98 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import Link from 'next/link'
-import cn from 'classnames'
-import { useRouter } from 'next/router'
-import { SkipNavContent } from '@reach/skip-nav'
-import { NAVIGATION } from '@lib/constants'
-import styles from './layout.module.css'
-import Logo from './icons/icon-logo'
-import MobileMenu from './mobile-menu'
-import Footer from './footer'
-import React from 'react'
-import DemoButton from './hms/demo-cta'
-import RoomCta from './hms/demo-cta/room-cta'
-import { hmsConfig } from './hms/config'
-import ViewSource from './view-source'
+"use client";
+import Link from "next/link";
+import cn from "classnames";
+import { useRouter } from "next/router";
+import { SkipNavContent } from "@reach/skip-nav";
+import { NAVIGATION } from "@lib/constants";
+import styles from "./layout.module.css";
+import Logo from "./icons/icon-logo";
+import MobileMenu from "./mobile-menu";
+import Footer from "./footer";
+import React from "react";
+import DemoButton from "./hms/demo-cta";
+import RoomCta from "./hms/demo-cta/room-cta";
+import { hmsConfig } from "./hms/config";
+import ViewSource from "./view-source";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import { useReactiveVar } from "@apollo/client";
+import { visibleHeaderVar } from "@/apollo/reactive-store";
+import { usePathname } from "next/navigation";
 
 type Props = {
-  children: React.ReactNode
-  className?: string
-  hideNav?: boolean
-  layoutStyles?: any
-  isLive?: boolean
-}
+  children: React.ReactNode;
+  className?: string;
+  hideNav?: boolean;
+  layoutStyles?: any;
+  isLive?: boolean;
+};
 
-export default function Layout({ children, className, hideNav, layoutStyles, isLive = false }: Props) {
-  const router = useRouter()
-  const activeRoute = router.asPath
-  const disableCta = ['/schedule', '/speakers', '/expo', '/jobs']
+export default function Layout({
+  children,
+  className,
+  hideNav,
+  layoutStyles,
+  isLive = false,
+}: Props) {
+  const router = useRouter();
+
+  const visibleHeader = useReactiveVar(visibleHeaderVar);
+
+  const activeRoute = router.asPath;
+  const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];
   return (
     <>
       <div className={styles.background}>
         {!hideNav && (
           <header className={cn(styles.header)}>
-            <div className={styles['header-logos']}>
+            <div className={styles["header-logos"]}>
               <MobileMenu key={router.asPath} />
               <Link href="/" className={styles.logo}>
                 <Logo />
               </Link>
             </div>
-            <div className={styles.tabs}>
-              {NAVIGATION.map(({ name, route }) => (
-                <Link
-                  key={name}
-                  href={route}
-                  className={cn(styles.tab, {
-                    [styles['tab-active']]: activeRoute.startsWith(route)
-                  })}
-                >
-                  {name}
-                </Link>
-              ))}
+            <div className={styles.menu}>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {NAVIGATION.map(({ name, route }) => (
+                    <NavigationMenuItem key={name}>
+                      {visibleHeader && (
+                        <Link
+                          href={{
+                            pathname: `/workspaceSlug${route}`,
+                          }}
+                          legacyBehavior
+                          passHref
+                        >
+                          <NavigationMenuLink
+                            className={navigationMenuTriggerStyle()}
+                          >
+                            {name.toUpperCase()}
+                          </NavigationMenuLink>
+                        </Link>
+                      )}
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
 
-            {(hmsConfig.hmsIntegration && isLive && !disableCta.includes(activeRoute)) || activeRoute === '/' ? (
-              <div className={cn(styles['header-right'])}>{activeRoute === '/' ? <DemoButton /> : <RoomCta />}</div>
+            {(hmsConfig.hmsIntegration &&
+              isLive &&
+              !disableCta.includes(activeRoute)) ||
+            activeRoute === "/" ? (
+              <div className={cn(styles["header-right"])}>
+                {activeRoute === "/" ? <DemoButton /> : <RoomCta />}
+              </div>
             ) : (
               <div />
             )}
@@ -79,9 +116,9 @@ export default function Layout({ children, className, hideNav, layoutStyles, isL
             <SkipNavContent />
             <div className={cn(styles.full, className)}>{children}</div>
           </main>
-          {!activeRoute.startsWith('/stage') && <Footer />}
+          {!activeRoute.startsWith("/stage") && <Footer />}
         </div>
       </div>
     </>
-  )
+  );
 }

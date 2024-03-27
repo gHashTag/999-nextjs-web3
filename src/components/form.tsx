@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import cn from "classnames";
-
 import { useRouter } from "next/router";
-
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import LoadingDots from "./loading-dots";
 import styleUtils from "./utils.module.css";
 import styles from "./form.module.css";
 import useEmailQueryParam from "@lib/hooks/use-email-query-param";
+import { useReactiveVar } from "@apollo/client";
+import {
+  openWeb3ModalVar,
+  setInviteCode,
+  setUserId,
+  visibleSignInVar,
+} from "@/apollo/reactive-store";
 
 import Captcha, { useCaptcha } from "./captcha";
 
-import { checkUsername } from "@/hooks/useWeb3Auth";
+import { useSupabase } from "@/hooks/useSupabase";
 
 type FormState = "default" | "loading" | "error";
 
@@ -35,7 +42,12 @@ type Props = {
 };
 
 export default function Form({ sharePage }: Props) {
-  const [inviteCode, setInviteCode] = useState("");
+  const { toast } = useToast();
+
+  const visible = useReactiveVar(visibleSignInVar);
+  const workspaceSlug = useReactiveVar(setUserId);
+  const inviteCode = useReactiveVar(setInviteCode);
+
   const [errorMsg, setErrorMsg] = useState("");
   const [errorTryAgain, setErrorTryAgain] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -48,19 +60,39 @@ export default function Form({ sharePage }: Props) {
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
 
+  const { checkUsername } = useSupabase();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (workspaceSlug) {
+      router.push(`/${workspaceSlug}/wallet`);
+    }
+    if (inputRef.current) {
+      (inputRef.current as any)?.focus();
+    }
+  }, []);
+
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
-      const userId = await checkUsername(inviteCode);
-
-      if (userId) {
-        router.push({
-          pathname: "/wallet",
-          query: { inviteCode: inviteCode },
-        });
+      // console.log(inviteCode, "inviteCode");
+      const isInviterExist = await checkUsername(inviteCode);
+      // console.log(isInviterExist, "isInviterExist");
+      if (isInviterExist) {
+        visibleSignInVar(true);
+        // toast({
+        //   title: "Success",
+        //   description: "Welcome to Kingdom 999!!! Click Sing In to enter",
+        // });
       } else {
         setErrorMsg("Invite code not correct");
         setFormState("error");
-        setTimeout(() => setFormState("default"), 3000);
+        setTimeout(() => setFormState("default"), 2000);
+        toast({
+          variant: "destructive",
+          title: "Closed access",
+          description:
+            "This content is available to registered users only. Enter the invite code to access it.",
+        });
         return;
       }
     }
@@ -109,60 +141,65 @@ export default function Form({ sharePage }: Props) {
           <div className={cn(styles.input, styles["input-text"])}>
             {errorMsg}
           </div>
-          <button
+          <Button
             type="button"
             className={cn(styles.submit, styles.register, styles.error)}
             onClick={onTryAgainClick}
           >
             Try Again
-          </button>
+          </Button>
         </div>
       </div>
     </div>
   ) : (
-    <form
-      className={cn(styles.form, {
-        [styles["share-page"]]: sharePage,
-        [styleUtils.appear]: !errorTryAgain,
-        [styleUtils["appear-fifth"]]: !errorTryAgain && !sharePage,
-        [styleUtils["appear-third"]]: !errorTryAgain && sharePage,
-      })}
-      onSubmit={onSubmit}
-    >
-      <div className={styles["form-row"]}>
-        <label
-          htmlFor="email-input-field"
-          className={cn(styles["input-label"], {
-            [styles.focused]: focused,
+    <>
+      {!visible ? (
+        <form
+          className={cn(styles.form, {
+            [styles["share-page"]]: sharePage,
+            [styleUtils.appear]: !errorTryAgain,
+            [styleUtils["appear-fifth"]]: !errorTryAgain && !sharePage,
+            [styleUtils["appear-third"]]: !errorTryAgain && sharePage,
           })}
+          onSubmit={onSubmit}
         >
-          <input
-            className={styles.input}
-            autoComplete="off"
-            type="text"
-            id="email-input-field"
-            value={inviteCode}
-            onChange={(e) => setInviteCode(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            placeholder="Enter invite code to register"
-            aria-label="Your invite code address"
-            required
-          />
-        </label>
-        <button
-          type="submit"
-          className={cn(styles.submit, styles.register, styles[formState])}
-          disabled={formState === "loading"}
-        >
-          {formState === "loading" ? (
-            <LoadingDots size={4} />
-          ) : (
-            <p className={styles["register-text"]}>Register</p>
-          )}
-        </button>
-      </div>
-      <Captcha ref={captchaRef} onVerify={handleRegister} />
-    </form>
+          <div className={styles["form-row"]}>
+            <label
+              htmlFor="email-input-field"
+              className={cn(styles["input-label"], {
+                [styles.focused]: focused,
+              })}
+            >
+              <input
+                ref={inputRef}
+                className={styles.input}
+                autoComplete="off"
+                type="text"
+                id="email-input-field"
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                placeholder="Enter invite code"
+                aria-label="Your invite code address"
+                required
+              />
+            </label>
+            <Button
+              type="submit"
+              className={cn(styles.submit, styles.register, styles[formState])}
+              disabled={formState === "loading"}
+            >
+              {formState === "loading" ? (
+                <LoadingDots size={4} />
+              ) : (
+                <p className={styles["register-text"]}>Register</p>
+              )}
+            </Button>
+          </div>
+          <Captcha ref={captchaRef} onVerify={handleRegister} />
+        </form>
+      ) : null}
+    </>
   );
 }

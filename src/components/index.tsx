@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
-import { PageState, ConfDataContext, UserData } from '@lib/hooks/use-conf-data';
-import Ticket from './ticket';
-import Layout from './layout';
-import ConfContainer from './conf-container';
-import Hero from './hero';
-import Form from './form';
-import LearnMore from './learn-more';
+import { useEffect, useState } from "react";
+import { PageState, ConfDataContext, UserData } from "@lib/hooks/use-conf-data";
+import Ticket from "./ticket";
+import Layout from "./layout";
+import ConfContainer from "./conf-container";
+import Hero from "./hero";
+import Form from "./form";
+import LearnMore from "./learn-more";
+import { useReactiveVar } from "@apollo/client";
+import { setLoggedIn, visibleHeaderVar } from "@/apollo/reactive-store";
+import { Globe } from "./ui/globe";
 
 type Props = {
   defaultUserData: UserData;
@@ -32,26 +35,37 @@ type Props = {
 export default function Conf({
   defaultUserData,
   sharePage,
-  defaultPageState = 'registration'
+  defaultPageState = "registration",
 }: Props) {
   const [userData, setUserData] = useState<UserData>(defaultUserData);
   const [pageState, setPageState] = useState<PageState>(defaultPageState);
+  const loggedIn = useReactiveVar(setLoggedIn);
+
+  useEffect(() => {
+    if (!loggedIn) {
+      visibleHeaderVar(false);
+    }
+  }, []);
 
   return (
     <ConfDataContext.Provider
       value={{
         userData,
         setUserData,
-        setPageState
+        setPageState,
       }}
     >
       <Layout>
         <ConfContainer>
-          {pageState === 'registration' && !sharePage ? (
+          {pageState === "registration" && !sharePage ? (
             <>
-              <Hero />
-              <Form />
-              <LearnMore />
+              {loggedIn ? (
+                <Globe />
+              ) : (
+                <>
+                  <Hero /> <Form /> <LearnMore />
+                </>
+              )}
             </>
           ) : (
             <Ticket

@@ -5,11 +5,15 @@ import Button from "../Button";
 import LinkButton from "../LinkButton";
 
 import IconLogo from "@/components/icons/icon-logo";
+import { useSupabase } from "@/hooks/useSupabase";
+import { openWeb3ModalVar, openIntroModalVar } from "@/apollo/reactive-store";
+import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { useToast } from "@/components/ui/use-toast";
 
 const data = [
   {
     name: "DAO",
-    roleName: "dao",
+    roleName: "DAO",
     role: "backstage",
     desc: ` This role is for DAO (Decentralized Autonomous Organizations) organizers. The role has full control and can add or remove members, invite them to the team, remove them from the team, and perform other administrative functions.`,
   },
@@ -21,7 +25,7 @@ const data = [
   // },
   {
     name: "Member",
-    roleName: "member",
+    roleName: "Member",
     role: "viewer",
     desc: `This is the most basic role: he can see and hear everything that happens in his DAO, cannot share his audio and video, and can also leave messages in the public chat section.`,
   },
@@ -29,12 +33,34 @@ const data = [
 
 const DemoModal = () => {
   const [stage, setStage] = React.useState(``);
+  const { login } = useWeb3Auth();
+  const { toast } = useToast();
+
   const router = useRouter();
   React.useEffect(() => {
     if (router.query.slug) {
       setStage(router.query.slug as string);
     }
   }, [router]);
+
+  const handlerCreateUser = async () => {
+    openWeb3ModalVar(true);
+    openIntroModalVar(false);
+    const loggedIn = await login();
+    if (loggedIn) {
+      toast({
+        title: "Success",
+        description: "Welcome to 999 kingdom!!!",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Create user error",
+        description:
+          "An error occurred while trying to create a new user. Please try again or contact your system administrator for assistance.",
+      });
+    }
+  };
   return (
     <div className="font-sans">
       <p className="text-[32px] font-semibold my-0">
@@ -58,14 +84,15 @@ const DemoModal = () => {
               <p className="text-gray-300 text-xs">{m.desc}</p>
             </div>
             <div className="flex items-center space-x-6">
-              <CopyButton
+              {/* <CopyButton
                 text={`${window.location.host}/stage/${stage || "a"}?role=${
                   m.role
                 }`}
-              />
+              /> */}
               <LinkButton
                 className="w-[200px] bg-yellow-300"
-                href={`/stage/${stage || "a"}?role=${m.role}`}
+                onClick={handlerCreateUser}
+                // href={`${workspaceSlug}/wallet`}
               >
                 Join as {m.name} <ArrowRightIcon height={20} color="black" />
               </LinkButton>
@@ -78,7 +105,7 @@ const DemoModal = () => {
           <IconLogo
             width="50"
             height="50"
-            backgroundColor="var(--accents-1)"
+            backgroundColor="var(--brand)"
             foregroundColor="black"
           />
           dao999nft
