@@ -6,7 +6,7 @@ import { AudioLevelIcon } from "@100mslive/react-icons";
 import Button from "./Button";
 import { useDevices, DeviceType } from "./lib/useDevices";
 
-const SettingDialog: React.FC = ({ children }) => {
+const SettingDialog = ({ children }: { children: React.ReactNode }) => {
   const { allDevices, selectedDeviceIDs, updateDevice, isAllowedToPublish } =
     useDevices();
   const videoInput = allDevices["videoInput"] || [];
