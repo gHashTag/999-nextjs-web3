@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useAccount, useDisconnect } from "wagmi";
 
-import { cn, extractProjectName } from "../@helpers/utils";
+import { cn, extractProjectName } from "@helpers/utils";
 import DomainInputStrip from "./DomainInputStrip";
 import KeyStrip from "./KeyStrip";
 
