@@ -6,11 +6,14 @@ const Spinner = () => (
     style={{
       display: "flex",
       justifyContent: "center",
+      height: "100vh",
       alignItems: "center",
-      height: "70vh",
+      backgroundColor: "#000000",
     }}
   >
-    <LoadingSpinner size="lg" />
+    <div style={{ top: 300 }}>
+      <LoadingSpinner size="lg" />
+    </div>
   </div>
 );
 

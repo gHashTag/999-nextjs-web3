@@ -36,6 +36,7 @@ import { useToast } from "@/components/ui/use-toast";
 // import apolloClient from "@/apollo/apollo-client";
 import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 import { setContext } from "@apollo/client/link/context";
+import { Spinner } from "@/components/ui/spinner";
 
 // const huddleClient = new HuddleClient({
 //   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
@@ -193,7 +194,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   if (!client) {
-    return <h2>Initializing app...</h2>;
+    return <Spinner />;
   }
 
   return (
@@ -209,9 +210,10 @@ export default function App({ Component, pageProps }: AppProps) {
                 enableSystem
                 disableTransitionOnChange
               >
+                <BackgroundBeams />
                 <HMSRoomProvider>
-                  {/* <BackgroundBeams /> */}
                   <Component {...pageProps} />
+
                   <ResizeHandler />
                   <NProgress />
                   <Toaster />

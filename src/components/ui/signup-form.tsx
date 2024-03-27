@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/utils/cn";
@@ -29,7 +29,15 @@ export function SignupFormDemo({
     watch,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      first_name: first_name,
+      last_name: last_name,
+      designation: designation,
+      position: position,
+      company: company,
+    },
+  });
   const watchedDesignation = watch("designation", designation);
   const watchedFirstName = watch("first_name", first_name);
   const watchedLastName = watch("last_name", last_name);
@@ -39,9 +47,9 @@ export function SignupFormDemo({
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    const subscription = watch((value, { name, type }) =>
-      console.log(value, name, type)
-    );
+    const subscription = watch((value, { name, type }) => {
+      console.log("Watch update:", value, name, type);
+    });
     return () => subscription.unsubscribe();
   }, [watch]);
 
@@ -52,7 +60,7 @@ export function SignupFormDemo({
   };
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-transparent dark:bg-transparent">
+    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-transparent dark:bg-transparent">
       <form className="my-8" onSubmit={handleSubmit(onSubmitDesctination)}>
         {isEdit ? (
           <>
@@ -118,18 +126,24 @@ export function SignupFormDemo({
             </button>
           </>
         ) : (
-          <>
-            <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
+          <div className="ounded-md border border-input bg-transparent px-6 py-6 rounded-md">
+            <h2 className="font-bold text-3xl text-neutral-800 dark:text-neutral-200">
               {first_name} {last_name}
             </h2>
-            <p className="text-neutral-600 text-sm max-w-full mt-2 dark:text-neutral-300">
+            <p className="text-neutral-600 text-xl max-w-full mt-2 dark:text-yellow-300">
               {company}
             </p>
-            <p className="text-neutral-600 text-sm max-w-full mt-2 dark:text-neutral-300">
+            <p className="text-neutral-600 text-xl max-w-full mt-2 dark:text-cyan-300">
               {position}
             </p>
-            <p className="text-neutral-600 text-sm max-w-full mt-2 dark:text-neutral-300">
-              {designation}
+
+            <p className="text-neutral-600 text-md max-w-full mt-2 dark:text-neutral-300">
+              {designation.split("\n").map((line, index) => (
+                <Fragment key={index}>
+                  {line}
+                  <br />
+                </Fragment>
+              ))}
             </p>
             <div style={{ padding: "15px" }} />
             <button
@@ -149,7 +163,7 @@ export function SignupFormDemo({
               Logout
               <BottomGradient />
             </button>
-          </>
+          </div>
         )}
       </form>
     </div>
