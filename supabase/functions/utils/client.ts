@@ -1,13 +1,15 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 export const client = () => {
-  const ANON_KEY_SUPABASE = Deno.env.get("ANON_KEY_SUPABASE");
+  const NEXT_PUBLIC_SUPABASE_ANON_KEY = Deno.env.get(
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  );
 
-  const URL_SUPABASE = Deno.env.get("URL_SUPABASE");
+  const NEXT_PUBLIC_SUPABASE_URL = Deno.env.get("NEXT_PUBLIC_SUPABASE_URL");
 
   const supabaseClient = createClient(
-    URL_SUPABASE ?? "",
-    ANON_KEY_SUPABASE ??
+    NEXT_PUBLIC_SUPABASE_URL ?? "",
+    NEXT_PUBLIC_SUPABASE_ANON_KEY ??
       "",
   );
   // console.log("supabaseClient", supabaseClient);
