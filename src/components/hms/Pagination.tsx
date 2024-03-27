@@ -1,13 +1,10 @@
-import { TrackWithPeer } from "@100mslive/react-sdk/dist/utils/layout";
+// import { TrackWithPeer } from "@100mslive/react-sdk/dist/utils/layout";
 import React from "react";
 
 interface Props {
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  list: (TrackWithPeer & {
-    width: number;
-    height: number;
-  })[][];
+  list: any;
 }
 
 const Pagination: React.FC<Props> = ({ list, page, setPage }) => {
