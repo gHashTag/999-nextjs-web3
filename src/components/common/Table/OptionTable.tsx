@@ -1,4 +1,4 @@
-import { cn } from "../../@helpers/utils";
+import { cn } from "../@helpers/utils";
 import styles from "./style.module.css";
 
 export default function OptionTable({

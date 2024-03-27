@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useAccount, useDisconnect } from "wagmi";
 
-import { cn, extractProjectName, isValidEmail } from "../@helpers/utils";
+import { cn, extractProjectName, isValidEmail } from "@helpers/utils";
 
 interface props {
   apiKey: string;

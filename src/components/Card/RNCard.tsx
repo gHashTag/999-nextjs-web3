@@ -2,7 +2,7 @@ import React from "react";
 
 import StackIcons from "@components/assets/StackIcons";
 
-import { cn } from "../@helpers/utils";
+import { cn } from "@helpers/utils";
 import Link from "next/link";
 
 interface Props {

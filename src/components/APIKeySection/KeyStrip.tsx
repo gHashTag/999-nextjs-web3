@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import CommonIcons from "@components/assets/CommonIcons";
 import { useAccount } from "wagmi";
 
-import { cn } from "../@helpers/utils";
+import { cn } from "@helpers/utils";
 
 interface Props {
   text: string;

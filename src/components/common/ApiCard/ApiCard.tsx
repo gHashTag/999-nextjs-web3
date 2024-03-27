@@ -1,6 +1,6 @@
 import * as Tabs from "@radix-ui/react-tabs";
 
-import { cn } from "../../@helpers/utils";
+import { cn } from "../@helpers/utils";
 import Pill from "../Pill/Pill";
 
 //* Wrapper
