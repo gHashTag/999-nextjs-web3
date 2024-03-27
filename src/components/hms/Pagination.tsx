@@ -1,24 +1,24 @@
-import { TrackWithPeer } from '@100mslive/react-sdk/dist/utils/layout'
-import React from 'react'
+import { TrackWithPeer } from "@100mslive/react-sdk/dist/utils/layout";
+import React from "react";
 
 interface Props {
-  page: number
-  setPage: React.Dispatch<React.SetStateAction<number>>
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
   list: (TrackWithPeer & {
-    width: number
-    height: number
-  })[][]
+    width: number;
+    height: number;
+  })[][];
 }
 
 const Pagination: React.FC<Props> = ({ list, page, setPage }) => {
-  const disableLeft = list.length - page === list.length
-  const disableRight = list.length - page === 1
+  const disableLeft = list.length - page === list.length;
+  const disableRight = list.length - page === 1;
   const nextPage = () => {
-    setPage(Math.min(page + 1, list.length - 1))
-  }
+    setPage(Math.min(page + 1, list.length - 1));
+  };
   const prevPage = () => {
-    setPage(Math.max(page - 1, 0))
-  }
+    setPage(Math.max(page - 1, 0));
+  };
   return (
     <div
       className={`flex items-center space-x-2 absolute -bottom-16 right-10 z-20 border-solid border-gray-700 border px-1 py-2 rounded-3xl`}
@@ -28,7 +28,10 @@ const Pagination: React.FC<Props> = ({ list, page, setPage }) => {
       </button>
       {list.map((_, i: number) => (
         <div
-          className={`w-[6px] h-[6px] rounded-full cursor-pointer ${i === page ? 'bg-gray-200' : 'bg-gray-500'}`}
+          key={i}
+          className={`w-[6px] h-[6px] rounded-full cursor-pointer ${
+            i === page ? "bg-gray-200" : "bg-gray-500"
+          }`}
           onClick={() => setPage(i)}
         />
       ))}
@@ -36,10 +39,10 @@ const Pagination: React.FC<Props> = ({ list, page, setPage }) => {
         <ChevronRight />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default Pagination
+export default Pagination;
 
 const ChevronLeft = () => (
   <svg
@@ -56,7 +59,7 @@ const ChevronLeft = () => (
   >
     <path d="M15 18l-6-6 6-6" />
   </svg>
-)
+);
 
 const ChevronRight = () => (
   <svg
@@ -74,4 +77,4 @@ const ChevronRight = () => (
   >
     <path d="M9 18l6-6-6-6" />
   </svg>
-)
+);

@@ -1,22 +1,25 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useRef, useState } from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
-import { CrossIcon } from '@100mslive/react-icons'
-import Select from './select'
-import { AudioLevelIcon } from '@100mslive/react-icons'
-import Button from './Button'
-import { useDevices, DeviceType } from './lib/useDevices'
+import React, { useEffect, useRef, useState } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { CrossIcon } from "@100mslive/react-icons";
+import Select from "./select";
+import { AudioLevelIcon } from "@100mslive/react-icons";
+import Button from "./Button";
+import { useDevices, DeviceType } from "./lib/useDevices";
 
 const SettingDialog: React.FC = ({ children }) => {
-  const { allDevices, selectedDeviceIDs, updateDevice, isAllowedToPublish } = useDevices()
-  const videoInput = allDevices['videoInput'] || []
-  const audioInput = allDevices['audioInput'] || []
-  const audioOutput = allDevices['audioOutput'] || []
-  const textClass = `text-gray-200`
-  const wrapperClass = `flex md:flex-row flex-col md:items-center md:justify-between my-6`
+  const { allDevices, selectedDeviceIDs, updateDevice, isAllowedToPublish } =
+    useDevices();
+  const videoInput = allDevices["videoInput"] || [];
+  const audioInput = allDevices["audioInput"] || [];
+  const audioOutput = allDevices["audioOutput"] || [];
+  const textClass = `text-gray-200`;
+  const wrapperClass = `flex md:flex-row flex-col md:items-center md:justify-between my-6`;
   return (
     <Dialog.Root>
-      <Dialog.Overlay className="fixed inset-0" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} />
+      <Dialog.Overlay
+        className="fixed inset-0"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      />
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Content className="dialog-content dialog-animation  bg-gray-700 md:w-[520px] rounded-2xl w-[90%] ">
         <div className="w-full flex items-center justify-between">
@@ -28,7 +31,9 @@ const SettingDialog: React.FC = ({ children }) => {
           </Dialog.Close>
         </div>
         {isAllowedToPublish.audio && isAllowedToPublish.video ? (
-          <p className="my-0 text-gray-300 text-sm">Control your audio, video source from here</p>
+          <p className="my-0 text-gray-300 text-sm">
+            Control your audio, video source from here
+          </p>
         ) : null}
         {videoInput.length > 0 && isAllowedToPublish.video ? (
           <div className={wrapperClass}>
@@ -37,7 +42,7 @@ const SettingDialog: React.FC = ({ children }) => {
               onChange={(e) =>
                 updateDevice({
                   deviceId: e.target.value,
-                  deviceType: DeviceType.videoInput
+                  deviceType: DeviceType.videoInput,
                 })
               }
               value={selectedDeviceIDs.videoInput}
@@ -57,7 +62,7 @@ const SettingDialog: React.FC = ({ children }) => {
               onChange={(e) =>
                 updateDevice({
                   deviceId: e.target.value,
-                  deviceType: DeviceType.audioInput
+                  deviceType: DeviceType.audioInput,
                 })
               }
               value={selectedDeviceIDs.audioInput}
@@ -77,7 +82,7 @@ const SettingDialog: React.FC = ({ children }) => {
               onChange={(e) =>
                 updateDevice({
                   deviceId: e.target.value,
-                  deviceType: DeviceType.audioOutput
+                  deviceType: DeviceType.audioOutput,
                 })
               }
               value={selectedDeviceIDs.audioOutput}
@@ -91,34 +96,38 @@ const SettingDialog: React.FC = ({ children }) => {
           </div>
         ) : null}
         <div className="flex justify-end">
-          <TestAudio id={selectedDeviceIDs.audioOutput || ''} />
+          <TestAudio id={selectedDeviceIDs.audioOutput || ""} />
         </div>
       </Dialog.Content>
     </Dialog.Root>
-  )
-}
+  );
+};
 
-export default SettingDialog
+export default SettingDialog;
 
-const TEST_AUDIO_URL = 'https://100ms.live/test-audio.wav'
+const TEST_AUDIO_URL = "https://100ms.live/test-audio.wav";
 
 export const TestAudio: React.FC<{ id: string }> = ({ id }) => {
-  const audioRef = useRef<HTMLAudioElement>(null)
-  const [playing, setPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
   useEffect(() => {
     if (audioRef.current && id) {
       try {
         // @ts-ignore
-        audioRef.current.setSinkId(id)
+        audioRef.current.setSinkId(id);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audioRef.current, id])
+  }, [audioRef.current, id]);
   return (
     <>
-      <Button onClick={() => audioRef.current?.play()} disabled={playing} variant="secondary">
+      <Button
+        onClick={() => audioRef.current?.play()}
+        disabled={playing}
+        variant="secondary"
+      >
         <AudioLevelIcon className="mr-2" /> Play Audio Level Test
       </Button>
       <audio
@@ -128,5 +137,5 @@ export const TestAudio: React.FC<{ id: string }> = ({ id }) => {
         onPlay={() => setPlaying(true)}
       ></audio>
     </>
-  )
-}
+  );
+};

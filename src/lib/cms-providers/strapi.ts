@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /**
  * Copyright 2020 Vercel Inc.
  *
@@ -15,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Job, Sponsor, Stage, Speaker } from "@lib/types";
+import { Job, Speaker, Sponsor, Stage } from "@lib/types";
 
 const API_URL = `${process.env.STRAPI_API_URL}/graphql`;
 const IMAGE_API_URL = process.env.STRAPI_API_URL;
@@ -26,7 +24,7 @@ interface Image {
 
 async function fetchCmsAPI(
   query: string,
-  { variables }: { variables?: Record<string, any> } = {}
+  { variables }: { variables?: Record<string, any> } = {},
 ) {
   const res = await fetch(API_URL, {
     method: "POST",

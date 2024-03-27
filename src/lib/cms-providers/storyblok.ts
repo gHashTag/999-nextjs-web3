@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /**
  * Copyright 2020 Vercel Inc.
  *
@@ -15,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Job, Sponsor, Stage, Speaker } from "@lib/types";
+import { Job, Speaker, Sponsor, Stage } from "@lib/types";
 
 const API_URL = "https://gapi.storyblok.com/v1/api";
 const API_TOKEN = process.env.STORYBLOK_PREVIEW_TOKEN;
@@ -41,7 +39,7 @@ function transformResponse(response: any[], _speakers?: any) {
         item[key] = item[key].map((slot: { content: any; speaker: any }) => {
           slot = slot.content;
           const speakers = _speakers?.filter(
-            (speaker: any) => slot.speaker.indexOf(speaker.uuid) !== -1
+            (speaker: any) => slot.speaker.indexOf(speaker.uuid) !== -1,
           );
           slot.speaker = speakers;
           return slot;
@@ -55,7 +53,7 @@ function transformResponse(response: any[], _speakers?: any) {
 
 async function fetchCmsAPI(
   query: string,
-  { variables }: { variables?: Record<string, any> } = {}
+  { variables }: { variables?: Record<string, any> } = {},
 ) {
   const res = await fetch(API_URL, {
     method: "POST",

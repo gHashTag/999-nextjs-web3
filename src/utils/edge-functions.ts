@@ -1,28 +1,26 @@
-import { useReactiveVar } from "@apollo/client";
 import { supabase } from "./supabase";
-import { setUserSupabase } from "@/apollo/reactive-store";
 
-const getUserFromSupabase = async () => {
-  const userSupabase = useReactiveVar(setUserSupabase);
+// const getUserFromSupabase = async () => {
+//   const userSupabase = useReactiveVar(setUserSupabase);
 
-  try {
-    if (userSupabase) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", userSupabase.email);
+//   try {
+//     if (userSupabase) {
+//       const { data, error } = await supabase
+//         .from("users")
+//         .select("*")
+//         .eq("email", userSupabase.email);
 
-      if (error) {
-        console.error("error", error);
-        throw error;
-      }
+//       if (error) {
+//         console.error("error", error);
+//         throw error;
+//       }
 
-      return data;
-    }
-  } catch (error: any) {
-    throw error.response?.data ?? error;
-  }
-};
+//       return data;
+//     }
+//   } catch (error: any) {
+//     throw error.response?.data ?? error;
+//   }
+// };
 
 async function createRoom(name: string, type: string, room_id: string) {
   const url =

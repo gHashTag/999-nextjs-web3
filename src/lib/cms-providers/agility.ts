@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-var-requires */
 
 const agilityContentSync = require("@agility/content-sync");
-const agilityFileSystem = require("@agility/content-sync/src/store-interface-filesystem");
+const agilityFileSystem = require(
+  "@agility/content-sync/src/store-interface-filesystem",
+);
 
 import { Job, Speaker, Sponsor, Stage } from "../types";
 
@@ -202,9 +201,7 @@ export async function getAllJobs(): Promise<Job[]> {
     languageCode: agilityConfig.languageCode,
   });
 
-  jobs = jobs.sort((a: any, b: any) =>
-    a.fields.rank > b.fields.rank ? 1 : -1
-  );
+  jobs = jobs.sort((a: any, b: any) => a.fields.rank > b.fields.rank ? 1 : -1);
 
   await expandContentList({
     agility,
@@ -248,9 +245,10 @@ const getSyncClient = (context: any) => {
     return null;
   }
 
-  let cachePath = `node_modules/@agility/content-sync/cache/${
-    agilityConfig.guid
-  }/${isPreview ? "preview" : "live"}`;
+  let cachePath =
+    `node_modules/@agility/content-sync/cache/${agilityConfig.guid}/${
+      isPreview ? "preview" : "live"
+    }`;
 
   if (!isDevelopmentMode) {
     cachePath = `/tmp/agilitycache/${agilityConfig.guid}/${
@@ -371,10 +369,11 @@ const expandLinkedList = async ({
   }
 
   const referenceName = fieldObj.referencename;
-  if (!referenceName)
+  if (!referenceName) {
     throw Error(
-      `A referencename property was not found on the ${fieldName} value.`
+      `A referencename property was not found on the ${fieldName} value.`,
     );
+  }
 
   let listItems = await agility.getContentList({ referenceName, languageCode });
   if (listItems?.length > 0) {
@@ -389,7 +388,7 @@ const expandLinkedList = async ({
           const childContentID = parseInt(idStr);
 
           const childItemIndex = listItems.findIndex(
-            (item: { contentID: number }) => item.contentID === childContentID
+            (item: { contentID: number }) => item.contentID === childContentID,
           );
 
           if (childItemIndex >= 0) {

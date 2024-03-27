@@ -414,7 +414,7 @@ export default function WorldPage() {
           }}
           className="div"
         ></motion.div>
-        {/* <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40" /> */}
+
         <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
           <Globe data={sampleArcs} globeConfig={globeConfig} />
         </div>
@@ -428,11 +428,6 @@ export default function WorldPage() {
           </span>
         </p>
       </div>
-      {/* <div>
-        <Button onClick={logout} color="primary" variant="faded">
-          Log Out
-        </Button>
-      </div> */}
     </div>
   );
 }

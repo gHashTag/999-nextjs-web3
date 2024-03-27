@@ -561,7 +561,7 @@ function KanbanBoard() {
             boardData.map((value: BoardData) => {
               if (value.cards) {
                 return (
-                  <div>
+                  <div key={value.id}>
                     <text> </text>
                     <Column
                       key={value.id}

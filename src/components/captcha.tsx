@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-import type HCaptcha from '@hcaptcha/react-hcaptcha';
-import { IS_CAPTCHA_ENABLED } from '@lib/captcha';
+import type HCaptcha from "@hcaptcha/react-hcaptcha";
+import { IS_CAPTCHA_ENABLED } from "@lib/captcha";
 
-import { ComponentProps, Suspense, forwardRef, useCallback, useRef, lazy } from 'react';
+import {
+  ComponentProps,
+  Suspense,
+  forwardRef,
+  useCallback,
+  useRef,
+  lazy,
+} from "react";
 
-type Props = Omit<ComponentProps<typeof HCaptcha>, 'sitekey'>;
+type Props = Omit<ComponentProps<typeof HCaptcha>, "sitekey">;
 
-const LazyCaptcha = lazy(() => import('@hcaptcha/react-hcaptcha'));
+const LazyCaptcha = lazy(() => import("@hcaptcha/react-hcaptcha"));
 
 export function useCaptcha() {
   const ref = useRef<HCaptcha>(null);
@@ -48,5 +55,7 @@ const Captcha = forwardRef<HCaptcha, Props>((props, ref) => {
     </Suspense>
   );
 });
+
+Captcha.displayName = "Captcha";
 
 export default Captcha;
