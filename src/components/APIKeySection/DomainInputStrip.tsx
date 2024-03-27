@@ -25,7 +25,9 @@ const DomainInputStrip: React.FC<props> = ({
   setEmail,
 }) => {
   const { isConnected, address } = useAccount();
-  const [newProjectName, setNewProjectName] = useState<string>(projectName);
+  const [newProjectName, setNewProjectName] = useState<string>(
+    projectName || ""
+  );
   const [newEmail, setNewEmail] = useState<string>("");
 
   const { mutateAsync: addApiKey } = useMutation({
