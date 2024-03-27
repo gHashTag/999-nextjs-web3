@@ -316,6 +316,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18
     version: 18.2.22
+  '@types/validator':
+    specifier: ^13.11.9
+    version: 13.11.9
   autoprefixer:
     specifier: ^10.0.1
     version: 10.4.18(postcss@8.4.35)
@@ -10033,6 +10036,10 @@ packages:
   /@types/unist@3.0.2:
     resolution: {integrity: sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ==}
     dev: false
+
+  /@types/validator@13.11.9:
+    resolution: {integrity: sha512-FCTsikRozryfayPuiI46QzH3fnrOoctTjvOYZkho9BTFLCOZ2rgZJHMOVgCOfttjPJcgOx52EpkY0CMfy87MIw==}
+    dev: true
 
   /@types/webgl-ext@0.0.30:
     resolution: {integrity: sha512-LKVgNmBxN0BbljJrVUwkxwRYqzsAEPcZOe6S2T6ZaBDIrFp0qu4FNlpc5sM1tGbXUYFgdVQIoeLk1Y1UoblyEg==}
