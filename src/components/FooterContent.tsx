@@ -1,4 +1,4 @@
-import ExternalLinks from "@helpers/externalLinks";
+// import ExternalLinks from "@helpers/externalLinks";
 import FooterIcons from "./assets/FooterIcons";
 
 export type TSocialDataType = {
@@ -48,8 +48,12 @@ export const NavigationData: TNavigationType = {
 };
 
 export const SocialData: TSocialDataType[] = [
-  { id: 1, icon: twitter, link: ExternalLinks.twitterLink },
-  { id: 2, icon: insta, link: ExternalLinks.instaLink },
-  { id: 3, icon: linkedin, link: ExternalLinks.linkedinLink },
-  { id: 4, icon: youTube, link: ExternalLinks.ytLink },
+  { id: 1, icon: twitter, link: "https://twitter.com/huddle01com" },
+  { id: 2, icon: insta, link: "https://www.instagram.com/huddle01/" },
+  { id: 3, icon: linkedin, link: "https://www.linkedin.com/company/huddle01" },
+  {
+    id: 4,
+    icon: youTube,
+    link: "https://www.youtube.com/channel/UCCFOQO5aDK0xXam4cUQXT8g",
+  },
 ];
