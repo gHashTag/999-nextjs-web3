@@ -15,19 +15,23 @@ const Column = ({ id, title, cards, openModal }: ColumnProps) => {
   const { setNodeRef } = useDroppable({ id });
 
   return (
-    <SortableContext
-      id={id.toString()}
-      items={cards ? cards.map((card) => ({ id: card.node.id })) : []}
-      strategy={rectSortingStrategy}
+    <div
+      ref={setNodeRef}
+      style={{
+        minHeight: "100px",
+        minWidth: "200px",
+        width: "280px",
+        background: "transparent",
+        marginRight: "10px",
+        marginBottom: "80px",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      <div
-        ref={setNodeRef}
-        style={{
-          width: "280px",
-          background: "transparent",
-          marginRight: "10px",
-          marginBottom: "80px",
-        }}
+      <SortableContext
+        id={id}
+        items={cards ? cards.map((card) => ({ id: card.node.id })) : []}
+        strategy={rectSortingStrategy}
       >
         <p
           style={{
@@ -42,9 +46,10 @@ const Column = ({ id, title, cards, openModal }: ColumnProps) => {
           {title}
         </p>
 
-        {cards?.map((card) => (
-          <div key={card.node.id}>
+        {cards.length > 0 ? (
+          cards.map((card) => (
             <Card
+              key={card.node.id}
               node={{
                 id: card.node.id,
                 title: card.node.title,
@@ -52,10 +57,14 @@ const Column = ({ id, title, cards, openModal }: ColumnProps) => {
               }}
               onClick={() => openModal(card.node.id)}
             />
+          ))
+        ) : (
+          <div style={{ padding: "10px", minHeight: "20px" }}>
+            Перетащите задачи сюда
           </div>
-        ))}
-      </div>
-    </SortableContext>
+        )}
+      </SortableContext>
+    </div>
   );
 };
 

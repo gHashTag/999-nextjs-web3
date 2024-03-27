@@ -30,7 +30,7 @@ import { useSupabase } from "@/hooks/useSupabase";
 
 const TASKS_COLLECTION_QUERY = gql`
   query TasksCollection {
-    tasksCollection {
+    tasksCollection(orderBy: { updated_at: DescNullsLast }) {
       edges {
         node {
           id
@@ -163,10 +163,13 @@ function KanbanBoard() {
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
     useMutation(MUTATION_TASK_UPDATE);
 
-  // if (mutateUpdateTaskStatusError instanceof ApolloError) {
-  //   // Обработка ошибки ApolloError
-  //   console.log(mutateUpdateTaskStatusError.message);
-  // }
+  if (mutateUpdateTaskStatusError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(
+      "mutateUpdateTaskStatusError",
+      mutateUpdateTaskStatusError.message
+    );
+  }
 
   const [mutateCreateTask, { error: mutateCreateTaskError }] =
     useMutation(CREATE_TASK_MUTATION);
@@ -178,7 +181,8 @@ function KanbanBoard() {
   //   console.log(deleteTaskError.message);
   // }
   const { getTaskById } = useSupabase();
-  const [boardData, setBoardData] = useState<BoardData[]>([]);
+  // const [boardData, setBoardData] = useState<BoardData[]>([]);
+  const [columns, setColumns] = useState<BoardData[]>(data);
   const [isEditing, setIsEditing] = useState(false);
   const [card, setCard] = useState<Task>();
 
@@ -259,38 +263,35 @@ function KanbanBoard() {
   useEffect(() => {
     if (data) {
       const newData = transformTasksToBoardData(data.tasksCollection.edges);
-      setBoardData(newData);
+      setColumns(newData);
     }
   }, [data]);
 
   const findColumn = (unique: string | null) => {
-    if (!unique || !boardData) {
+    if (!unique) {
       return null;
     }
-
-    if (boardData.some((c) => String(c.id) === String(unique))) {
-      return boardData.find((c) => String(c.id) === String(unique)) ?? null;
+    // overの対象がcolumnの場合があるためそのままidを返す
+    if (columns.some((c) => c.id === unique)) {
+      return columns.find((c) => c.id === unique) ?? null;
     }
-
     const id = String(unique);
-    const itemWithColumnId = boardData.flatMap((card: BoardData) => {
-      const columnId = card.id;
-      return card.cards?.map((i: Task) => ({
-        itemId: i.node.id,
-        columnId: columnId,
-      }));
+    const itemWithColumnId = columns.flatMap((c) => {
+      const columnId = c.id;
+      return c.cards?.map((i) => ({ itemId: i.node.id, columnId: columnId }));
     });
-
-    const columnId = itemWithColumnId.find(
-      (i) => String(i?.itemId) === id
-    )?.columnId;
-    return boardData.find((c) => String(c.id) === String(columnId)) ?? null;
+    const columnId = itemWithColumnId.find((i) => i.itemId === id)?.columnId;
+    return columns.find((c) => c.id === columnId) ?? null;
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over, delta } = event;
-    const activeId = String(active.id);
-    const overId = over ? String(over.id) : null;
+
+    console.log(
+      `Перетаскиваемый элемент: ${active.id}, Над элементом: ${over?.id}`
+    );
+    const activeId = active.id;
+    const overId = over ? over.id : null;
     const activeColumn = findColumn(activeId);
 
     const overColumn = findColumn(overId);
@@ -299,17 +300,17 @@ function KanbanBoard() {
       return null;
     }
 
-    setBoardData((prevState: BoardData[]) => {
+    setColumns((prevState: BoardData[]) => {
       if (!prevState) {
         return [];
       }
       const activeItems = activeColumn.cards;
       const overItems = overColumn.cards;
       const activeIndex = activeItems
-        ? activeItems.findIndex((i) => String(i.node.id) === activeId)
+        ? activeItems.findIndex((i) => i.node.id === activeId)
         : -1;
       const overIndex = overItems
-        ? overItems.findIndex((i) => String(i.node.id) === overId)
+        ? overItems.findIndex((i) => i.node.id === overId)
         : -1;
 
       const newIndex = () => {
@@ -323,7 +324,7 @@ function KanbanBoard() {
       return prevState?.map((c) => {
         if (c.id === activeColumn.id) {
           c.cards = activeItems
-            ? activeItems.filter((i) => String(i.node.id) !== activeId)
+            ? activeItems.filter((i) => i.node.id !== activeId)
             : [];
           return c;
         } else if (c.id === overColumn.id) {
@@ -377,7 +378,7 @@ function KanbanBoard() {
       ? overColumn.cards.findIndex((i) => String(i.node.id) === overId)
       : -1;
     if (activeIndex !== overIndex) {
-      setBoardData((prevState) => {
+      setColumns((prevState) => {
         if (!prevState) {
           return [];
         }
@@ -493,8 +494,8 @@ function KanbanBoard() {
         onDragOver={handleDragOver}
       >
         <div className="grid grid-cols-1 md:grid-cols-5 gap-1">
-          {boardData &&
-            boardData.map((value: BoardData) => {
+          {columns &&
+            columns.map((value: BoardData) => {
               if (value.cards) {
                 return (
                   <Column
