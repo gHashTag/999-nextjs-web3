@@ -23,7 +23,7 @@ const Chat = () => {
   const localPeer = useHMSStore(selectLocalPeer);
   return (
     <>
-      <div id="chat-feed" className="h-full overflow-y-scroll p-4">
+      {/* <div id="chat-feed" className="h-full overflow-y-scroll p-4">
         {msgs.length > 0 ? (
           msgs.map((m) => (
             <div key={m.id} className="flex items-start w-full mb-5 relative">
@@ -88,7 +88,7 @@ const Chat = () => {
           type="text"
           placeholder="Send a message..."
         />
-      </form>
+      </form> */}
     </>
   );
 };

@@ -23,9 +23,9 @@ const LeaveDialog = () => {
         style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       />
       <Dialog.Trigger asChild>
-        <ControlButton text="Leave" className="leave" onClick={() => {}}>
+        {/* <ControlButton text="Leave" className="leave" onClick={() => {}}>
           <HangUpIcon />
-        </ControlButton>
+        </ControlButton> */}
       </Dialog.Trigger>
       <Dialog.Content className="dialog-content bg-gray-700 w-96 rounded-lg dialog-animation">
         <h3>Leave Stage?</h3>

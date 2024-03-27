@@ -25,7 +25,7 @@ const HooksTable: React.FC = () => {
                 i < 6 && "cursor-pointer underline"
               )}
               role="presentation"
-              onClick={() => (i < 6 ? push(item.old.url) : null)}
+              // onClick={() => (i < 6 ? push(item.old.url) : null)}
             >
               {item.old.one}
             </td>

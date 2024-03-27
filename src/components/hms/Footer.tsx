@@ -38,7 +38,7 @@ const Footer = () => {
       className="w-full hidden md:flex items-center justify-center space-x-5"
       style={{ height: "calc(var(--header-height) * 1.2)" }}
     >
-      {isAllowedToPublish.audio ? (
+      {/* {isAllowedToPublish.audio ? (
         <ControlButton
           text="Mic"
           active={isLocalAudioEnabled}
@@ -70,7 +70,7 @@ const Footer = () => {
         <ControlButton text="Setting" onClick={() => {}}>
           <SettingsIcon />
         </ControlButton>
-      </SettingDialog>
+      </SettingDialog> */}
       {role?.name !== "viewer" ? <LeaveDialog /> : null}
     </div>
   );

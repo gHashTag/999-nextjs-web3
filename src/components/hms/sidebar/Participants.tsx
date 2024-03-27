@@ -1,17 +1,21 @@
-import { useHMSStore, selectLocalPeer, selectPeersByRole } from '@100mslive/react-sdk';
-import React from 'react';
-import Avatar from '../Avatar';
-import Dropdown from './Dropdown';
+import {
+  useHMSStore,
+  selectLocalPeer,
+  selectPeersByRole,
+} from "@100mslive/react-sdk";
+import React from "react";
+import Avatar from "../Avatar";
+import Dropdown from "./Dropdown";
 
 const Participants = () => {
-  const stagePeers = useHMSStore(selectPeersByRole('stage'));
-  const backstagePeers = useHMSStore(selectPeersByRole('backstage'));
-  const inviteePeers = useHMSStore(selectPeersByRole('invitee'));
-  const viewerPeers = useHMSStore(selectPeersByRole('viewer'));
+  const stagePeers = useHMSStore(selectPeersByRole("stage"));
+  const backstagePeers = useHMSStore(selectPeersByRole("backstage"));
+  const inviteePeers = useHMSStore(selectPeersByRole("invitee"));
+  const viewerPeers = useHMSStore(selectPeersByRole("viewer"));
   const localPeer = useHMSStore(selectLocalPeer);
   return (
     <div className="h-full p-4 overflow-y-scroll text-foreground">
-      {backstagePeers.length > 0 && localPeer.roleName === 'backstage' ? (
+      {/* {backstagePeers.length > 0 && localPeer.roleName === 'backstage' ? (
         <>
           <div>
             <p>Moderator ({backstagePeers.length})</p>
@@ -74,7 +78,7 @@ const Participants = () => {
             </div>
           ))}
         </div>
-      ) : null}
+      ) : null} */}
     </div>
   );
 };

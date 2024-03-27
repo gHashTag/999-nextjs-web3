@@ -37,20 +37,20 @@ const VideoList = () => {
     }
   };
 
-  useEffect(() => {
-    if (dominantSpeaker) {
-      peerFilter(dominantSpeaker);
-    } else {
-      if (localPeer.roleName === "viewer" && stagePeers.length > 0) {
-        setActiveSpeaker(stagePeers[0]);
-      }
-    }
-  }, [dominantSpeaker, stagePeers, localPeer.roleName]);
-  const isSomeoneScreenSharing = useHMSStore(selectIsSomeoneScreenSharing);
+  // useEffect(() => {
+  //   if (dominantSpeaker) {
+  //     peerFilter(dominantSpeaker);
+  //   } else {
+  //     if (localPeer.roleName === "viewer" && stagePeers.length > 0) {
+  //       setActiveSpeaker(stagePeers[0]);
+  //     }
+  //   }
+  // }, [dominantSpeaker, stagePeers, localPeer.roleName]);
+  // const isSomeoneScreenSharing = useHMSStore(selectIsSomeoneScreenSharing);
 
   return (
     <>
-      <div
+      {/* <div
         className="w-full relative md:block hidden"
         style={{ height: "calc((100vh - 3.2 * var(--header-height))" }}
       >
@@ -70,7 +70,7 @@ const VideoList = () => {
         )}
       </div>
       <RoleChangeDialog />
-      <MobileView allPeers={renderPeers} activePeer={activeSpeaker} />
+      <MobileView allPeers={renderPeers} activePeer={activeSpeaker} /> */}
     </>
   );
 };

@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ConfUser } from '@lib/types';
-import { createClient } from '@supabase/supabase-js';
+import { ConfUser } from "@lib/types";
+import { createClient } from "@supabase/supabase-js";
 
-const supabase =
-  process.env.SUPABASE_URL &&
-  process.env.SUPABASE_SERVICE_ROLE_SECRET &&
-  process.env.EMAIL_TO_ID_SECRET
-    ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_SECRET)
-    : undefined;
+const supabase = process.env.SUPABASE_URL &&
+    process.env.SUPABASE_SERVICE_ROLE_SECRET &&
+    process.env.EMAIL_TO_ID_SECRET
+  ? createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_SECRET,
+  )
+  : undefined;
 
 export async function getUserByUsername(username: string): Promise<ConfUser> {
   const { data } = await supabase!
-    .from<ConfUser>('users')
-    .select('name, ticketNumber')
-    .eq('username', username)
+    .from("users")
+    .select("name, ticketNumber")
+    .eq("username", username)
     .single();
 
   return data ?? {};
@@ -35,9 +37,9 @@ export async function getUserByUsername(username: string): Promise<ConfUser> {
 
 export async function getUserById(id: string): Promise<ConfUser> {
   const { data, error } = await supabase!
-    .from<ConfUser>('users')
-    .select('name, username, createdAt')
-    .eq('id', id)
+    .from("users")
+    .select("name, username, createdAt")
+    .eq("id", id)
     .single();
   if (error) throw new Error(error.message);
 
@@ -45,40 +47,51 @@ export async function getUserById(id: string): Promise<ConfUser> {
 }
 
 export async function createUser(id: string, email: string): Promise<ConfUser> {
-  const { data, error } = await supabase!.from<ConfUser>('users').insert({ id, email }).single();
+  const { data, error } = await supabase!.from("users").insert({ id, email })
+    .single();
   if (error) throw new Error(error.message);
 
   return data ?? {};
 }
 
-export async function getTicketNumberByUserId(id: string): Promise<string | null> {
+export async function getTicketNumberByUserId(
+  id: string,
+): Promise<string | null> {
   const { data } = await supabase!
-    .from<ConfUser>('users')
-    .select('ticketNumber')
-    .eq('id', id)
+    .from("users")
+    .select("ticketNumber")
+    .eq("id", id)
     .single();
 
   return data?.ticketNumber!.toString() ?? null;
 }
 
 export async function createGitHubUser(user: any): Promise<string> {
-  const { data, error } = await supabase!.from('github_users').insert({ userData: user }).single();
+  const { data, error } = await supabase!.from("github_users").insert({
+    userData: user,
+  }).single();
   if (error) throw new Error(error.message);
 
   return data.id;
 }
 
-export async function updateUserWithGitHubUser(id: string, token: string): Promise<ConfUser> {
-  const { data } = await supabase!.from('github_users').select('userData').eq('id', token).single();
+export async function updateUserWithGitHubUser(
+  id: string,
+  token: string,
+): Promise<ConfUser> {
+  const { data } = await supabase!.from("github_users").select("userData").eq(
+    "id",
+    token,
+  ).single();
   const { login: username, name } = data?.userData;
   if (!username) {
-    throw new Error('Invalid or expired token');
+    throw new Error("Invalid or expired token");
   }
 
   const { error } = await supabase!
-    .from<ConfUser>('users')
+    .from("users")
     .update({ username, name })
-    .eq('id', id)
+    .eq("id", id)
     .single();
   if (error) console.log(error.message);
 

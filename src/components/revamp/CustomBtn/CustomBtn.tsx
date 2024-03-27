@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "../@helpers/utils";
+import { cn } from "@helpers/utils";
 import { useRouter } from "next/router";
 
 type CustomBtnProps = {
