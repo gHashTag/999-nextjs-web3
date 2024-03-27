@@ -497,13 +497,16 @@ function KanbanBoard() {
             boardData.map((value: BoardData) => {
               if (value.cards) {
                 return (
-                  <Column
-                    key={value.id}
-                    id={value.id}
-                    title={value.title}
-                    cards={value.cards}
-                    openModal={openModal}
-                  />
+                  <div>
+                    <text> </text>
+                    <Column
+                      key={value.id}
+                      id={value.id}
+                      title={value.title}
+                      cards={value.cards}
+                      openModal={openModal}
+                    />
+                  </div>
                 );
               }
             })}

@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import styled from "styled-components";
+import { cn } from "@/utils/cn";
 
 type Modal = {
   isOpen: boolean;
@@ -85,9 +86,11 @@ function TaskModal({
                   name="description"
                   control={control}
                   render={({ field }) => (
-                    <Input
+                    <textarea
                       placeholder="Enter your description"
-                      className="w-full"
+                      className={cn(
+                        "flex h-40 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      )}
                       {...field}
                       onChange={(e) => {
                         setValue("description", e.target.value);
