@@ -7,11 +7,11 @@ import Button from "./Button";
 import { useDevices, DeviceType } from "./lib/useDevices";
 
 const SettingDialog = ({ children }: { children: React.ReactNode }) => {
-  const { allDevices, selectedDeviceIDs, updateDevice, isAllowedToPublish } =
-    useDevices();
-  const videoInput = allDevices["videoInput"] || [];
-  const audioInput = allDevices["audioInput"] || [];
-  const audioOutput = allDevices["audioOutput"] || [];
+  // const { allDevices, selectedDeviceIDs, updateDevice, isAllowedToPublish } =
+  //   useDevices();
+  // const videoInput = allDevices["videoInput"] || [];
+  // const audioInput = allDevices["audioInput"] || [];
+  // const audioOutput = allDevices["audioOutput"] || [];
   const textClass = `text-gray-200`;
   const wrapperClass = `flex md:flex-row flex-col md:items-center md:justify-between my-6`;
   return (
@@ -21,7 +21,7 @@ const SettingDialog = ({ children }: { children: React.ReactNode }) => {
         style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       />
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
-      <Dialog.Content className="dialog-content dialog-animation  bg-gray-700 md:w-[520px] rounded-2xl w-[90%] ">
+      {/* <Dialog.Content className="dialog-content dialog-animation  bg-gray-700 md:w-[520px] rounded-2xl w-[90%] ">
         <div className="w-full flex items-center justify-between">
           <span className="text-xl font-bold">Settings</span>
           <Dialog.Close asChild>
@@ -29,8 +29,8 @@ const SettingDialog = ({ children }: { children: React.ReactNode }) => {
               <CrossIcon />
             </button>
           </Dialog.Close>
-        </div>
-        {isAllowedToPublish.audio && isAllowedToPublish.video ? (
+        </div> */}
+      {/* {isAllowedToPublish.audio && isAllowedToPublish.video ? (
           <p className="my-0 text-gray-300 text-sm">
             Control your audio, video source from here
           </p>
@@ -98,7 +98,7 @@ const SettingDialog = ({ children }: { children: React.ReactNode }) => {
         <div className="flex justify-end">
           <TestAudio id={selectedDeviceIDs.audioOutput || ""} />
         </div>
-      </Dialog.Content>
+      </Dialog.Content> */}
     </Dialog.Root>
   );
 };

@@ -1,16 +1,16 @@
-import {
-  HMSPublishAllowed,
-  selectDevices,
-  selectIsAllowedToPublish,
-  selectLocalMediaSettings
-} from '@100mslive/hms-video-store';
-import { useCallback } from 'react';
-import { useHMSActions, useHMSStore } from '@100mslive/react-sdk';
+// import {
+//   HMSPublishAllowed,
+//   selectDevices,
+//   selectIsAllowedToPublish,
+//   selectLocalMediaSettings,
+// } from "@100mslive/hms-video-store";
+import { useCallback } from "react";
+import { useHMSActions, useHMSStore } from "@100mslive/react-sdk";
 
 export enum DeviceType {
-  videoInput = 'videoInput',
-  audioInput = 'audioInput',
-  audioOutput = 'audioOutput'
+  videoInput = "videoInput",
+  audioInput = "audioInput",
+  audioOutput = "audioOutput",
 }
 
 type DeviceTypeInfo<T> = {
@@ -22,12 +22,12 @@ export interface useDevicesResult {
   selectedDeviceIDs: DeviceTypeInfo<string>;
   updateDevice: ({
     deviceType,
-    deviceId
+    deviceId,
   }: {
     deviceType: DeviceType;
     deviceId: string;
   }) => Promise<void>;
-  isAllowedToPublish: HMSPublishAllowed;
+  isAllowedToPublish: any;
 }
 
 /**
@@ -43,50 +43,52 @@ export interface useDevicesResult {
  *
  * @param handleError error handler for any errors during device change
  */
-export const useDevices = (): useDevicesResult => {
+export const useDevices = () => {
   const hmsActions = useHMSActions();
-  const allDevices: DeviceTypeInfo<MediaDeviceInfo[]> = useHMSStore(selectDevices);
-  const sdkSelectedDevices = useHMSStore(selectLocalMediaSettings);
-  const isAllowedToPublish = useHMSStore(selectIsAllowedToPublish);
+  // const allDevices: DeviceTypeInfo<MediaDeviceInfo[]> = useHMSStore(
+  //   selectDevices,
+  // );
+  // const sdkSelectedDevices = useHMSStore(selectLocalMediaSettings);
+  // const isAllowedToPublish = useHMSStore(selectIsAllowedToPublish);
 
-  const selectedDeviceIDs: DeviceTypeInfo<string> = {
-    [DeviceType.audioInput]: sdkSelectedDevices.audioInputDeviceId,
-    [DeviceType.audioOutput]: sdkSelectedDevices.audioOutputDeviceId,
-    [DeviceType.videoInput]: sdkSelectedDevices.videoInputDeviceId
-  };
+  // const selectedDeviceIDs: DeviceTypeInfo<string> = {
+  //   [DeviceType.audioInput]: sdkSelectedDevices.audioInputDeviceId,
+  //   [DeviceType.audioOutput]: sdkSelectedDevices.audioOutputDeviceId,
+  //   [DeviceType.videoInput]: sdkSelectedDevices.videoInputDeviceId,
+  // };
 
-  if (!isAllowedToPublish.video && allDevices.videoInput === []) {
-    delete allDevices[DeviceType.videoInput];
-    delete selectedDeviceIDs[DeviceType.videoInput];
-  }
-  if (!isAllowedToPublish.audio && allDevices.audioInput === []) {
-    delete allDevices[DeviceType.audioInput];
-    delete selectedDeviceIDs[DeviceType.audioInput];
-  }
+  // if (!isAllowedToPublish.video && allDevices.videoInput === []) {
+  //   delete allDevices[DeviceType.videoInput];
+  //   delete selectedDeviceIDs[DeviceType.videoInput];
+  // }
+  // if (!isAllowedToPublish.audio && allDevices.audioInput === []) {
+  //   delete allDevices[DeviceType.audioInput];
+  //   delete selectedDeviceIDs[DeviceType.audioInput];
+  // }
 
-  const updateDevice = useCallback(
-    async ({ deviceType, deviceId }) => {
-      try {
-        switch (deviceType) {
-          case DeviceType.audioInput:
-            await hmsActions.setAudioSettings({ deviceId });
-            break;
-          case DeviceType.videoInput:
-            await hmsActions.setVideoSettings({ deviceId });
-            break;
-          case DeviceType.audioOutput:
-            hmsActions.setAudioOutputDevice(deviceId);
-            break;
-        }
-      } catch (err) {}
-    },
-    [hmsActions]
-  );
+  // const updateDevice = useCallback(
+  //   async ({ deviceType, deviceId }) => {
+  //     try {
+  //       switch (deviceType) {
+  //         case DeviceType.audioInput:
+  //           await hmsActions.setAudioSettings({ deviceId });
+  //           break;
+  //         case DeviceType.videoInput:
+  //           await hmsActions.setVideoSettings({ deviceId });
+  //           break;
+  //         case DeviceType.audioOutput:
+  //           hmsActions.setAudioOutputDevice(deviceId);
+  //           break;
+  //       }
+  //     } catch (err) {}
+  //   },
+  //   [hmsActions],
+  // );
 
-  return {
-    allDevices,
-    selectedDeviceIDs,
-    updateDevice,
-    isAllowedToPublish
-  };
+  // return {
+  //   // allDevices,
+  //   // selectedDeviceIDs,
+  //   // updateDevice,
+  //   // isAllowedToPublish,
+  // };
 };

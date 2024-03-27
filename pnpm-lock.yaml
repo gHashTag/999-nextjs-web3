@@ -352,6 +352,9 @@ devDependencies:
   eslint-config-next:
     specifier: 14.0.3
     version: 14.0.3(eslint@8.57.0)(typescript@5.4.2)
+  hms-video-store:
+    specifier: link:@types/@100mslive/hms-video-store
+    version: link:@types/@100mslive/hms-video-store
   postcss:
     specifier: ^8
     version: 8.4.35
