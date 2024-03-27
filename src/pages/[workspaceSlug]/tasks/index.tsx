@@ -18,7 +18,6 @@ const Kanban = dynamic(() => import("@/components/Kanban/KanbanBoard"), {
   ssr: false,
 });
 export default function Tasks() {
-  const handleOnClick = () => {};
   return (
     <Layout>
       <Kanban />

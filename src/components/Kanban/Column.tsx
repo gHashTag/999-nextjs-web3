@@ -16,7 +16,7 @@ const Column = ({ id, title, cards, openModal }: ColumnProps) => {
 
   return (
     <SortableContext
-      id={id}
+      id={id.toString()}
       items={cards ? cards.map((card) => ({ id: card.node.id })) : []}
       strategy={rectSortingStrategy}
     >

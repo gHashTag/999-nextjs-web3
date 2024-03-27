@@ -210,7 +210,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 disableTransitionOnChange
               >
                 <HMSRoomProvider>
-                  <BackgroundBeams />
+                  {/* <BackgroundBeams /> */}
                   <Component {...pageProps} />
                   <ResizeHandler />
                   <NProgress />
