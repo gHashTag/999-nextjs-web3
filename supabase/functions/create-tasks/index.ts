@@ -121,6 +121,7 @@ Deno.serve(async (req) => {
         getTitleWithEmojiSystemPrompt,
       );
       console.log(titleWithEmoji, "titleWithEmoji");
+
       const roomAsset = {
         ...data,
         title: titleWithEmoji,
@@ -184,10 +185,10 @@ Deno.serve(async (req) => {
         //144022504 - My
         // 6831432194 - 999 Dev;
         for (const task of newTasks) {
-          console.log(task, "task");
           // Убедитесь, что userId существует и не равен null
-          const userId = task?.assignee?.user_id ||
-            "d685d450-9759-4cd2-96cb-f1dc132d3078";
+          const userId = task?.assignee?.user_id === ""
+            ? "d685d450-9759-4cd2-96cb-f1dc132d3078"
+            : task?.assignee?.user_id;
 
           const data = await supabaseClient
             .from("tasks")
