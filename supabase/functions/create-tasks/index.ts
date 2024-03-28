@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
         summary_short,
         getTitleWithEmojiSystemPrompt,
       );
-
+      console.log(titleWithEmoji, "titleWithEmoji");
       const roomAsset = {
         ...data,
         title: titleWithEmoji,
