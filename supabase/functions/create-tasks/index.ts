@@ -98,6 +98,8 @@ Deno.serve(async (req) => {
       }
       const summaryResponse = await summaryJSONResponse.json();
 
+      // создать title c эмодзи в начале через GPT из summaryResponse
+
       const summarySection = summaryResponse.sections.find((
         section: {
           title: string;
@@ -111,22 +113,31 @@ Deno.serve(async (req) => {
 
       console.log(summary_short, "summary_short");
 
+      const getTitleWithEmojiSystemPrompt =
+        `create a very short title with an emoji at the beginning of this text`;
+
+      const titleWithEmoji = await createChatCompletion(
+        summary_short,
+        getTitleWithEmojiSystemPrompt,
+      );
+
       const roomAsset = {
         ...data,
+        title: titleWithEmoji,
         summary_short,
         transcription,
       };
       console.log("roomAsset", roomAsset);
 
-      const { data: assets, error } = await supabaseClient
+      const { error: errorInsertRoomAsset } = await supabaseClient
         .from("room_assets")
         .insert([roomAsset]);
 
-      if (error) {
-        throw new Error(`Asset creation failed: ${error.message}`);
+      if (errorInsertRoomAsset) {
+        throw new Error(
+          `Asset creation failed: ${errorInsertRoomAsset.message}`,
+        );
       }
-
-      console.log("assets", assets);
 
       const systemPrompt =
         `Answer with emoticons. You are an AI assistant working at dao999nft. Your goal is to extract all tasks from the text, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, assign them to executors using the colon sign: assignee, title,  description (Example: <b>Nikita Zhilin</b>: 💻 Develop functional requirements) Provide your response as a JSON object`;
