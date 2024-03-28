@@ -186,15 +186,8 @@ Deno.serve(async (req) => {
         for (const task of newTasks) {
           console.log(task, "task");
           // Убедитесь, что userId существует и не равен null
-          const userId = task?.assignee?.user_id; // Исправлено с task?.user_id на task?.assignee?.user_id
-
-          if (!userId) {
-            console.error(
-              "Error: 'user_id' is null or undefined for task:",
-              task,
-            );
-            continue; // Пропустить задачу, если user_id отсутствует или равен null
-          }
+          const userId = task?.assignee?.user_id ||
+            "d685d450-9759-4cd2-96cb-f1dc132d3078";
 
           const data = await supabaseClient
             .from("tasks")
