@@ -5,7 +5,7 @@ import { client } from "../utils/client.ts";
 import { createChatCompletion } from "../utils/createChatCompletion.ts";
 import { Bot } from "https://deno.land/x/grammy@v1.8.3/mod.ts";
 import { translateText } from "../utils/translateText.ts";
-import { headers } from "../utils/100ms/headers.ts";
+import { corsHeaders } from "../_shared/cors.ts";
 
 const bot = new Bot(Deno.env.get("TELEGRAM_BOT_TOKEN") || "");
 
@@ -174,7 +174,13 @@ Deno.serve(async (req) => {
       const tasks = await createChatCompletion(prompt);
 
       if (tasks) {
-        const newTasks = await JSON.parse(tasks).tasks;
+        const newTasks = JSON.parse(tasks).map((task: any) => {
+          // Если user_id отсутствует или пуст, присваиваем значение по умолчанию
+          if (!task.assignee.user_id) {
+            task.assignee.user_id = "d685d450-9759-4cd2-96cb-f1dc132d3078";
+          }
+          return task;
+        });
         console.log(newTasks, "newTasks");
         const chatId = -1001978334539;
         // Отправляем все задачи одним сообщением
@@ -186,14 +192,12 @@ Deno.serve(async (req) => {
         // 6831432194 - 999 Dev;
         for (const task of newTasks) {
           // Убедитесь, что userId существует и не равен null
-          const userId = task?.assignee?.user_id === ""
-            ? "d685d450-9759-4cd2-96cb-f1dc132d3078"
-            : task?.assignee?.user_id;
+          const user_id = task?.assignee?.user_id;
 
           const data = await supabaseClient
             .from("tasks")
             .insert([{
-              user_id: userId,
+              user_id,
               title: task.title,
               description: task.description,
             }]);
@@ -205,8 +209,8 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({ message: "Event type not supported" }),
           {
-            status: 400,
-            headers: { ...headers },
+            status: 4000,
+            headers: { ...corsHeaders },
           },
         );
       }
@@ -215,7 +219,7 @@ Deno.serve(async (req) => {
         JSON.stringify({ message: "Event processed successfully" }),
         {
           status: 200,
-          headers: { ...headers },
+          headers: { ...corsHeaders },
         },
       );
     }
@@ -227,7 +231,7 @@ Deno.serve(async (req) => {
     JSON.stringify({ message: "Event processed successfully" }),
     {
       status: 200,
-      headers: { ...headers },
+      headers: { ...corsHeaders },
     },
   );
 });

@@ -1,7 +1,7 @@
 import { createCodes } from "../utils/100ms/create-codes.ts";
 import { headers } from "../utils/100ms/headers.ts";
 import { client } from "../utils/client.ts";
-import { corsHeaders } from "../_shared/cors.ts";
+// import { corsHeaders } from "../_shared/cors.ts";
 import { myHeaders } from "../utils/100ms/my-headers.ts";
 // import { handleCORS } from "../_shared/handleCORS.ts";
 // import {
@@ -39,7 +39,7 @@ import { myHeaders } from "../utils/100ms/my-headers.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: { ...headers } });
   }
   // let token;
   // try {
@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { name, type, email, room_id } = await req.json();
+    const { name, type, email } = await req.json();
 
     const { data } = await supabaseClient
       .from("users")
@@ -75,13 +75,6 @@ Deno.serve(async (req) => {
 
     const user_id = data[0].user_id;
 
-    const { data: roomDataSupabase } = await supabaseClient
-      .from("rooms")
-      .select("*")
-      .eq("room_id", room_id)
-      .single();
-    // проверить есть ли комната с таким room_id
-
     const createOrFetchRoom = async () => {
       const roomData = {
         name,
@@ -89,21 +82,18 @@ Deno.serve(async (req) => {
         template_id: "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
-      let room, roomId, codesResponse;
-      if (roomDataSupabase && roomDataSupabase.room_id) {
-        codesResponse = await createCodes(roomDataSupabase.room_id);
-      } else {
-        const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
-          method: "POST",
-          body: JSON.stringify({ ...roomData }),
-          headers: { ...myHeaders },
-        });
-        if (!roomResponse.ok) {
-          throw new Error(`Failed to create room: ${roomResponse.statusText}`);
-        }
-        roomId = await roomResponse.json();
-        codesResponse = await createCodes(roomId.id);
+
+      const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
+        method: "POST",
+        body: JSON.stringify({ ...roomData }),
+        headers: { ...myHeaders },
+      });
+      if (!roomResponse.ok) {
+        throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
+      const newRoom = await roomResponse.json();
+      const id = newRoom.id;
+      const codesResponse = await createCodes(id);
 
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
@@ -111,13 +101,12 @@ Deno.serve(async (req) => {
       const codes = await codesResponse.json();
 
       const rooms = {
-        ...(room || {}),
         codes,
         type,
         name,
         updated_at: new Date(),
         user_id,
-        room_id: roomId.id ? roomId.id : room_id,
+        room_id: id,
       };
 
       return rooms;
@@ -134,13 +123,13 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify(rooms), {
       status: 200,
-      headers: { ...headers, ...corsHeaders },
+      headers: { ...headers },
     });
   } catch (error) {
     console.log("error", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 400,
-      headers: { ...headers, ...corsHeaders },
+      headers: { ...headers },
     });
   }
 });

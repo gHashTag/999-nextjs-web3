@@ -84,12 +84,16 @@ export default function Wallet() {
   const email = useReactiveVar(setUserEmail);
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
-  const [mutateUser, { loading: mutationLoading, error: mutationError }] =
-    useMutation(MUTATION);
+  const [
+    mutateUser,
+    { data: mutationData, loading: mutationLoading, error: mutationError },
+  ] = useMutation(MUTATION);
+
+  console.log(mutationData, "mutationData");
 
   if (mutationError instanceof ApolloError) {
     // Обработка ошибки ApolloError
-    console.log(mutationError.message);
+    console.log("mutationError", mutationError.message);
   }
   const { loading, error, data, refetch } = useQuery(QUERY, {
     variables: { email },
